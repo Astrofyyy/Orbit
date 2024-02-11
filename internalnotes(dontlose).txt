@@ -2,7 +2,7 @@ Super Mario Orbit Notes
 
 Hubworld: Basic hubworld, obviously using GLE, themed around a red comet observatory with the Battlerock Background.
 
-Hackio Heights Galaxy: First level of the mod, uses both FloatyFluff and the Cloud Flower. Themed around Gusty Garden and Cloudy Court.
+FLOATY (I SAW THAT HACKIO..) Heights Galaxy: First level of the mod, uses both FloatyFluff and the Cloud Flower. Themed around Gusty Garden and Cloudy Court.
 
 GALAXY #2:
 
