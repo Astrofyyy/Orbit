@@ -1,6 +1,7 @@
 {
 	"FileSelect": "SYS - File Select",
 	"StaffRollGalaxy": "SYS - Credits",
+	"DeathParadeGalaxy": "SYS - Game Over",
 	
 	"HubworldGalaxy": "HUB - Astro Midway",
     
@@ -11,6 +12,7 @@
 	"HellWaterfallGalaxy": "5 - Magma Falls Galaxy",
 	"VsKoopaCannonFleetGalaxy": "6 - Bowser's Dreadnought",
     
-    "SunBeachExGalaxy": "EX-1 - Sunset Beach Galaxy"
-    "OceanFloatyLandExGalaxy": "EX-2 - Buoy Bowl Galaxy"
+    "SunBeachExGalaxy": "EX-1 - Sunset Beach Galaxy",
+    "OceanFloatyLandExGalaxy": "EX-2 - Buoy Bowl Galaxy",
+    "AcornCapGalaxy": "EX-3 - Acorn Cap Galaxy"
 }
