@@ -1,7 +1,8 @@
 {
 	"FileSelect": "SYS - File Select",
-	"StaffRollGalaxy": "SYS - Credits",
+	"LifeParadeGalaxy": "SYS - Prologue",
 	"DeathParadeGalaxy": "SYS - Game Over",
+	"StaffRollGalaxy": "SYS - Credits",
 	
 	"HubworldGalaxy": "HUB - Astro Midway",
     
@@ -14,5 +15,8 @@
     
     "SunBeachExGalaxy": "EX-1 - Sunset Beach Galaxy",
     "OceanFloatyLandExGalaxy": "EX-2 - Buoy Bowl Galaxy",
-    "AcornCapGalaxy": "EX-3 - Sunset Chase Galaxy"
+    "AcornCapGalaxy": "EX-3 - Sundown Sweat Galaxy",
+    "DepthLiquidExGalaxy": "EX-4 - Bubble Boil Galaxy",
+    "SnowCollectExGalaxy" : "EX-5 - Snow Scramble Galaxy",
+    "FinalKingGalaxy" : "EX-6 - Grand Finale Galaxy"
 }
