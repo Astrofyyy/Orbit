@@ -10,13 +10,15 @@
 	"YosshiHighlandGalaxy": "2 - Yoshi Hills Galaxy",
 	"IceSpaceGalaxy": "3 - Solar Freeze Galaxy",
 	"AbekobeFactoryGalaxy": "4 - Toybox Galaxy",
-	"HellWaterfallGalaxy": "5 - Magma Falls Galaxy",
-	"VsKoopaCannonFleetGalaxy": "6 - Bowser's Dreadnought",
+    "SunBeachExGalaxy": "5 - Sunset Beach Galaxy",
+	"HellWaterfallGalaxy": "6 - Magma Falls Galaxy",
+	"VsKoopaCannonFleetGalaxy": "7 - Bowser's Dreadnought",
     
-    "SunBeachExGalaxy": "EX-1 - Sunset Beach Galaxy",
+    "AcornCapGalaxy": "EX-1 - Sundown Sweat Galaxy",
     "OceanFloatyLandExGalaxy": "EX-2 - Buoy Bowl Galaxy",
-    "AcornCapGalaxy": "EX-3 - Sundown Sweat Galaxy",
-    "DepthLiquidExGalaxy": "EX-4 - Bubble Boil Galaxy",
-    "SnowCollectExGalaxy" : "EX-5 - Snow Scramble Galaxy",
-    "FinalKingGalaxy" : "EX-6 - Grand Finale Galaxy"
+    "StarDustRedBlueExGalaxy": "EX-3 - Swap Space Galaxy",
+    "SnowCollectExGalaxy" : "EX-4 - Snow Scramble Galaxy",
+    "DepthLiquidExGalaxy": "EX-5 - Bubble Boil Galaxy",
+    "ExGalaxy": "EX-6 -  Galaxy",
+    "FinalKingGalaxy" : "EX-7 - Grand Finale Galaxy"
 }
