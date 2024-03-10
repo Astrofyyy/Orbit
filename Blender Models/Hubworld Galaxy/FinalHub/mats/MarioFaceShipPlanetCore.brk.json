@@ -1,0 +1,49 @@
+{
+    "loop_mode": 0,
+    "duration": 29,
+    
+    "register_color_animations": [
+        {
+            "material_name": "CoreMat",
+            "unknown": 0,
+            
+            "red": [
+                [0, 10, 0, 3],
+                [30, 103, 3, 0]
+            ],
+            "green": [
+                [0, 115, 0, -1],
+                [30, 59, -1, 0]
+            ],
+            "blue": [
+                [0, 203, 0, -3],
+                [30, 112, -3, 0]
+            ],
+            "alpha": [
+                [0, 255, 0, 0]
+            ]
+        },
+        {
+            "material_name": "CoreMat",
+            "unknown": 1,
+            
+            "red": [
+                [0, 0, 0, 0],
+                [30, 2, 0, 0]
+            ],
+            "green": [
+                [0, 40, 2, 2],
+                [30, 179, 2, 2]
+            ],
+            "blue": [
+                [0, 93, 1, 1],
+                [30, 189, 1, 1]
+            ],
+            "alpha": [
+                [0, 255, 0, 0]
+            ]
+        }
+    ],
+    "constant_color_animations": [
+    ]
+}
