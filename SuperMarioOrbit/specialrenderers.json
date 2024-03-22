@@ -1,0 +1,44 @@
+{
+  "SpecialRenderers": [
+    {
+      "ObjectName": "DecorWineGlassObj",
+      "RendererType": "BasicAnim",
+      "RendererParams": [
+        {
+          "BRK": {
+            "Filename": "ColorChange",
+            "FrameSource": "Obj_arg0"
+          },
+          "BTK": {
+            "Filename": "TexChange",
+            "FrameSource": "Obj_arg1"
+          },
+          "BTP": {
+            "Filename": "TexChange",
+            "FrameSource": "Obj_arg1"
+          }
+        }
+      ]
+    },
+    {
+      "ObjectName": "FinalKingBlockStep",
+      "RendererType": "BasicAnim",
+      "RendererParams": [
+        {
+          "BRK": {
+            "Filename": "ColorChange",
+            "FrameSource": "Obj_arg0"
+          },
+          "BTK": {
+            "Filename": "TexChange",
+            "FrameSource": "Obj_arg1"
+          },
+          "BTP": {
+            "Filename": "TexChange",
+            "FrameSource": "Obj_arg1"
+          }
+        }
+      ]
+    }
+  ]
+}
