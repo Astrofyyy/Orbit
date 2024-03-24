@@ -5,41 +5,41 @@
       <author>Assimp</author>
       <authoring_tool>Assimp Collada Exporter</authoring_tool>
     </contributor>
-    <created>2024-03-23T22:57:48</created>
-    <modified>2024-03-23T22:57:48</modified>
+    <created>2024-03-23T23:08:25</created>
+    <modified>2024-03-23T23:08:25</modified>
     <unit name="meter" meter="1" />
     <up_axis>Y_UP</up_axis>
   </asset>
   <library_images>
     <image id="m0GrassMat00_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\QFGP_b_mip.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\QFGP_b_mip.png</init_from>
     </image>
     <image id="m1HouseWallMat_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\Kabe01.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\Kabe01.png</init_from>
     </image>
     <image id="m2RoofMat_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\Yane00.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\Yane00.png</init_from>
     </image>
     <image id="m3SoilMat_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\QFGP_a2.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\QFGP_a2.png</init_from>
     </image>
     <image id="m4WoodPanelMat_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\EdenWoodPanel.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\EdenWoodPanel.png</init_from>
     </image>
     <image id="m5gaito_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\Gaito01.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\Gaito01.png</init_from>
     </image>
     <image id="m6purpleflower_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\purplehanatoha64.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\purplehanatoha64.png</init_from>
     </image>
     <image id="m7sibatutiwall_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\sibatutikabe.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\sibatutikabe.png</init_from>
     </image>
     <image id="m8whiteflower_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\whitehanatoha64.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\whitehanatoha64.png</init_from>
     </image>
     <image id="m9yellowflower_v-diffuse-image">
-      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\library\yellowhanatoha64.png</init_from>
+      <init_from>F%3a\Github\Super%2dMario%2dOrbit%2dDevelopment\Blender%20Models\Hubworld%20Galaxy\NEWHUB\Library2\yellowhanatoha64.png</init_from>
     </image>
   </library_images>
   <library_effects>

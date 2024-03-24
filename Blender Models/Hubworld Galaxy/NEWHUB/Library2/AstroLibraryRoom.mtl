@@ -1,0 +1,101 @@
+# Blender MTL File: 'LibraryIslandREAL.blend'
+# Material Count: 9
+
+newmtl GRASS
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\NEWHUB\Library\LibraryGate00.png
+
+newmtl GRASS_QFGP_b_mip.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\library\QFGP_b_mip.png
+
+newmtl GRASS_closet.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\NEWHUB\Library\closet.png
+
+newmtl SOIL
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\library\QFGP_b_mip.png
+
+newmtl SOIL_QFGP_a2.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\library\QFGP_a2.png
+
+newmtl SOIL_sibatutikabe.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\library\sibatutikabe.png
+
+newmtl WOOD
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\NEWHUB\Library\LibraryGate00.png
+
+newmtl WOOD_closet.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\NEWHUB\Library\closet.png
+
+newmtl WOOD_mokume02.png
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Hubworld Galaxy\NEWHUB\Library\mokume02.png
