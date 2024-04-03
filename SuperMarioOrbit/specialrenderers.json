@@ -1,6 +1,18 @@
 {
   "SpecialRenderers": [
     {
+      "ObjectName": "Poihana",
+      "RendererType": "BasicAnim",
+      "RendererParams": [
+        {
+          "BTP": {
+            "Filename": "ColorChange",
+            "FrameSource": "Obj_arg2"
+          }
+        }
+      ]
+    },
+    {
       "ObjectName": "DecorWineGlassObj",
       "RendererType": "BasicAnim",
       "RendererParams": [
