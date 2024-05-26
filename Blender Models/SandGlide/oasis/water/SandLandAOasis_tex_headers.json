@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "WaterWave",
+    "Format": "I8",
+    "AlphaSetting": 0,
+    "WrapS": "Repeat",
+    "WrapT": "Repeat",
+    "PaletteFormat": "IA8",
+    "MipMap": 1,
+    "EdgeLOD": false,
+    "BiasClamp": false,
+    "MaxAniso": 0,
+    "MinFilter": "LinearMipmapLinear",
+    "MagFilter": "Linear",
+    "MinLOD": 0.0,
+    "MaxLOD": 5.0,
+    "LodBias": 0.0
+  }
+]
