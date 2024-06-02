@@ -1,0 +1,46 @@
+# Blender MTL File: 'FloatyHightsStartingAreaCOL.blend'
+# Material Count: 4
+
+newmtl m0Green_v
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Floaty Heights\Im Restarting EVERYTHING\PuffballA\hanasiba.png
+
+newmtl m1Ground_v
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Floaty Heights\Im Restarting EVERYTHING\PuffballA\puffdurt.png
+
+newmtl m4isekiwall_v
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\Github\Super-Mario-Orbit-Development\Blender Models\Floaty Heights\Im Restarting EVERYTHING\PuffballA\pffwall.png
+
+newmtl m4isekiwall_v_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F:\\Github\\Super-Mario-Orbit-Development\\Blender Models\\Floaty Heights\\Im Restarting EVERYTHING\\Puffball\\pffwall.png
