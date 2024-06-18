@@ -1,13 +1,13 @@
 [
   {
-    "Name": "CloudValleyWater_00_v",
-    "Flag": 4,
-    "CullMode": "None",
+    "Name": "SandTileMat_v",
+    "Flag": 1,
+    "CullMode": "Back",
     "ZCompLoc": true,
     "Dither": false,
     "TextureNames": [
-      "WaterWave:0",
-      "WaterWave:0",
+      "SandTile3:0",
+      "",
       "",
       "",
       "",
@@ -20,20 +20,20 @@
       "IndTexStageNum": 0,
       "TevOrders": [
         {
-          "TexCoord": "TexCoord0",
-          "TexMap": "TexMap0"
+          "TexCoord": "Null",
+          "TexMap": "Null"
         },
         {
-          "TexCoord": "TexCoord0",
-          "TexMap": "TexMap0"
+          "TexCoord": "Null",
+          "TexMap": "Null"
         },
         {
-          "TexCoord": "TexCoord0",
-          "TexMap": "TexMap0"
+          "TexCoord": "Null",
+          "TexMap": "Null"
         },
         {
-          "TexCoord": "TexCoord0",
-          "TexMap": "TexMap0"
+          "TexCoord": "Null",
+          "TexMap": "Null"
         }
       ],
       "Matrices": [
@@ -282,31 +282,31 @@
     },
     "MaterialColors": [
       {
-        "R": 0.8,
-        "G": 0.8,
-        "B": 0.8,
+        "R": 0.796078444,
+        "G": 0.796078444,
+        "B": 0.796078444,
         "A": 1.0
       },
       {
-        "R": 0.8,
-        "G": 0.8,
-        "B": 0.8,
+        "R": 0.796078444,
+        "G": 0.796078444,
+        "B": 0.796078444,
         "A": 1.0
       }
     ],
     "ChannelControls": [
       {
         "Enable": false,
-        "MaterialSrcColor": "Register",
+        "MaterialSrcColor": "Vertex",
         "LitMask": "None",
         "DiffuseFunction": "Clamp",
         "AttenuationFunction": "Spec",
         "AmbientSrcColor": "Register"
       },
       {
-        "Enable": false,
-        "MaterialSrcColor": "Register",
-        "LitMask": "None",
+        "Enable": true,
+        "MaterialSrcColor": "Vertex",
+        "LitMask": "Light2",
         "DiffuseFunction": "Clamp",
         "AttenuationFunction": "Spec",
         "AmbientSrcColor": "Register"
@@ -356,13 +356,9 @@
       {
         "Type": "Matrix2x4",
         "Source": "Tex0",
-        "TexMatrixSource": "TexMtx0"
+        "TexMatrixSource": "Identity"
       },
-      {
-        "Type": "Matrix2x4",
-        "Source": "Tex0",
-        "TexMatrixSource": "TexMtx1"
-      },
+      null,
       null,
       null,
       null,
@@ -393,54 +389,10 @@
           1.0,
           1.0
         ],
-        "Rotation": 89.99451,
-        "Translation": [
-          0.973,
-          0.973
-        ],
-        "ProjectionMatrix": [
-          [
-            1.0,
-            0.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            1.0,
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ]
-      },
-      {
-        "Projection": "Matrix2x4",
-        "Type": 0,
-        "EffectTranslation": [
-          0.5,
-          0.5,
-          0.5
-        ],
-        "Scale": [
-          0.3,
-          0.3
-        ],
         "Rotation": 0.0,
         "Translation": [
           0.0,
-          0.973
+          0.0
         ],
         "ProjectionMatrix": [
           [
@@ -469,6 +421,7 @@
           ]
         ]
       },
+      null,
       null,
       null,
       null,
@@ -502,13 +455,13 @@
     ],
     "TevOrders": [
       {
-        "TexCoord": "TexCoord0",
-        "TexMap": "TexMap0",
+        "TexCoord": "Null",
+        "TexMap": "Null",
         "ChannelId": "Color0A0"
       },
       {
-        "TexCoord": "TexCoord1",
-        "TexMap": "TexMap1",
+        "TexCoord": "TexCoord0",
+        "TexMap": "TexMap0",
         "ChannelId": "Color0A0"
       },
       null,
@@ -564,16 +517,16 @@
     ],
     "TevColors": [
       {
-        "R": -0.0235294122,
-        "G": 0.380392164,
-        "B": 0.2509804,
-        "A": 1.0196079
+        "R": 1.0,
+        "G": 1.0,
+        "B": 1.0,
+        "A": 0.0
       },
       {
-        "R": 1.56862748,
-        "G": -1.01176476,
-        "B": -3.37647057,
-        "A": 1.0
+        "R": 0.0,
+        "G": 0.0,
+        "B": 0.0,
+        "A": 1.44313729
       },
       {
         "R": 1.0,
@@ -590,15 +543,15 @@
     ],
     "KonstColors": [
       {
-        "R": 1.0,
-        "G": 1.0,
-        "B": 1.0,
-        "A": 1.0
-      },
-      {
         "R": 0.0,
         "G": 0.0,
         "B": 0.0,
+        "A": 0.7058824
+      },
+      {
+        "R": 1.0,
+        "G": 1.0,
+        "B": 1.0,
         "A": 1.0
       },
       {
@@ -616,10 +569,30 @@
     ],
     "TevStages": [
       {
-        "ColorInA": "Zero",
-        "ColorInB": "Konst",
-        "ColorInC": "TexColor",
+        "ColorInA": "Konst",
+        "ColorInB": "C0",
+        "ColorInC": "RasColor",
         "ColorInD": "Zero",
+        "ColorOp": "Add",
+        "ColorBias": "Zero",
+        "ColorScale": "Scale_1",
+        "ColorClamp": true,
+        "ColorRegId": "TevPrev",
+        "AlphaInA": "Konst",
+        "AlphaInB": "Zero",
+        "AlphaInC": "RasAlpha",
+        "AlphaInD": "Zero",
+        "AlphaOp": "Add",
+        "AlphaBias": "Zero",
+        "AlphaScale": "Scale_2",
+        "AlphaClamp": true,
+        "AlphaRegId": "TevPrev"
+      },
+      {
+        "ColorInA": "Zero",
+        "ColorInB": "ColorPrev",
+        "ColorInC": "TexColor",
+        "ColorInD": "AlphaPrev",
         "ColorOp": "Add",
         "ColorBias": "Zero",
         "ColorScale": "Scale_1",
@@ -633,26 +606,6 @@
         "AlphaBias": "Zero",
         "AlphaScale": "Scale_1",
         "AlphaClamp": true,
-        "AlphaRegId": "TevPrev"
-      },
-      {
-        "ColorInA": "Konst",
-        "ColorInB": "Zero",
-        "ColorInC": "Zero",
-        "ColorInD": "Zero",
-        "ColorOp": "Add",
-        "ColorBias": "Zero",
-        "ColorScale": "Scale_1",
-        "ColorClamp": true,
-        "ColorRegId": "TevPrev",
-        "AlphaInA": "Zero",
-        "AlphaInB": "AlphaPrev",
-        "AlphaInC": "TexAlpha",
-        "AlphaInD": "Zero",
-        "AlphaOp": "Add",
-        "AlphaBias": "Zero",
-        "AlphaScale": "Scale_4",
-        "AlphaClamp": false,
         "AlphaRegId": "TevPrev"
       },
       null,
@@ -760,22 +713,22 @@
       ]
     },
     "AlphCompare": {
-      "Comp0": "LEqual",
-      "Reference0": 160,
-      "Operation": "XOR",
-      "Comp1": "GEqual",
-      "Reference1": 40
+      "Comp0": "Always",
+      "Reference0": 0,
+      "Operation": "Or",
+      "Comp1": "Always",
+      "Reference1": 0
     },
     "BMode": {
-      "Type": "Blend",
-      "SourceFact": "SrcAlpha",
-      "DestinationFact": "InverseSrcAlpha",
+      "Type": "None",
+      "SourceFact": "One",
+      "DestinationFact": "Zero",
       "Operation": "Copy"
     },
     "ZMode": {
       "Enable": true,
       "Function": "LEqual",
-      "UpdateEnable": false
+      "UpdateEnable": true
     },
     "NBTScale": {
       "Unknown1": 0,

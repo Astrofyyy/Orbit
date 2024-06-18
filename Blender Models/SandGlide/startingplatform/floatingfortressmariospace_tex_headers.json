@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "GrassPattern2",
+    "Format": "CMPR",
+    "AlphaSetting": 0,
+    "WrapS": "Repeat",
+    "WrapT": "Repeat",
+    "PaletteFormat": "IA8",
+    "MipMap": 0,
+    "EdgeLOD": false,
+    "BiasClamp": false,
+    "MaxAniso": 0,
+    "MinFilter": "Linear",
+    "MagFilter": "Linear",
+    "MinLOD": 0.0,
+    "MaxLOD": 5.0,
+    "LodBias": -1.42
+  }
+]

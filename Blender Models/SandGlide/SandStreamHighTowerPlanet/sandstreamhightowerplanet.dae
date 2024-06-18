@@ -5,8 +5,8 @@
       <author>Assimp</author>
       <authoring_tool>Assimp Collada Exporter</authoring_tool>
     </contributor>
-    <created>2024-05-18T16:48:33</created>
-    <modified>2024-05-18T16:48:33</modified>
+    <created>2024-06-18T11:54:59</created>
+    <modified>2024-06-18T11:54:59</modified>
     <unit name="meter" meter="1" />
     <up_axis>Y_UP</up_axis>
   </asset>

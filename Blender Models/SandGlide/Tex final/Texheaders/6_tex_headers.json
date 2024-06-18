@@ -1,19 +1,19 @@
 [
   {
-    "Name": "WaterWave",
-    "Format": "I8",
-    "AlphaSetting": 0,
+    "Name": "CactusA",
+    "Format": "CMPR",
+    "AlphaSetting": 1,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
-    "MipMap": 1,
+    "MipMap": 0,
     "EdgeLOD": false,
     "BiasClamp": false,
     "MaxAniso": 0,
-    "MinFilter": "LinearMipmapLinear",
+    "MinFilter": "Linear",
     "MagFilter": "Linear",
     "MinLOD": 0.0,
-    "MaxLOD": 5.0,
+    "MaxLOD": 0.0,
     "LodBias": 0.0
   }
 ]
