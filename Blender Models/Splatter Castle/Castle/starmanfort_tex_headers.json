@@ -2,7 +2,7 @@
   {
     "Name": "YellowCartain",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -19,7 +19,7 @@
   {
     "Name": "Brck18S",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -36,9 +36,9 @@
   {
     "Name": "Wood07L",
     "Format": "CMPR",
-    "AlphaSetting": 1,
-    "WrapS": "MirroredRepeat",
-    "WrapT": "MirroredRepeat",
+    "AlphaSetting": 0,
+    "WrapS": "Repeat",
+    "WrapT": "Repeat",
     "PaletteFormat": "IA8",
     "MipMap": 0,
     "EdgeLOD": false,
@@ -53,7 +53,7 @@
   {
     "Name": "Window",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -70,7 +70,7 @@
   {
     "Name": "Brck66S",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -87,7 +87,7 @@
   {
     "Name": "Rub37M",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -104,7 +104,7 @@
   {
     "Name": "brck19M",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -121,7 +121,7 @@
   {
     "Name": "Lawn",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -138,7 +138,7 @@
   {
     "Name": "Lawn3",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -155,7 +155,7 @@
   {
     "Name": "Dokan2",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -172,7 +172,7 @@
   {
     "Name": "Rust09S2",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
@@ -189,7 +189,7 @@
   {
     "Name": "met28M",
     "Format": "CMPR",
-    "AlphaSetting": 1,
+    "AlphaSetting": 0,
     "WrapS": "Repeat",
     "WrapT": "Repeat",
     "PaletteFormat": "IA8",
