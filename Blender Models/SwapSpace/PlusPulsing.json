@@ -1,0 +1,32 @@
+{
+    "loop_mode": 2,
+    "duration": 600,
+    
+    "register_color_animations": [
+    ],
+    "constant_color_animations": [
+        {
+            "material_name": "BoxKillarPlusMat_v",
+            "unknown": 1,
+            
+            "red": [
+                [0, 55, 0, 0],
+                [300, 218, 0, 0],
+                [600, 55, 0, 0]
+            ],
+            "green": [
+                [0, 35, 0, 0],
+                [1, 139, 0, 0],
+                [2, 35, 0, 0]
+            ],
+            "blue": [
+                [0, 64, 0, 0],
+                [1, 255, 0, 0],
+                [2, 64, 0, 0]
+            ],
+            "alpha": [
+                [0, 255, 0, 0]
+            ]
+        }
+    ]
+}
