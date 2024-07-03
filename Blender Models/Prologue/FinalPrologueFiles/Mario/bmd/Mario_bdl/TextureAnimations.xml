@@ -1,0 +1,75 @@
+<?xml version=1.0 encoding=utf-8?>
+
+<TextureAnimation>
+
+	<Textures>
+#
+% MarioBody.1
+#
+% MarioBody.2
+#
+% MarioCap.0
+#
+% MarioCap.1
+#
+% MarioCap.2
+#
+% MarioEyeBall
+#
+% MarioFace
+#
+% MarioHair
+#
+% MarioHand
+#
+% mario_eyeLid.0
+#
+% mario_eyeLid.1
+#
+% mario_eyeLid.2
+#
+% mario_eyeLid.3
+#
+% MarioBody.0
+#
+% Noizu
+#
+% MarioHair
+#
+% MarioCap.0
+#
+% MarioEyeBall
+#
+% mario_eyeLid.0
+#
+% MarioFace
+#
+% MarioHand
+</Textures>
+
+	<Materials>
+#
+% Body1_v
+#
+% Cap_v
+#
+% EyeLid_v
+#
+% EyeballL_v
+#
+% EyeballR_v
+#
+% Face_v
+#
+% Hair_v
+#
+% Hand_v
+#
+% Hand_v(2)
+</Materials>
+
+	<Animations>
+
+	</Animations>
+
+</TextureAnimation>
