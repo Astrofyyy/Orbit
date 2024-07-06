@@ -1,0 +1,941 @@
+{
+  "Root": {
+    "Type": "Joint",
+    "Index": 0,
+    "Children": [
+      {
+        "Type": "Material",
+        "Index": 0,
+        "Children": [
+          {
+            "Type": "Shape",
+            "Index": 5,
+            "Children": [
+              {
+                "Type": "Material",
+                "Index": 1,
+                "Children": [
+                  {
+                    "Type": "Shape",
+                    "Index": 1,
+                    "Children": [
+                      {
+                        "Type": "Material",
+                        "Index": 2,
+                        "Children": [
+                          {
+                            "Type": "Shape",
+                            "Index": 0,
+                            "Children": [
+                              {
+                                "Type": "Material",
+                                "Index": 3,
+                                "Children": [
+                                  {
+                                    "Type": "Shape",
+                                    "Index": 4,
+                                    "Children": [
+                                      {
+                                        "Type": "Material",
+                                        "Index": 4,
+                                        "Children": [
+                                          {
+                                            "Type": "Shape",
+                                            "Index": 8,
+                                            "Children": [
+                                              {
+                                                "Type": "Material",
+                                                "Index": 5,
+                                                "Children": [
+                                                  {
+                                                    "Type": "Shape",
+                                                    "Index": 2,
+                                                    "Children": [
+                                                      {
+                                                        "Type": "Material",
+                                                        "Index": 6,
+                                                        "Children": [
+                                                          {
+                                                            "Type": "Shape",
+                                                            "Index": 21,
+                                                            "Children": [
+                                                              {
+                                                                "Type": "Material",
+                                                                "Index": 7,
+                                                                "Children": [
+                                                                  {
+                                                                    "Type": "Shape",
+                                                                    "Index": 25,
+                                                                    "Children": [
+                                                                      {
+                                                                        "Type": "Material",
+                                                                        "Index": 8,
+                                                                        "Children": [
+                                                                          {
+                                                                            "Type": "Shape",
+                                                                            "Index": 11,
+                                                                            "Children": [
+                                                                              {
+                                                                                "Type": "Material",
+                                                                                "Index": 9,
+                                                                                "Children": [
+                                                                                  {
+                                                                                    "Type": "Shape",
+                                                                                    "Index": 23,
+                                                                                    "Children": [
+                                                                                      {
+                                                                                        "Type": "Material",
+                                                                                        "Index": 10,
+                                                                                        "Children": [
+                                                                                          {
+                                                                                            "Type": "Shape",
+                                                                                            "Index": 28,
+                                                                                            "Children": [
+                                                                                              {
+                                                                                                "Type": "Material",
+                                                                                                "Index": 11,
+                                                                                                "Children": [
+                                                                                                  {
+                                                                                                    "Type": "Shape",
+                                                                                                    "Index": 10,
+                                                                                                    "Children": [
+                                                                                                      {
+                                                                                                        "Type": "Material",
+                                                                                                        "Index": 12,
+                                                                                                        "Children": [
+                                                                                                          {
+                                                                                                            "Type": "Shape",
+                                                                                                            "Index": 6,
+                                                                                                            "Children": [
+                                                                                                              {
+                                                                                                                "Type": "Material",
+                                                                                                                "Index": 13,
+                                                                                                                "Children": [
+                                                                                                                  {
+                                                                                                                    "Type": "Shape",
+                                                                                                                    "Index": 9,
+                                                                                                                    "Children": [
+                                                                                                                      {
+                                                                                                                        "Type": "Material",
+                                                                                                                        "Index": 14,
+                                                                                                                        "Children": [
+                                                                                                                          {
+                                                                                                                            "Type": "Shape",
+                                                                                                                            "Index": 26,
+                                                                                                                            "Children": [
+                                                                                                                              {
+                                                                                                                                "Type": "Material",
+                                                                                                                                "Index": 15,
+                                                                                                                                "Children": [
+                                                                                                                                  {
+                                                                                                                                    "Type": "Shape",
+                                                                                                                                    "Index": 24,
+                                                                                                                                    "Children": [
+                                                                                                                                      {
+                                                                                                                                        "Type": "Material",
+                                                                                                                                        "Index": 16,
+                                                                                                                                        "Children": [
+                                                                                                                                          {
+                                                                                                                                            "Type": "Shape",
+                                                                                                                                            "Index": 27,
+                                                                                                                                            "Children": [
+                                                                                                                                              {
+                                                                                                                                                "Type": "Material",
+                                                                                                                                                "Index": 17,
+                                                                                                                                                "Children": [
+                                                                                                                                                  {
+                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                    "Index": 3,
+                                                                                                                                                    "Children": [
+                                                                                                                                                      {
+                                                                                                                                                        "Type": "Material",
+                                                                                                                                                        "Index": 18,
+                                                                                                                                                        "Children": [
+                                                                                                                                                          {
+                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                            "Index": 12,
+                                                                                                                                                            "Children": [
+                                                                                                                                                              {
+                                                                                                                                                                "Type": "Material",
+                                                                                                                                                                "Index": 19,
+                                                                                                                                                                "Children": [
+                                                                                                                                                                  {
+                                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                                    "Index": 17,
+                                                                                                                                                                    "Children": [
+                                                                                                                                                                      {
+                                                                                                                                                                        "Type": "Material",
+                                                                                                                                                                        "Index": 20,
+                                                                                                                                                                        "Children": [
+                                                                                                                                                                          {
+                                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                                            "Index": 19,
+                                                                                                                                                                            "Children": [
+                                                                                                                                                                              {
+                                                                                                                                                                                "Type": "Material",
+                                                                                                                                                                                "Index": 21,
+                                                                                                                                                                                "Children": [
+                                                                                                                                                                                  {
+                                                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                                                    "Index": 20,
+                                                                                                                                                                                    "Children": [
+                                                                                                                                                                                      {
+                                                                                                                                                                                        "Type": "Material",
+                                                                                                                                                                                        "Index": 22,
+                                                                                                                                                                                        "Children": [
+                                                                                                                                                                                          {
+                                                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                                                            "Index": 13,
+                                                                                                                                                                                            "Children": [
+                                                                                                                                                                                              {
+                                                                                                                                                                                                "Type": "Material",
+                                                                                                                                                                                                "Index": 23,
+                                                                                                                                                                                                "Children": [
+                                                                                                                                                                                                  {
+                                                                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                                                                    "Index": 18,
+                                                                                                                                                                                                    "Children": [
+                                                                                                                                                                                                      {
+                                                                                                                                                                                                        "Type": "Material",
+                                                                                                                                                                                                        "Index": 24,
+                                                                                                                                                                                                        "Children": [
+                                                                                                                                                                                                          {
+                                                                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                                                                            "Index": 22,
+                                                                                                                                                                                                            "Children": [
+                                                                                                                                                                                                              {
+                                                                                                                                                                                                                "Type": "Material",
+                                                                                                                                                                                                                "Index": 25,
+                                                                                                                                                                                                                "Children": [
+                                                                                                                                                                                                                  {
+                                                                                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                                                                                    "Index": 15,
+                                                                                                                                                                                                                    "Children": [
+                                                                                                                                                                                                                      {
+                                                                                                                                                                                                                        "Type": "Material",
+                                                                                                                                                                                                                        "Index": 26,
+                                                                                                                                                                                                                        "Children": [
+                                                                                                                                                                                                                          {
+                                                                                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                                                                                            "Index": 7,
+                                                                                                                                                                                                                            "Children": [
+                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                "Type": "Material",
+                                                                                                                                                                                                                                "Index": 27,
+                                                                                                                                                                                                                                "Children": [
+                                                                                                                                                                                                                                  {
+                                                                                                                                                                                                                                    "Type": "Shape",
+                                                                                                                                                                                                                                    "Index": 16,
+                                                                                                                                                                                                                                    "Children": [
+                                                                                                                                                                                                                                      {
+                                                                                                                                                                                                                                        "Type": "Material",
+                                                                                                                                                                                                                                        "Index": 28,
+                                                                                                                                                                                                                                        "Children": [
+                                                                                                                                                                                                                                          {
+                                                                                                                                                                                                                                            "Type": "Shape",
+                                                                                                                                                                                                                                            "Index": 14,
+                                                                                                                                                                                                                                            "Children": [
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "CloseChild",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                                "Type": "Terminator",
+                                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                                              }
+                                                                                                                                                                                                                                            ]
+                                                                                                                                                                                                                                          },
+                                                                                                                                                                                                                                          {
+                                                                                                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                                                                                                            "Index": 0,
+                                                                                                                                                                                                                                            "Children": []
+                                                                                                                                                                                                                                          }
+                                                                                                                                                                                                                                        ]
+                                                                                                                                                                                                                                      },
+                                                                                                                                                                                                                                      {
+                                                                                                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                                                                                                        "Index": 0,
+                                                                                                                                                                                                                                        "Children": []
+                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                    ]
+                                                                                                                                                                                                                                  },
+                                                                                                                                                                                                                                  {
+                                                                                                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                                                                                                    "Index": 0,
+                                                                                                                                                                                                                                    "Children": []
+                                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                                ]
+                                                                                                                                                                                                                              },
+                                                                                                                                                                                                                              {
+                                                                                                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                                              }
+                                                                                                                                                                                                                            ]
+                                                                                                                                                                                                                          },
+                                                                                                                                                                                                                          {
+                                                                                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                                                                                            "Index": 0,
+                                                                                                                                                                                                                            "Children": []
+                                                                                                                                                                                                                          }
+                                                                                                                                                                                                                        ]
+                                                                                                                                                                                                                      },
+                                                                                                                                                                                                                      {
+                                                                                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                                                                                        "Index": 0,
+                                                                                                                                                                                                                        "Children": []
+                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                    ]
+                                                                                                                                                                                                                  },
+                                                                                                                                                                                                                  {
+                                                                                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                                                                                    "Index": 0,
+                                                                                                                                                                                                                    "Children": []
+                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                ]
+                                                                                                                                                                                                              },
+                                                                                                                                                                                                              {
+                                                                                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                                              }
+                                                                                                                                                                                                            ]
+                                                                                                                                                                                                          },
+                                                                                                                                                                                                          {
+                                                                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                                                                            "Index": 0,
+                                                                                                                                                                                                            "Children": []
+                                                                                                                                                                                                          }
+                                                                                                                                                                                                        ]
+                                                                                                                                                                                                      },
+                                                                                                                                                                                                      {
+                                                                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                                                                        "Index": 0,
+                                                                                                                                                                                                        "Children": []
+                                                                                                                                                                                                      }
+                                                                                                                                                                                                    ]
+                                                                                                                                                                                                  },
+                                                                                                                                                                                                  {
+                                                                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                                                                    "Index": 0,
+                                                                                                                                                                                                    "Children": []
+                                                                                                                                                                                                  }
+                                                                                                                                                                                                ]
+                                                                                                                                                                                              },
+                                                                                                                                                                                              {
+                                                                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                                "Children": []
+                                                                                                                                                                                              }
+                                                                                                                                                                                            ]
+                                                                                                                                                                                          },
+                                                                                                                                                                                          {
+                                                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                                                            "Index": 0,
+                                                                                                                                                                                            "Children": []
+                                                                                                                                                                                          }
+                                                                                                                                                                                        ]
+                                                                                                                                                                                      },
+                                                                                                                                                                                      {
+                                                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                                                        "Index": 0,
+                                                                                                                                                                                        "Children": []
+                                                                                                                                                                                      }
+                                                                                                                                                                                    ]
+                                                                                                                                                                                  },
+                                                                                                                                                                                  {
+                                                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                                                    "Index": 0,
+                                                                                                                                                                                    "Children": []
+                                                                                                                                                                                  }
+                                                                                                                                                                                ]
+                                                                                                                                                                              },
+                                                                                                                                                                              {
+                                                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                                                "Index": 0,
+                                                                                                                                                                                "Children": []
+                                                                                                                                                                              }
+                                                                                                                                                                            ]
+                                                                                                                                                                          },
+                                                                                                                                                                          {
+                                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                                            "Index": 0,
+                                                                                                                                                                            "Children": []
+                                                                                                                                                                          }
+                                                                                                                                                                        ]
+                                                                                                                                                                      },
+                                                                                                                                                                      {
+                                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                                        "Index": 0,
+                                                                                                                                                                        "Children": []
+                                                                                                                                                                      }
+                                                                                                                                                                    ]
+                                                                                                                                                                  },
+                                                                                                                                                                  {
+                                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                                    "Index": 0,
+                                                                                                                                                                    "Children": []
+                                                                                                                                                                  }
+                                                                                                                                                                ]
+                                                                                                                                                              },
+                                                                                                                                                              {
+                                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                                "Index": 0,
+                                                                                                                                                                "Children": []
+                                                                                                                                                              }
+                                                                                                                                                            ]
+                                                                                                                                                          },
+                                                                                                                                                          {
+                                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                                            "Index": 0,
+                                                                                                                                                            "Children": []
+                                                                                                                                                          }
+                                                                                                                                                        ]
+                                                                                                                                                      },
+                                                                                                                                                      {
+                                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                                        "Index": 0,
+                                                                                                                                                        "Children": []
+                                                                                                                                                      }
+                                                                                                                                                    ]
+                                                                                                                                                  },
+                                                                                                                                                  {
+                                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                                    "Index": 0,
+                                                                                                                                                    "Children": []
+                                                                                                                                                  }
+                                                                                                                                                ]
+                                                                                                                                              },
+                                                                                                                                              {
+                                                                                                                                                "Type": "OpenChild",
+                                                                                                                                                "Index": 0,
+                                                                                                                                                "Children": []
+                                                                                                                                              }
+                                                                                                                                            ]
+                                                                                                                                          },
+                                                                                                                                          {
+                                                                                                                                            "Type": "OpenChild",
+                                                                                                                                            "Index": 0,
+                                                                                                                                            "Children": []
+                                                                                                                                          }
+                                                                                                                                        ]
+                                                                                                                                      },
+                                                                                                                                      {
+                                                                                                                                        "Type": "OpenChild",
+                                                                                                                                        "Index": 0,
+                                                                                                                                        "Children": []
+                                                                                                                                      }
+                                                                                                                                    ]
+                                                                                                                                  },
+                                                                                                                                  {
+                                                                                                                                    "Type": "OpenChild",
+                                                                                                                                    "Index": 0,
+                                                                                                                                    "Children": []
+                                                                                                                                  }
+                                                                                                                                ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                "Type": "OpenChild",
+                                                                                                                                "Index": 0,
+                                                                                                                                "Children": []
+                                                                                                                              }
+                                                                                                                            ]
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                            "Type": "OpenChild",
+                                                                                                                            "Index": 0,
+                                                                                                                            "Children": []
+                                                                                                                          }
+                                                                                                                        ]
+                                                                                                                      },
+                                                                                                                      {
+                                                                                                                        "Type": "OpenChild",
+                                                                                                                        "Index": 0,
+                                                                                                                        "Children": []
+                                                                                                                      }
+                                                                                                                    ]
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    "Type": "OpenChild",
+                                                                                                                    "Index": 0,
+                                                                                                                    "Children": []
+                                                                                                                  }
+                                                                                                                ]
+                                                                                                              },
+                                                                                                              {
+                                                                                                                "Type": "OpenChild",
+                                                                                                                "Index": 0,
+                                                                                                                "Children": []
+                                                                                                              }
+                                                                                                            ]
+                                                                                                          },
+                                                                                                          {
+                                                                                                            "Type": "OpenChild",
+                                                                                                            "Index": 0,
+                                                                                                            "Children": []
+                                                                                                          }
+                                                                                                        ]
+                                                                                                      },
+                                                                                                      {
+                                                                                                        "Type": "OpenChild",
+                                                                                                        "Index": 0,
+                                                                                                        "Children": []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  },
+                                                                                                  {
+                                                                                                    "Type": "OpenChild",
+                                                                                                    "Index": 0,
+                                                                                                    "Children": []
+                                                                                                  }
+                                                                                                ]
+                                                                                              },
+                                                                                              {
+                                                                                                "Type": "OpenChild",
+                                                                                                "Index": 0,
+                                                                                                "Children": []
+                                                                                              }
+                                                                                            ]
+                                                                                          },
+                                                                                          {
+                                                                                            "Type": "OpenChild",
+                                                                                            "Index": 0,
+                                                                                            "Children": []
+                                                                                          }
+                                                                                        ]
+                                                                                      },
+                                                                                      {
+                                                                                        "Type": "OpenChild",
+                                                                                        "Index": 0,
+                                                                                        "Children": []
+                                                                                      }
+                                                                                    ]
+                                                                                  },
+                                                                                  {
+                                                                                    "Type": "OpenChild",
+                                                                                    "Index": 0,
+                                                                                    "Children": []
+                                                                                  }
+                                                                                ]
+                                                                              },
+                                                                              {
+                                                                                "Type": "OpenChild",
+                                                                                "Index": 0,
+                                                                                "Children": []
+                                                                              }
+                                                                            ]
+                                                                          },
+                                                                          {
+                                                                            "Type": "OpenChild",
+                                                                            "Index": 0,
+                                                                            "Children": []
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "Type": "OpenChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "Type": "OpenChild",
+                                                                    "Index": 0,
+                                                                    "Children": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "Type": "OpenChild",
+                                                                "Index": 0,
+                                                                "Children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "Type": "OpenChild",
+                                                            "Index": 0,
+                                                            "Children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "Type": "OpenChild",
+                                                        "Index": 0,
+                                                        "Children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "Type": "OpenChild",
+                                                    "Index": 0,
+                                                    "Children": []
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "Type": "OpenChild",
+                                                "Index": 0,
+                                                "Children": []
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "Type": "OpenChild",
+                                            "Index": 0,
+                                            "Children": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "Type": "OpenChild",
+                                        "Index": 0,
+                                        "Children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "Type": "OpenChild",
+                                    "Index": 0,
+                                    "Children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "Type": "OpenChild",
+                                "Index": 0,
+                                "Children": []
+                              }
+                            ]
+                          },
+                          {
+                            "Type": "OpenChild",
+                            "Index": 0,
+                            "Children": []
+                          }
+                        ]
+                      },
+                      {
+                        "Type": "OpenChild",
+                        "Index": 0,
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Type": "OpenChild",
+                    "Index": 0,
+                    "Children": []
+                  }
+                ]
+              },
+              {
+                "Type": "OpenChild",
+                "Index": 0,
+                "Children": []
+              }
+            ]
+          },
+          {
+            "Type": "OpenChild",
+            "Index": 0,
+            "Children": []
+          }
+        ]
+      },
+      {
+        "Type": "OpenChild",
+        "Index": 0,
+        "Children": []
+      }
+    ]
+  }
+}
