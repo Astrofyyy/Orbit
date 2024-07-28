@@ -1,0 +1,54 @@
+# Blender MTL File: 'FestivePlatforms.blend'
+# Material Count: 5
+
+newmtl Col_Stone
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.242558 0.242558 0.242558
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Col_WaterBottom
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.345403 0.532959 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Col_Wood
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.207838 0.061381 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Grass
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.170300 0.640000 0.152599
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\\Projects\\SMG2\\Super-Mario-Orbit-Development\\Blender Models\\Floaty Heights\\Im Restarting EVERYTHING\\PuffballA\\New folder (2)\\hanasiba.png
+
+newmtl Grass2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.053327 0.236553 0.041018
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\\Projects\\SMG2\\Super-Mario-Orbit-Development\\Blender Models\\Floaty Heights\\Im Restarting EVERYTHING\\PuffballA\\New folder (2)\\hanasiba.png

@@ -36,7 +36,7 @@
 		<folder external="LocalizeData/UsEnglish" disc="/LocalizeData/UsSpanish" create="true" />
 
 		<!-- More Celestial areas -->
-        <memory offset="0x80645360" value="00000030" />
+        <memory offset="0x80645360" value="00000040" />
 
 		<!-- Syati -->
 		<folder external="CustomCode" disc="/CustomCode" create="true" />
