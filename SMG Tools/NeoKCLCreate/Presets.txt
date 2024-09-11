@@ -1,0 +1,20 @@
+Default Settings,255,0,0,0,false,The Default Settings.
+Grass,255,2,37,0,false,Includes Grass particles when you spin.
+Dirt,255,1,0,0,false,Ordinary Dirt.
+Stone,255,3,0,0,false,Ordinary Stone.
+Snow,255,8,26,0,false,Includes Snow particles.
+Ice,255,9,5,0,false,Ice that you can skate on by shaking the Wii Remote.
+Ice [Reflection],255,9,33,0,false,Ice that you can skate on by shaking the Wii Remote. This variant also shows a reflection of Mario/Luigi.
+Lava,255,0,10,0,false,Lava that burns you. Also burns you if it's a wall regardless of the Wall Code.
+Mud,255,14,32,0,false,Mud that mario can barely move in. Yoshi can traverse this terrain with ease.
+Cloud,255,20,38,0,false,Use this for making custom cloud platforms.
+Desert,255,11,13,0,false,Sand for Desert Levels.
+Beach,255,12,13,0,false,Sand for Beaches. Sounds slightly different that desert sand.
+Quicksand,255,11,17,0,false,Quicksand that you'll slowly sink into. Jump to escape!
+Quicksand [Deadly],255,11,25,0,false,Quicksand that you'll sink into. Jump as much as you want but there is no escape...
+Honey,255,15,32,7,false,Honey that will slow you down if you walk in it. This preset also lets you climb this honey if it is on a wall.
+Dark Matter,255,0,41,0,false,Dark matter that will kill you upon contact. Also kills you if it's a wall regardless of the Wall Code.
+Dusty,255,1,42,0,false,Very dusty terrain. Emits dust effects when walking on it.
+Glass,255,9,14,0,false,Glass for glass surfaces.
+Carpet,255,13,0,0,false,It's carpet. Doesn't get any better than this.
+No Spin Drill Digging,255,16,36,0,false,A metal surface that will cause the Spin Drill to rebound. (Set Obj Arg 2 = 0 to enable 90 degree angle changes)

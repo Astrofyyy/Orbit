@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hack.io.RARC</name>
+    </assembly>
+    <members>
+        <member name="T:Hack.io.RARC.RARC">
+            <summary>
+            Nintendo File Archive used in WII/GC Games.
+            <para/> NOTE: THIS IS NOT A U8 ARCHIVE!
+            </summary>
+        </member>
+        <member name="P:Hack.io.RARC.RARC.KeepFileIDsSynced">
+            <summary>
+            If false, the user must set all unique ID's for each file
+            </summary>
+        </member>
+        <member name="P:Hack.io.RARC.RARC.NextFreeFileID">
+            <summary>
+            Gets the next free File ID
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.Magic">
+            <summary>
+            File Identifier
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.#ctor">
+            <summary>
+            Create an empty archive
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.#ctor(System.String)">
+            <summary>
+            Open an archive
+            </summary>
+            <param name="filename">Archive full filepath</param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.#ctor(System.IO.Stream,System.String)">
+            <summary>
+            Open an archive that's stored inside a stream.
+            <para/> Stream will be a <see cref="T:System.IO.MemoryStream"/> if the Hack.io.YAZ0 library was used.
+            </summary>
+            <param name="RARCFile">Memorystream containing the archiev</param>
+            <param name="filename">Filename to give</param>
+        </member>
+        <member name="T:Hack.io.RARC.RARC.Directory">
+            <summary>
+            Folder contained inside the Archive. Can contain more <see cref="T:Hack.io.RARC.RARC.Directory"/>s if desired, as well as <see cref="T:Hack.io.RARC.RARC.File"/>s
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.#ctor">
+            <summary>
+            Create a new Archive Directory
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.#ctor(Hack.io.RARC.RARC,Hack.io.RARC.RARC.Directory)">
+            <summary>
+            Create a new, child directory
+            </summary>
+            <param name="Owner">The Owner Archive</param>
+            <param name="parentdir">The Parent Directory. NULL if this is the Root Directory</param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.#ctor(System.String,Hack.io.RARC.RARC)">
+            <summary>
+            Import a Folder into a RARCDirectory
+            </summary>
+            <param name="FolderPath"></param>
+            <param name="Owner"></param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.CreateFromFolder(System.String,Hack.io.Util.Archive)">
+            <summary>
+            Create an ArchiveDirectory. You cannot use this function unless this directory is empty
+            </summary>
+            <param name="FolderPath"></param>
+            <param name="OwnerArchive"></param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.NewDirectory">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.NewDirectory(Hack.io.Util.Archive,Hack.io.Util.ArchiveDirectory)">
+            <summary>
+            
+            </summary>
+            <param name="Owner"></param>
+            <param name="parent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Directory.NewDirectory(System.String,Hack.io.Util.Archive)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="Owner"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Hack.io.RARC.RARC.File">
+            <summary>
+            File contained inside the Archive
+            </summary>
+        </member>
+        <member name="P:Hack.io.RARC.RARC.File.FileSettings">
+            <summary>
+            Extra settings for this File.<para/>Default: <see cref="F:Hack.io.RARC.RARC.FileAttribute.FILE"/> | <see cref="F:Hack.io.RARC.RARC.FileAttribute.PRELOAD_TO_MRAM"/>
+            </summary>
+        </member>
+        <member name="P:Hack.io.RARC.RARC.File.ID">
+            <summary>
+            The ID of the file in the archive
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.File.#ctor">
+            <summary>
+            Empty file
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.File.#ctor(System.String)">
+            <summary>
+            Load a File's Data based on a path
+            </summary>
+            <param name="Filepath"></param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.File.#ctor(System.String,System.IO.MemoryStream)">
+            <summary>
+            Create a File from a MemoryStream
+            </summary>
+            <param name="name">The name of the file</param>
+            <param name="ms">The Memory Stream to use</param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.File.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.File.op_Explicit(Hack.io.RARC.RARC.File)~System.IO.MemoryStream">
+            <summary>
+            Cast a File to a MemoryStream
+            </summary>
+            <param name="x"></param>
+        </member>
+        <member name="T:Hack.io.RARC.RARC.RARCDirEntry">
+            <summary>
+            Only used when Reading / Writing
+            </summary>
+        </member>
+        <member name="P:Hack.io.RARC.RARC.RARCDirEntry.Type">
+            <summary>
+            Directory Type. usually the first 4 letters of the <see cref="P:Hack.io.RARC.RARC.RARCDirEntry.Name"/>. If the <see cref="P:Hack.io.RARC.RARC.RARCDirEntry.Name"/> is shorter than 4, the missing spots will be ' ' (space)
+            </summary>
+        </member>
+        <member name="T:Hack.io.RARC.RARC.RARCFileEntry">
+            <summary>
+            Only used when Reading / Writing
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.RARCFileEntry.ModularA">
+            <summary>
+            For files: offset to file data in file data section, for subdirectories: index of the corresponding directory node
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.RARCFileEntry.ModularB">
+            <summary>
+            For files: size of the file, for subdirectories: always 0x10 (size of the node entry?)
+            </summary>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.StringToHash(System.String)">
+            <summary>
+            Generates a 2 byte hash from a string
+            </summary>
+            <param name="Input">string to convert</param>
+            <returns>hashed string</returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.OnItemSet(System.Object,System.String)">
+            <summary>
+            Sets new file's File ID
+            </summary>
+            <param name="value"></param>
+            <param name="Path"></param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.NewDirectory">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.NewDirectory(Hack.io.Util.Archive,Hack.io.Util.ArchiveDirectory)">
+            <summary>
+            
+            </summary>
+            <param name="Owner"></param>
+            <param name="parent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.NewDirectory(System.String,Hack.io.Util.Archive)">
+            <summary>
+            
+            </summary>
+            <param name="filename"></param>
+            <param name="Owner"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Read(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="RARCFile"></param>
+        </member>
+        <member name="M:Hack.io.RARC.RARC.Write(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="RARCFile"></param>
+        </member>
+        <member name="T:Hack.io.RARC.RARC.FileAttribute">
+            <summary>
+            File Attibutes for <see cref="T:Hack.io.RARC.RARC.File"/>
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.FILE">
+            <summary>
+            Indicates this is a File
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.DIRECTORY">
+            <summary>
+            Directory. Not allowed to be used for <see cref="T:Hack.io.RARC.RARC.File"/>s, only here for reference
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.COMPRESSED">
+            <summary>
+            Indicates that this file is compressed
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.PRELOAD_TO_MRAM">
+            <summary>
+            Indicates that this file gets Pre-loaded into Main RAM
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.PRELOAD_TO_ARAM">
+            <summary>
+            Indicates that this file gets Pre-loaded into Auxiliary RAM
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.LOAD_FROM_DVD">
+            <summary>
+            Indicates that this file does not get pre-loaded, but rather read from the DVD
+            </summary>
+        </member>
+        <member name="F:Hack.io.RARC.RARC.FileAttribute.YAZ0_COMPRESSED">
+            <summary>
+            Indicates that this file is YAZ0 Compressed
+            </summary>
+        </member>
+    </members>
+</doc>

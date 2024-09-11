@@ -1,0 +1,42 @@
+Binary Comma Seperated Values|*.bcsv
+SMG Binary Camera Data|*.bcam
+Classic Model Data|*.mdl
+Binary Model Data|*.bmd
+Binary Display List|*.bdl
+Nintendo KCollision|*.kcl
+Nintendo GameCube Collision|*.col
+SMG Collision Codes|*.pa
+Binary Curve Keyframes|*.bck
+Binary Texture Keys|*.btk
+Binary Register Keys|*.brk
+Binary Texture Pattern|*.btp
+Binary Pallete keys|*.bpk
+Binary Visiblilty Animation|*.bva
+Data Table|*.tbl
+Binary Texture Image|*.bti
+Texture Pallete|*.tpl
+Revolution Archive|*.arc
+Binary Animation Table|*.banmt
+Binary Action Sound|*.bas
+Binary Music Sequence|*.bms
+Message Binary Table|*.msbt
+Message Binary Flows|*.msbf
+Binary Messages|*.bmg
+Single JParticle|*.jpa
+JParticle Archive|*.jpc
+Chord Information Table|*.cit
+Binary Revolution Layout|*.brlyt
+Binary Revolution Animation|*.brlan
+Binary Font|*.bfn
+Binary Revolution Font|*.brfnt
+Binary Layout|*.blo
+Yaz0 Encoded File|*.szs
+Plain text|*.txt
+Binary File|*.bin
+Binary Revolution Resources|*.brres
+Kart Map|*.kmp
+Binary Mii Material|*.bmm
+Binary Revolution Effect|*.breff
+Binary Revolution Effect Textures|*.breft
+Binary Light|*.blight
+Binary Light Map|*.blmap
