@@ -1,0 +1,24 @@
+{
+	"FileSelect": "SYS - File Select",
+	"LifeParadeGalaxy": "SYS - Prologue",
+	"DeathParadeGalaxy": "SYS - Game Over",
+	"StaffRollGalaxy": "SYS - Credits",
+	
+	"HubworldGalaxy": "HUB - Starry Observatory",
+    
+	"HackioHeightsGalaxy": "1 - Floaty Heights Galaxy",
+	"YosshiHighlandGalaxy": "2 - Yoshi Hills Galaxy",
+	"IceSpaceGalaxy": "3 - Solar Freeze Galaxy",
+	"AbekobeFactoryGalaxy": "4 - Toybox Galaxy",
+    	"SunBeachExGalaxy": "5 - Sunset Beach Galaxy",
+	"HellWaterfallGalaxy": "6 - Magma Falls Galaxy",
+	"VsKoopaCannonFleetGalaxy": "7 - Bowser's Dreadnought",
+    
+    "AcornCapGalaxy": "EX-1 - Sundown Sweat Galaxy",
+    "OceanFloatyLandExGalaxy": "EX-2 - Buoy Bowl Galaxy",
+    "DarkCastleExGalaxy" : "EX-3 - Cloudy Plains Galaxy",
+    "BattleShipGliderExGalaxy": "EX-4 - Soaring Sands Galaxy",
+    "DepthLiquidExGalaxy": "EX-5 - Bubble Boil Galaxy",
+    "StarDustRedBlueExGalaxy": "EX-6 - Swap Space Galaxy",
+    "FinalKingGalaxy" : "EX-7 - Grand Finale Galaxy"
+}
