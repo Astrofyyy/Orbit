@@ -27,21 +27,21 @@ class UnifiedPaintPanel:
 
     @staticmethod
     def paint_settings(context):
-        toolsettings = context.tool_settings
+        tool_settings = context.tool_settings
 
         if context.sculpt_object:
-            return toolsettings.sculpt
+            return tool_settings.sculpt
         elif context.vertex_paint_object:
-            return toolsettings.vertex_paint
+            return tool_settings.vertex_paint
         elif context.weight_paint_object:
-            return toolsettings.weight_paint
+            return tool_settings.weight_paint
         elif context.image_paint_object:
-            if (toolsettings.image_paint and toolsettings.image_paint.detect_data()):
-                return toolsettings.image_paint
+            if (tool_settings.image_paint and tool_settings.image_paint.detect_data()):
+                return tool_settings.image_paint
 
             return None
         elif context.particle_edit_object:
-            return toolsettings.particle_edit
+            return tool_settings.particle_edit
 
         return None
 
@@ -126,7 +126,7 @@ def brush_texpaint_common(panel, context, layout, brush, settings, projpaint=Fal
                     col.prop(brush, "gradient_stroke_mode", text="Mode")
                     if brush.gradient_stroke_mode in {'SPACING_REPEAT', 'SPACING_CLAMP'}:
                         col.prop(brush, "grad_spacing")
-                else: # if brush.image_tool == 'FILL':
+                else:  # if brush.image_tool == 'FILL':
                     col.prop(brush, "gradient_fill_mode")
             else:
                 row = col.row(align=True)
@@ -157,9 +157,9 @@ def brush_texpaint_common(panel, context, layout, brush, settings, projpaint=Fal
         col.separator()
         if projpaint:
             if settings.mode == 'MATERIAL':
-                col.prop(settings, "use_clone_layer", text="Clone from paint slot")
+                col.prop(settings, "use_clone_layer", text="Clone from Paint Slot")
             elif settings.mode == 'IMAGE':
-                col.prop(settings, "use_clone_layer", text="Clone from image/UV map")
+                col.prop(settings, "use_clone_layer", text="Clone from Image/UV Map")
 
             if settings.use_clone_layer:
                 ob = context.active_object

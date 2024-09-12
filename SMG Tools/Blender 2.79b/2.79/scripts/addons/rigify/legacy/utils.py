@@ -197,8 +197,8 @@ def copy_bone(obj, bone_name, assign_name=''):
 
         edit_bone_2.use_deform = edit_bone_1.use_deform
         edit_bone_2.bbone_segments = edit_bone_1.bbone_segments
-        edit_bone_2.bbone_in = edit_bone_1.bbone_in
-        edit_bone_2.bbone_out = edit_bone_1.bbone_out
+        edit_bone_2.bbone_easein = edit_bone_1.bbone_easein
+        edit_bone_2.bbone_easeout = edit_bone_1.bbone_easeout
 
         bpy.ops.object.mode_set(mode='OBJECT')
 
@@ -749,7 +749,7 @@ def has_connected_children(bone):
 
 
 def get_layers(layers):
-    """ Does it's best to exctract a set of layers from any data thrown at it.
+    """ Does it's best to extract a set of layers from any data thrown at it.
     """
     if type(layers) == int:
         return [x == layers for x in range(0, 32)]

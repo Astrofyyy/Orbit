@@ -3,7 +3,10 @@ from tokenize import (tokenize, _tokenize, untokenize, NUMBER, NAME, OP,
                      STRING, ENDMARKER, ENCODING, tok_name, detect_encoding,
                      open as tokenize_open, Untokenizer)
 from io import BytesIO
+import unittest
 from unittest import TestCase, mock
+from test.test_grammar import (VALID_UNDERSCORE_LITERALS,
+                               INVALID_UNDERSCORE_LITERALS)
 import os
 import token
 
@@ -24,8 +27,7 @@ class TokenizeTest(TestCase):
             if type == ENDMARKER:
                 break
             type = tok_name[type]
-            result.append("    %(type)-10.10s %(token)-13.13r %(start)s %(end)s" %
-                          locals())
+            result.append(f"    {type:10} {token!r:13} {start} {end}")
         self.assertEqual(result,
                          ["    ENCODING   'utf-8'       (0, 0) (0, 0)"] +
                          expected.rstrip().splitlines())
@@ -38,6 +40,7 @@ class TokenizeTest(TestCase):
     """)
         self.check_tokenize("if False:\n"
                             "    # NL\n"
+                            "    \n"
                             "    True = False # NEWLINE\n", """\
     NAME       'if'          (1, 0) (1, 2)
     NAME       'False'       (1, 3) (1, 8)
@@ -45,13 +48,14 @@ class TokenizeTest(TestCase):
     NEWLINE    '\\n'          (1, 9) (1, 10)
     COMMENT    '# NL'        (2, 4) (2, 8)
     NL         '\\n'          (2, 8) (2, 9)
-    INDENT     '    '        (3, 0) (3, 4)
-    NAME       'True'        (3, 4) (3, 8)
-    OP         '='           (3, 9) (3, 10)
-    NAME       'False'       (3, 11) (3, 16)
-    COMMENT    '# NEWLINE'   (3, 17) (3, 26)
-    NEWLINE    '\\n'          (3, 26) (3, 27)
-    DEDENT     ''            (4, 0) (4, 0)
+    NL         '\\n'          (3, 4) (3, 5)
+    INDENT     '    '        (4, 0) (4, 4)
+    NAME       'True'        (4, 4) (4, 8)
+    OP         '='           (4, 9) (4, 10)
+    NAME       'False'       (4, 11) (4, 16)
+    COMMENT    '# NEWLINE'   (4, 17) (4, 26)
+    NEWLINE    '\\n'          (4, 26) (4, 27)
+    DEDENT     ''            (5, 0) (5, 0)
     """)
         indent_error_file = b"""\
 def k(x):
@@ -132,18 +136,18 @@ def k(x):
         self.check_tokenize("x = 0xfffffffffff", """\
     NAME       'x'           (1, 0) (1, 1)
     OP         '='           (1, 2) (1, 3)
-    NUMBER     '0xffffffffff (1, 4) (1, 17)
+    NUMBER     '0xfffffffffff' (1, 4) (1, 17)
     """)
         self.check_tokenize("x = 123141242151251616110", """\
     NAME       'x'           (1, 0) (1, 1)
     OP         '='           (1, 2) (1, 3)
-    NUMBER     '123141242151 (1, 4) (1, 25)
+    NUMBER     '123141242151251616110' (1, 4) (1, 25)
     """)
         self.check_tokenize("x = -15921590215012591", """\
     NAME       'x'           (1, 0) (1, 1)
     OP         '='           (1, 2) (1, 3)
     OP         '-'           (1, 4) (1, 5)
-    NUMBER     '159215902150 (1, 5) (1, 22)
+    NUMBER     '15921590215012591' (1, 5) (1, 22)
     """)
 
     def test_float(self):
@@ -185,6 +189,21 @@ def k(x):
     OP         '='           (1, 2) (1, 3)
     NUMBER     '3.14e159'    (1, 4) (1, 12)
     """)
+
+    def test_underscore_literals(self):
+        def number_token(s):
+            f = BytesIO(s.encode('utf-8'))
+            for toktype, token, start, end, line in tokenize(f.readline):
+                if toktype == NUMBER:
+                    return token
+            return 'invalid token'
+        for lit in VALID_UNDERSCORE_LITERALS:
+            if '(' in lit:
+                # this won't work with compound complex inputs
+                continue
+            self.assertEqual(number_token(lit), lit)
+        for lit in INVALID_UNDERSCORE_LITERALS:
+            self.assertNotEqual(number_token(lit), lit)
 
     def test_string(self):
         # String literals
@@ -307,6 +326,50 @@ def k(x):
     OP         '+'           (1, 28) (1, 29)
     STRING     'RB"abc"'     (1, 30) (1, 37)
     """)
+        # Check 0, 1, and 2 character string prefixes.
+        self.check_tokenize(r'"a\
+de\
+fg"', """\
+    STRING     '"a\\\\\\nde\\\\\\nfg"\' (1, 0) (3, 3)
+    """)
+        self.check_tokenize(r'u"a\
+de"', """\
+    STRING     'u"a\\\\\\nde"\'  (1, 0) (2, 3)
+    """)
+        self.check_tokenize(r'rb"a\
+d"', """\
+    STRING     'rb"a\\\\\\nd"\'  (1, 0) (2, 2)
+    """)
+        self.check_tokenize(r'"""a\
+b"""', """\
+    STRING     '\"\""a\\\\\\nb\"\""' (1, 0) (2, 4)
+    """)
+        self.check_tokenize(r'u"""a\
+b"""', """\
+    STRING     'u\"\""a\\\\\\nb\"\""' (1, 0) (2, 4)
+    """)
+        self.check_tokenize(r'rb"""a\
+b\
+c"""', """\
+    STRING     'rb"\""a\\\\\\nb\\\\\\nc"\""' (1, 0) (3, 4)
+    """)
+        self.check_tokenize('f"abc"', """\
+    STRING     'f"abc"'      (1, 0) (1, 6)
+    """)
+        self.check_tokenize('fR"a{b}c"', """\
+    STRING     'fR"a{b}c"'   (1, 0) (1, 9)
+    """)
+        self.check_tokenize('f"""abc"""', """\
+    STRING     'f\"\"\"abc\"\"\"'  (1, 0) (1, 10)
+    """)
+        self.check_tokenize(r'f"abc\
+def"', """\
+    STRING     'f"abc\\\\\\ndef"' (1, 0) (2, 4)
+    """)
+        self.check_tokenize(r'Rf"abc\
+def"', """\
+    STRING     'Rf"abc\\\\\\ndef"' (1, 0) (2, 4)
+    """)
 
     def test_function(self):
         self.check_tokenize("def d22(a, b, c=2, d=2, *k): pass", """\
@@ -347,6 +410,25 @@ def k(x):
     OP         ')'           (1, 22) (1, 23)
     OP         ':'           (1, 23) (1, 24)
     NAME       'pass'        (1, 25) (1, 29)
+    """)
+        self.check_tokenize("def d23(a: str, b: int=3) -> int: pass", """\
+    NAME       'def'         (1, 0) (1, 3)
+    NAME       'd23'         (1, 4) (1, 7)
+    OP         '('           (1, 7) (1, 8)
+    NAME       'a'           (1, 8) (1, 9)
+    OP         ':'           (1, 9) (1, 10)
+    NAME       'str'         (1, 11) (1, 14)
+    OP         ','           (1, 14) (1, 15)
+    NAME       'b'           (1, 16) (1, 17)
+    OP         ':'           (1, 17) (1, 18)
+    NAME       'int'         (1, 19) (1, 22)
+    OP         '='           (1, 22) (1, 23)
+    NUMBER     '3'           (1, 23) (1, 24)
+    OP         ')'           (1, 24) (1, 25)
+    OP         '->'          (1, 26) (1, 28)
+    NAME       'int'         (1, 29) (1, 32)
+    OP         ':'           (1, 32) (1, 33)
+    NAME       'pass'        (1, 34) (1, 38)
     """)
 
     def test_comparison(self):
@@ -505,7 +587,7 @@ def k(x):
         # Methods
         self.check_tokenize("@staticmethod\ndef foo(x,y): pass", """\
     OP         '@'           (1, 0) (1, 1)
-    NAME       'staticmethod (1, 1) (1, 13)
+    NAME       'staticmethod' (1, 1) (1, 13)
     NEWLINE    '\\n'          (1, 13) (1, 14)
     NAME       'def'         (2, 0) (2, 3)
     NAME       'foo'         (2, 4) (2, 7)
@@ -677,7 +759,7 @@ def k(x):
     """)
 
         self.check_tokenize("async def foo(): pass", """\
-    ASYNC      'async'       (1, 0) (1, 5)
+    NAME       'async'       (1, 0) (1, 5)
     NAME       'def'         (1, 6) (1, 9)
     NAME       'foo'         (1, 10) (1, 13)
     OP         '('           (1, 13) (1, 14)
@@ -694,7 +776,7 @@ async def foo():
     await
 async += 1
 ''', """\
-    ASYNC      'async'       (1, 0) (1, 5)
+    NAME       'async'       (1, 0) (1, 5)
     NAME       'def'         (1, 6) (1, 9)
     NAME       'foo'         (1, 10) (1, 13)
     OP         '('           (1, 13) (1, 14)
@@ -705,12 +787,12 @@ async += 1
     NAME       'def'         (2, 2) (2, 5)
     NAME       'foo'         (2, 6) (2, 9)
     OP         '('           (2, 9) (2, 10)
-    AWAIT      'await'       (2, 10) (2, 15)
+    NAME       'await'       (2, 10) (2, 15)
     OP         ')'           (2, 15) (2, 16)
     OP         ':'           (2, 16) (2, 17)
     NEWLINE    '\\n'          (2, 17) (2, 18)
     INDENT     '    '        (3, 0) (3, 4)
-    AWAIT      'await'       (3, 4) (3, 9)
+    NAME       'await'       (3, 4) (3, 9)
     OP         '='           (3, 10) (3, 11)
     NUMBER     '1'           (3, 12) (3, 13)
     NEWLINE    '\\n'          (3, 13) (3, 14)
@@ -720,7 +802,7 @@ async += 1
     OP         ':'           (4, 6) (4, 7)
     NEWLINE    '\\n'          (4, 7) (4, 8)
     INDENT     '    '        (5, 0) (5, 4)
-    AWAIT      'await'       (5, 4) (5, 9)
+    NAME       'await'       (5, 4) (5, 9)
     NEWLINE    '\\n'          (5, 9) (5, 10)
     DEDENT     ''            (6, 0) (6, 0)
     DEDENT     ''            (6, 0) (6, 0)
@@ -733,7 +815,7 @@ async += 1
         self.check_tokenize('''\
 async def foo():
   async for i in 1: pass''', """\
-    ASYNC      'async'       (1, 0) (1, 5)
+    NAME       'async'       (1, 0) (1, 5)
     NAME       'def'         (1, 6) (1, 9)
     NAME       'foo'         (1, 10) (1, 13)
     OP         '('           (1, 13) (1, 14)
@@ -741,7 +823,7 @@ async def foo():
     OP         ':'           (1, 15) (1, 16)
     NEWLINE    '\\n'          (1, 16) (1, 17)
     INDENT     '  '          (2, 0) (2, 2)
-    ASYNC      'async'       (2, 2) (2, 7)
+    NAME       'async'       (2, 2) (2, 7)
     NAME       'for'         (2, 8) (2, 11)
     NAME       'i'           (2, 12) (2, 13)
     NAME       'in'          (2, 14) (2, 16)
@@ -752,14 +834,14 @@ async def foo():
     """)
 
         self.check_tokenize('''async def foo(async): await''', """\
-    ASYNC      'async'       (1, 0) (1, 5)
+    NAME       'async'       (1, 0) (1, 5)
     NAME       'def'         (1, 6) (1, 9)
     NAME       'foo'         (1, 10) (1, 13)
     OP         '('           (1, 13) (1, 14)
-    ASYNC      'async'       (1, 14) (1, 19)
+    NAME       'async'       (1, 14) (1, 19)
     OP         ')'           (1, 19) (1, 20)
     OP         ':'           (1, 20) (1, 21)
-    AWAIT      'await'       (1, 22) (1, 27)
+    NAME       'await'       (1, 22) (1, 27)
     """)
 
         self.check_tokenize('''\
@@ -784,7 +866,7 @@ def f():
     OP         ':'           (3, 11) (3, 12)
     NAME       'pass'        (3, 13) (3, 17)
     NEWLINE    '\\n'          (3, 17) (3, 18)
-    ASYNC      'async'       (4, 2) (4, 7)
+    NAME       'async'       (4, 2) (4, 7)
     NAME       'def'         (4, 8) (4, 11)
     NAME       'bar'         (4, 12) (4, 15)
     OP         '('           (4, 15) (4, 16)
@@ -806,7 +888,7 @@ async def f():
   async def bar(): pass
 
   await = 2''', """\
-    ASYNC      'async'       (1, 0) (1, 5)
+    NAME       'async'       (1, 0) (1, 5)
     NAME       'def'         (1, 6) (1, 9)
     NAME       'f'           (1, 10) (1, 11)
     OP         '('           (1, 11) (1, 12)
@@ -822,7 +904,7 @@ async def f():
     OP         ':'           (3, 11) (3, 12)
     NAME       'pass'        (3, 13) (3, 17)
     NEWLINE    '\\n'          (3, 17) (3, 18)
-    ASYNC      'async'       (4, 2) (4, 7)
+    NAME       'async'       (4, 2) (4, 7)
     NAME       'def'         (4, 8) (4, 11)
     NAME       'bar'         (4, 12) (4, 15)
     OP         '('           (4, 15) (4, 16)
@@ -831,7 +913,7 @@ async def f():
     NAME       'pass'        (4, 19) (4, 23)
     NEWLINE    '\\n'          (4, 23) (4, 24)
     NL         '\\n'          (5, 0) (5, 1)
-    AWAIT      'await'       (6, 2) (6, 7)
+    NAME       'await'       (6, 2) (6, 7)
     OP         '='           (6, 8) (6, 9)
     NUMBER     '2'           (6, 10) (6, 11)
     DEDENT     ''            (7, 0) (7, 0)
@@ -1262,13 +1344,13 @@ class TestTokenize(TestCase):
         tokens = list(tokenize(BytesIO(opstr.encode('utf-8')).readline))
         num_optypes = len(optypes)
         self.assertEqual(len(tokens), 2 + num_optypes)
-        self.assertEqual(token.tok_name[tokens[0].exact_type],
-                         token.tok_name[ENCODING])
+        self.assertEqual(tok_name[tokens[0].exact_type],
+                         tok_name[ENCODING])
         for i in range(num_optypes):
-            self.assertEqual(token.tok_name[tokens[i + 1].exact_type],
-                             token.tok_name[optypes[i]])
-        self.assertEqual(token.tok_name[tokens[1 + num_optypes].exact_type],
-                         token.tok_name[token.ENDMARKER])
+            self.assertEqual(tok_name[tokens[i + 1].exact_type],
+                             tok_name[optypes[i]])
+        self.assertEqual(tok_name[tokens[1 + num_optypes].exact_type],
+                         tok_name[token.ENDMARKER])
 
     def test_exact_type(self):
         self.assertExactTypeEqual('()', token.LPAR, token.RPAR)
@@ -1311,6 +1393,8 @@ class TestTokenize(TestCase):
         self.assertExactTypeEqual('**=', token.DOUBLESTAREQUAL)
         self.assertExactTypeEqual('//', token.DOUBLESLASH)
         self.assertExactTypeEqual('//=', token.DOUBLESLASHEQUAL)
+        self.assertExactTypeEqual('...', token.ELLIPSIS)
+        self.assertExactTypeEqual('->', token.RARROW)
         self.assertExactTypeEqual('@', token.AT)
         self.assertExactTypeEqual('@=', token.ATEQUAL)
 
@@ -1488,10 +1572,10 @@ class TestRoundtrip(TestCase):
 
         # Tokenize is broken on test_pep3131.py because regular expressions are
         # broken on the obscure unicode identifiers in it. *sigh*
-        # With roundtrip extended to test the 5-tuple mode of  untokenize,
+        # With roundtrip extended to test the 5-tuple mode of untokenize,
         # 7 more testfiles fail.  Remove them also until the failure is diagnosed.
 
-        testfiles.remove(os.path.join(tempdir, "test_pep3131.py"))
+        testfiles.remove(os.path.join(tempdir, "test_unicode_identifiers.py"))
         for f in ('buffer', 'builtin', 'fileio', 'inspect', 'os', 'platform', 'sys'):
             testfiles.remove(os.path.join(tempdir, "test_%s.py") % f)
 

@@ -646,7 +646,7 @@ class OffsetEdges(Operator):
             row.prop(self, 'edge_rail_only_end', text="OnlyEnd", toggle=True)
 
         layout.prop(self, 'mirror_modifier')
-        # layout.operator('mesh.offset_edges', text="Repeat")  # for 2.79a, Crashing...
+        layout.operator('mesh.offset_edges', text="Repeat")
 
         if self.follow_face:
             layout.separator()
@@ -786,7 +786,7 @@ class OffsetEdges(Operator):
 
     def restore_original_and_free(self, context):
         self.caches_valid = False  # Make caches invalid
-        context.area.header_text_set()
+        context.area.header_text_set("")
 
         me = context.edit_object.data
         bpy.ops.object.mode_set(mode="OBJECT")
@@ -794,7 +794,7 @@ class OffsetEdges(Operator):
         bpy.ops.object.mode_set(mode="EDIT")
 
         self._bm_orig.free()
-        context.area.header_text_set()
+        context.area.header_text_set("")
 
     def invoke(self, context, event):
         # In edit mode

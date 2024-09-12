@@ -1,6 +1,5 @@
 import os
 import sys
-import builtins
 import contextlib
 import importlib.util
 import inspect
@@ -12,6 +11,7 @@ import pkgutil
 import re
 import stat
 import string
+import tempfile
 import test.support
 import time
 import types
@@ -21,6 +21,7 @@ import urllib.parse
 import xml.etree
 import xml.etree.ElementTree
 import textwrap
+import threading
 from io import StringIO
 from collections import namedtuple
 from test.support.script_helper import assert_python_ok
@@ -31,10 +32,6 @@ from test.support import (
 )
 from test import pydoc_mod
 
-try:
-    import threading
-except ImportError:
-    threading = None
 
 class nonascii:
     'Це не латиниця'
@@ -84,6 +81,8 @@ CLASSES
      |  Data and other attributes defined here:
      |\x20\x20
      |  NO_MEANING = 'eggs'
+     |\x20\x20
+     |  __annotations__ = {'NO_MEANING': <class 'str'>}
 \x20\x20\x20\x20
     class C(builtins.object)
      |  Methods defined here:
@@ -196,6 +195,8 @@ Data descriptors defined here:<br>
 Data and other attributes defined here:<br>
 <dl><dt><strong>NO_MEANING</strong> = 'eggs'</dl>
 
+<dl><dt><strong>__annotations__</strong> = {'NO_MEANING': &lt;class 'str'&gt;}</dl>
+
 </td></tr></table> <p>
 <table width="100%%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -264,7 +265,7 @@ Use help() to get the interactive help utility.
 Use help(str) for help on the str class.'''.replace('\n', os.linesep)
 
 # output pattern for module with bad imports
-badimport_pattern = "problem in %s - ImportError: No module named %r"
+badimport_pattern = "problem in %s - ModuleNotFoundError: No module named %r"
 
 expected_dynamicattribute_pattern = """
 Help on class DA in module %s:
@@ -639,8 +640,9 @@ class PydocDocTest(unittest.TestCase):
         del expected['__doc__']
         del expected['__class__']
         # inspect resolves descriptors on type into methods, but vars doesn't,
-        # so we need to update __subclasshook__.
+        # so we need to update __subclasshook__ and __init_subclass__.
         expected['__subclasshook__'] = TestClass.__subclasshook__
+        expected['__init_subclass__'] = TestClass.__init_subclass__
 
         methods = pydoc.allmethods(TestClass)
         self.assertDictEqual(methods, expected)
@@ -823,10 +825,10 @@ class TestDescriptions(unittest.TestCase):
         T = typing.TypeVar('T')
         class C(typing.Generic[T], typing.Mapping[int, str]): ...
         self.assertEqual(pydoc.render_doc(foo).splitlines()[-1],
-                         'f\x08fo\x08oo\x08o(data:List[Any], x:int)'
+                         'f\x08fo\x08oo\x08o(data: List[Any], x: int)'
                          ' -> Iterator[Tuple[int, Any]]')
         self.assertEqual(pydoc.render_doc(C).splitlines()[2],
-                         'class C\x08C(typing.Mapping)')
+                         'class C\x08C(collections.abc.Mapping, typing.Generic)')
 
     def test_builtin(self):
         for name in ('str', 'str.translate', 'builtins.str',
@@ -868,6 +870,22 @@ class TestDescriptions(unittest.TestCase):
         self.assertEqual(self._get_summary_line(t.wrap),
             "wrap(text) method of textwrap.TextWrapper instance")
 
+    def test_field_order_for_named_tuples(self):
+        Person = namedtuple('Person', ['nickname', 'firstname', 'agegroup'])
+        s = pydoc.render_doc(Person)
+        self.assertLess(s.index('nickname'), s.index('firstname'))
+        self.assertLess(s.index('firstname'), s.index('agegroup'))
+
+        class NonIterableFields:
+            _fields = None
+
+        class NonHashableFields:
+            _fields = [[]]
+
+        # Make sure these doesn't fail
+        pydoc.render_doc(NonIterableFields)
+        pydoc.render_doc(NonHashableFields)
+
     @requires_docstrings
     def test_bound_builtin_method(self):
         s = StringIO()
@@ -882,7 +900,6 @@ class TestDescriptions(unittest.TestCase):
             "stat(path, *, dir_fd=None, follow_symlinks=True)")
 
 
-@unittest.skipUnless(threading, 'Threading required for this test.')
 class PydocServerTest(unittest.TestCase):
     """Tests for pydoc._start_server"""
 
@@ -893,8 +910,8 @@ class PydocServerTest(unittest.TestCase):
             text = 'the URL sent was: (%s, %s)' % (url, content_type)
             return text
 
-        serverthread = pydoc._start_server(my_url_handler, port=0)
-        self.assertIn('localhost', serverthread.docserver.address)
+        serverthread = pydoc._start_server(my_url_handler, hostname='0.0.0.0', port=0)
+        self.assertIn('0.0.0.0', serverthread.docserver.address)
 
         starttime = time.time()
         timeout = 1  #seconds
@@ -1068,6 +1085,71 @@ class PydocWithMetaClasses(unittest.TestCase):
         self.assertIn('class Enum', helptext)
 
 
+class TestInternalUtilities(unittest.TestCase):
+
+    def setUp(self):
+        tmpdir = tempfile.TemporaryDirectory()
+        self.argv0dir = tmpdir.name
+        self.argv0 = os.path.join(tmpdir.name, "nonexistent")
+        self.addCleanup(tmpdir.cleanup)
+        self.abs_curdir = abs_curdir = os.getcwd()
+        self.curdir_spellings = ["", os.curdir, abs_curdir]
+
+    def _get_revised_path(self, given_path, argv0=None):
+        # Checking that pydoc.cli() actually calls pydoc._get_revised_path()
+        # is handled via code review (at least for now).
+        if argv0 is None:
+            argv0 = self.argv0
+        return pydoc._get_revised_path(given_path, argv0)
+
+    def _get_starting_path(self):
+        # Get a copy of sys.path without the current directory.
+        clean_path = sys.path.copy()
+        for spelling in self.curdir_spellings:
+            for __ in range(clean_path.count(spelling)):
+                clean_path.remove(spelling)
+        return clean_path
+
+    def test_sys_path_adjustment_adds_missing_curdir(self):
+        clean_path = self._get_starting_path()
+        expected_path = [self.abs_curdir] + clean_path
+        self.assertEqual(self._get_revised_path(clean_path), expected_path)
+
+    def test_sys_path_adjustment_removes_argv0_dir(self):
+        clean_path = self._get_starting_path()
+        expected_path = [self.abs_curdir] + clean_path
+        leading_argv0dir = [self.argv0dir] + clean_path
+        self.assertEqual(self._get_revised_path(leading_argv0dir), expected_path)
+        trailing_argv0dir = clean_path + [self.argv0dir]
+        self.assertEqual(self._get_revised_path(trailing_argv0dir), expected_path)
+
+
+    def test_sys_path_adjustment_protects_pydoc_dir(self):
+        def _get_revised_path(given_path):
+            return self._get_revised_path(given_path, argv0=pydoc.__file__)
+        clean_path = self._get_starting_path()
+        leading_argv0dir = [self.argv0dir] + clean_path
+        expected_path = [self.abs_curdir] + leading_argv0dir
+        self.assertEqual(_get_revised_path(leading_argv0dir), expected_path)
+        trailing_argv0dir = clean_path + [self.argv0dir]
+        expected_path = [self.abs_curdir] + trailing_argv0dir
+        self.assertEqual(_get_revised_path(trailing_argv0dir), expected_path)
+
+    def test_sys_path_adjustment_when_curdir_already_included(self):
+        clean_path = self._get_starting_path()
+        for spelling in self.curdir_spellings:
+            with self.subTest(curdir_spelling=spelling):
+                # If curdir is already present, no alterations are made at all
+                leading_curdir = [spelling] + clean_path
+                self.assertIsNone(self._get_revised_path(leading_curdir))
+                trailing_curdir = clean_path + [spelling]
+                self.assertIsNone(self._get_revised_path(trailing_curdir))
+                leading_argv0dir = [self.argv0dir] + leading_curdir
+                self.assertIsNone(self._get_revised_path(leading_argv0dir))
+                trailing_argv0dir = trailing_curdir + [self.argv0dir]
+                self.assertIsNone(self._get_revised_path(trailing_argv0dir))
+
+
 @reap_threads
 def test_main():
     try:
@@ -1078,6 +1160,7 @@ def test_main():
                                   PydocUrlHandlerTest,
                                   TestHelper,
                                   PydocWithMetaClasses,
+                                  TestInternalUtilities,
                                   )
     finally:
         reap_children()

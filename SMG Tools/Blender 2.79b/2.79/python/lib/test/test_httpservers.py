@@ -14,15 +14,21 @@ import re
 import base64
 import ntpath
 import shutil
-import urllib.parse
+import email.message
+import email.utils
 import html
 import http.client
+import urllib.parse
 import tempfile
+import time
+import datetime
+import threading
+from unittest import mock
 from io import BytesIO
 
 import unittest
 from test import support
-threading = support.import_module('threading')
+
 
 class NoLogRequestHandler:
     def log_message(self, *args):
@@ -51,6 +57,7 @@ class TestServerThread(threading.Thread):
 
     def stop(self):
         self.server.shutdown()
+        self.join()
 
 
 class BaseTestCase(unittest.TestCase):
@@ -189,7 +196,7 @@ class BaseHTTPServerTestCase(BaseTestCase):
         res = self.con.getresponse()
         self.assertEqual(res.status, HTTPStatus.NOT_IMPLEMENTED)
 
-    def test_head_keep_alive(self):
+    def test_header_keep_alive(self):
         self.con._http_vsn_str = 'HTTP/1.1'
         self.con.putrequest('GET', '/')
         self.con.putheader('Connection', 'keep-alive')
@@ -330,8 +337,17 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.tempdir = tempfile.mkdtemp(dir=basetempdir)
         self.tempdir_name = os.path.basename(self.tempdir)
         self.base_url = '/' + self.tempdir_name
-        with open(os.path.join(self.tempdir, 'test'), 'wb') as temp:
+        tempname = os.path.join(self.tempdir, 'test')
+        with open(tempname, 'wb') as temp:
             temp.write(self.data)
+            temp.flush()
+        mtime = os.stat(tempname).st_mtime
+        # compute last modification datetime for browser cache tests
+        last_modif = datetime.datetime.fromtimestamp(mtime,
+            datetime.timezone.utc)
+        self.last_modif_datetime = last_modif.replace(microsecond=0)
+        self.last_modif_header = email.utils.formatdate(
+            last_modif.timestamp(), usegmt=True)
 
     def tearDown(self):
         try:
@@ -368,7 +384,10 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         reader.close()
         return body
 
-    @support.requires_mac_ver(10, 5)
+    @unittest.skipIf(sys.platform == 'darwin',
+                     'undecodable name cannot always be decoded on macOS')
+    @unittest.skipIf(sys.platform == 'win32',
+                     'undecodable name cannot be decoded on win32')
     @unittest.skipUnless(support.TESTFN_UNDECODABLE,
                          'need support.TESTFN_UNDECODABLE')
     def test_undecodable_filename(self):
@@ -388,7 +407,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         quotedname = urllib.parse.quote(filename, errors='surrogatepass')
         self.assertIn(('href="%s"' % quotedname)
                       .encode(enc, 'surrogateescape'), body)
-        self.assertIn(('>%s<' % html.escape(filename))
+        self.assertIn(('>%s<' % html.escape(filename, quote=False))
                       .encode(enc, 'surrogateescape'), body)
         response = self.request(self.base_url + '/' + quotedname)
         self.check_status_and_reason(response, HTTPStatus.OK,
@@ -441,6 +460,44 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.assertEqual(response.getheader('content-type'),
                          'application/octet-stream')
 
+    def test_browser_cache(self):
+        """Check that when a request to /test is sent with the request header
+        If-Modified-Since set to date of last modification, the server returns
+        status code 304, not 200
+        """
+        headers = email.message.Message()
+        headers['If-Modified-Since'] = self.last_modif_header
+        response = self.request(self.base_url + '/test', headers=headers)
+        self.check_status_and_reason(response, HTTPStatus.NOT_MODIFIED)
+
+        # one hour after last modification : must return 304
+        new_dt = self.last_modif_datetime + datetime.timedelta(hours=1)
+        headers = email.message.Message()
+        headers['If-Modified-Since'] = email.utils.format_datetime(new_dt,
+            usegmt=True)
+        response = self.request(self.base_url + '/test', headers=headers)
+        self.check_status_and_reason(response, HTTPStatus.NOT_MODIFIED)
+
+    def test_browser_cache_file_changed(self):
+        # with If-Modified-Since earlier than Last-Modified, must return 200
+        dt = self.last_modif_datetime
+        # build datetime object : 365 days before last modification
+        old_dt = dt - datetime.timedelta(days=365)
+        headers = email.message.Message()
+        headers['If-Modified-Since'] = email.utils.format_datetime(old_dt,
+            usegmt=True)
+        response = self.request(self.base_url + '/test', headers=headers)
+        self.check_status_and_reason(response, HTTPStatus.OK)
+
+    def test_browser_cache_with_If_None_Match_header(self):
+        # if If-None-Match header is present, ignore If-Modified-Since
+
+        headers = email.message.Message()
+        headers['If-Modified-Since'] = self.last_modif_header
+        headers['If-None-Match'] = "*"
+        response = self.request(self.base_url + '/test', headers=headers)
+        self.check_status_and_reason(response, HTTPStatus.OK)
+
     def test_invalid_requests(self):
         response = self.request('/', method='FOO')
         self.check_status_and_reason(response, HTTPStatus.NOT_IMPLEMENTED)
@@ -449,6 +506,15 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.check_status_and_reason(response, HTTPStatus.NOT_IMPLEMENTED)
         response = self.request('/', method='GETs')
         self.check_status_and_reason(response, HTTPStatus.NOT_IMPLEMENTED)
+
+    def test_last_modified(self):
+        """Checks that the datetime returned in Last-Modified response header
+        is the actual datetime of last modification, rounded to the second
+        """
+        response = self.request(self.base_url + '/test')
+        self.check_status_and_reason(response, HTTPStatus.OK, data=self.data)
+        last_modif_header = response.headers['Last-modified']
+        self.assertEqual(last_modif_header, self.last_modif_header)
 
     def test_path_without_leading_slash(self):
         response = self.request(self.tempdir_name + '/test')
@@ -465,6 +531,27 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.check_status_and_reason(response, HTTPStatus.MOVED_PERMANENTLY)
         self.assertEqual(response.getheader("Location"),
                          self.tempdir_name + "/?hi=1")
+
+    def test_html_escape_filename(self):
+        filename = '<test&>.txt'
+        fullpath = os.path.join(self.tempdir, filename)
+
+        try:
+            open(fullpath, 'w').close()
+        except OSError:
+            raise unittest.SkipTest('Can not create file %s on current file '
+                                    'system' % filename)
+
+        try:
+            response = self.request(self.base_url + '/')
+            body = self.check_status_and_reason(response, HTTPStatus.OK)
+            enc = response.headers.get_content_charset()
+        finally:
+            os.unlink(fullpath)  # avoid affecting test_undecodable_filename
+
+        self.assertIsNotNone(enc)
+        html_text = '>%s<' % html.escape(filename, quote=False)
+        self.assertIn(html_text.encode(enc), body)
 
 
 cgi_file1 = """\
@@ -701,7 +788,11 @@ class CGIHTTPServerTestCase(BaseTestCase):
 
 
 class SocketlessRequestHandler(SimpleHTTPRequestHandler):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        request = mock.Mock()
+        request.makefile.return_value = BytesIO()
+        super().__init__(request, None, None)
+
         self.get_called = False
         self.protocol_version = "HTTP/1.1"
 
@@ -797,6 +888,16 @@ class BaseHTTPRequestHandlerTestCase(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], b'<html><body>Data</body></html>\r\n')
         self.verify_get_called()
+
+    def test_extra_space(self):
+        result = self.send_typical_request(
+            b'GET /spaced out HTTP/1.1\r\n'
+            b'Host: dummy\r\n'
+            b'\r\n'
+        )
+        self.assertTrue(result[0].startswith(b'HTTP/1.1 400 '))
+        self.verify_expected_headers(result[1:result.index(b'\r\n')])
+        self.assertFalse(self.handler.get_called)
 
     def test_with_continue_1_0(self):
         result = self.send_typical_request(b'GET / HTTP/1.0\r\nExpect: 100-continue\r\n\r\n')
@@ -916,7 +1017,7 @@ class BaseHTTPRequestHandlerTestCase(unittest.TestCase):
         # Issue #6791: same for headers
         result = self.send_typical_request(
             b'GET / HTTP/1.1\r\nX-Foo: bar' + b'r' * 65537 + b'\r\n\r\n')
-        self.assertEqual(result[0], b'HTTP/1.1 400 Line too long\r\n')
+        self.assertEqual(result[0], b'HTTP/1.1 431 Line too long\r\n')
         self.assertFalse(self.handler.get_called)
         self.assertEqual(self.handler.requestline, 'GET / HTTP/1.1')
 
@@ -926,6 +1027,13 @@ class BaseHTTPRequestHandlerTestCase(unittest.TestCase):
         self.assertEqual(result[0], b'HTTP/1.1 431 Too many headers\r\n')
         self.assertFalse(self.handler.get_called)
         self.assertEqual(self.handler.requestline, 'GET / HTTP/1.1')
+
+    def test_html_escape_on_error(self):
+        result = self.send_typical_request(
+            b'<script>alert("hello")</script> / HTTP/1.1')
+        result = b''.join(result)
+        text = '<script>alert("hello")</script>'
+        self.assertIn(html.escape(text, quote=False).encode('ascii'), result)
 
     def test_close_connection(self):
         # handle_one_request() should be repeatedly called until
@@ -941,6 +1049,19 @@ class BaseHTTPRequestHandlerTestCase(unittest.TestCase):
         close_values = iter((False, False, True))
         self.handler.handle()
         self.assertRaises(StopIteration, next, close_values)
+
+    def test_date_time_string(self):
+        now = time.time()
+        # this is the old code that formats the timestamp
+        year, month, day, hh, mm, ss, wd, y, z = time.gmtime(now)
+        expected = "%s, %02d %3s %4d %02d:%02d:%02d GMT" % (
+            self.handler.weekdayname[wd],
+            day,
+            self.handler.monthname[month],
+            year, hh, mm, ss
+        )
+        self.assertEqual(self.handler.date_time_string(timestamp=now), expected)
+
 
 class SimpleHTTPRequestHandlerTestCase(unittest.TestCase):
     """ Test url parsing """

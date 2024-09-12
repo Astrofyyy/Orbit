@@ -1,6 +1,6 @@
 OpenShadingLanguage 1.00
-# Compiled by oslc 1.7.5
-# options: -q -O2 -IK:/BlenderGit/blender/intern/cycles/kernel/shaders -o K:/BlenderGit/build_windows_Release_x64_vc12_Release/intern/cycles/kernel/shaders/node_wireframe.oso
+# Compiled by oslc 1.9.9
+# options: -q -O2 -IC:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders -o C:/b/win64_cmake_vs2017/win64_cmake_vs2017/build/win64_cmake_vs2017/intern/cycles/kernel/shaders/node_wireframe.oso
 shader node_wireframe
 param	string	bump_offset	"center"		%read{74,156} %write{2147483647,-1}
 param	int	use_pixel_size	0		%read{33,193} %write{2147483647,-1}
@@ -8,18 +8,18 @@ param	float	Size	0.0099999998		%read{48,208} %write{2147483647,-1}
 oparam	float	Fac	0		%read{152,237} %write{3,237}
 global	point	P	%read{34,231} %write{77,159} %derivs
 global	vector	I	%read{36,203} %write{2147483647,-1}
-local	int	___646_np	%read{23,231} %write{5,182}
-local	point[64]	___646_p	%read{53,231} %write{10,186}
-local	float	___646_pixelWidth	%read{49,231} %write{6,210}
-local	float	___649_pixelWidthX	%read{46,206} %write{39,199}
-local	float	___649_pixelWidthY	%read{46,206} %write{45,205}
-local	int	___650_i	%read{53,231} %write{52,231}
-local	int	___651_i2	%read{53,231} %write{53,231}
-local	vector	___651_dir	%read{53,231} %write{53,231}
-local	vector	___651_edge	%read{53,231} %write{53,231}
-local	vector	___651_crs	%read{53,231} %write{53,231}
-local	point	___655_dx	%read{77,153} %write{76,76} %derivs
-local	point	___656_dy	%read{159,235} %write{158,158} %derivs
+local	int	___669_np	%read{23,231} %write{5,182}
+local	point[64]	___669_p	%read{53,231} %write{10,186}
+local	float	___669_pixelWidth	%read{49,231} %write{6,210}
+local	float	___672_pixelWidthX	%read{46,206} %write{39,199}
+local	float	___672_pixelWidthY	%read{46,206} %write{45,205}
+local	int	___673_i	%read{53,231} %write{52,231}
+local	int	___674_i2	%read{53,231} %write{53,231}
+local	vector	___674_dir	%read{53,231} %write{53,231}
+local	vector	___674_edge	%read{53,231} %write{53,231}
+local	vector	___674_crs	%read{53,231} %write{53,231}
+local	point	___678_dx	%read{77,153} %write{76,76} %derivs
+local	point	___679_dy	%read{159,235} %write{158,158} %derivs
 const	string	$const1	"triangles"		%read{7,178} %write{2147483647,-1}
 const	string	$const2	"wireframe"		%read{0,160} %write{2147483647,-1}
 temp	int	$tmp1	%read{2,2} %write{1,1}
@@ -152,39 +152,39 @@ temp	float	$tmp113	%read{236,236} %write{234,234}
 temp	float	$tmp114	%read{236,236} %write{235,235}
 temp	float	$tmp115	%read{237,237} %write{236,236}
 code ___main___
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:26
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:26
 # 	Fac = wireframe("triangles", Size, use_pixel_size);
-	functioncall	$const2 74 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{26} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:43
-#  * * Neither the name of Sony Pictures Imageworks nor the names of its
-	raytype		$tmp1 $const3 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h"} %line{43} %argrw{"wr"}
+	functioncall	$const2 74 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{26} %argrw{"r"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:43
+#    if (raytype("path:diffuse")) return 0.0;
+	raytype		$tmp1 $const3 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h"} %line{43} %argrw{"wr"}
 	if		$tmp1 5 5 	%argrw{"r"}
 	assign		Fac $const4 	%argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:45
-#  *   this software without specific prior written permission.
-	assign		___646_np $const5 	%line{45} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:47
-#  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	assign		___646_pixelWidth $const6 	%line{47} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:49
-#  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:45
+#    int np = 0;
+	assign		___669_np $const5 	%line{45} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:47
+#    float pixelWidth = 1;
+	assign		___669_pixelWidth $const6 	%line{47} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:49
+#    if (edge_type == "triangles")
 	eq		$tmp2 $const1 $const1 	%line{49} %argrw{"wrr"}
 	if		$tmp2 15 33 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:51
-#  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	assign		___646_np $const7 	%line{51} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:52
-#  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	getattribute	$tmp3 $const8 ___646_p 	%line{52} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:51
+#       np = 3;
+	assign		___669_np $const7 	%line{51} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:52
+#       if (!getattribute("geom:trianglevertices", p))
+	getattribute	$tmp3 $const8 ___669_p 	%line{52} %argrw{"wrw"}
 	eq		$tmp4 $tmp3 $const5 	%argrw{"wrr"}
 	if		$tmp4 15 15 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:53
-#  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:53
+#          return 0.0;
 	assign		Fac $const4 	%line{53} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:55
-#  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:55
+#    else if (edge_type == "polygons" || edge_type == "patches")
 	eq		$tmp5 $const1 $const9 	%line{55} %argrw{"wrr"}
 	neq		$tmp6 $tmp5 $const5 	%argrw{"wrr"}
 	if		$tmp6 18 21 	%argrw{"r"}
@@ -192,137 +192,137 @@ code ___main___
 	neq		$tmp8 $tmp7 $const5 	%argrw{"wrr"}
 	assign		$tmp6 $tmp8 	%argrw{"wr"}
 	if		$tmp6 33 33 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:57
-#  */
-	getattribute	$tmp9 $const11 ___646_np 	%line{57} %argrw{"wrw"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:58
-# 
-	lt		$tmp10 ___646_np $const7 	%line{58} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:57
+#       getattribute("geom:numpolyvertices", np);
+	getattribute	$tmp9 $const11 ___669_np 	%line{57} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:58
+#       if (np < 3 || !getattribute("geom:polyvertices", p))
+	lt		$tmp10 ___669_np $const7 	%line{58} %argrw{"wrr"}
 	neq		$tmp11 $tmp10 $const5 	%argrw{"wrr"}
 	if		$tmp11 26 30 	%argrw{"r"}
-	getattribute	$tmp12 $const12 ___646_p 	%argrw{"wrw"}
+	getattribute	$tmp12 $const12 ___669_p 	%argrw{"wrw"}
 	eq		$tmp13 $tmp12 $const5 	%argrw{"wrr"}
 	neq		$tmp14 $tmp13 $const5 	%argrw{"wrr"}
 	assign		$tmp11 $tmp14 	%argrw{"wr"}
 	if		$tmp11 33 33 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:59
-# #ifndef CCL_OSLUTIL_H
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:59
+#          return 0.0;
 	assign		Fac $const4 	%line{59} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:62
-# // Return wireframe opacity factor [0, 1] given a geometry type in
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:62
+#    if (raster)
 	if		use_pixel_size 48 48 	%line{62} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:66
-# float wireframe(string edge_type, float line_width, int raster)
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:66
+#       float pixelWidthX = length(Dx(P) - dot(Dx(P), I) * I);
 	Dx		$tmp15 P 	%line{66} %argrw{"wr"} %argderivs{1}
 	Dx		$tmp17 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp16 $tmp17 I 	%argrw{"wrr"}
 	mul		$tmp18 $tmp16 I 	%argrw{"wrr"}
 	sub		$tmp19 $tmp15 $tmp18 	%argrw{"wrr"}
-	length		___649_pixelWidthX $tmp19 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:67
-# {
+	length		___672_pixelWidthX $tmp19 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:67
+#       float pixelWidthY = length(Dy(P) - dot(Dy(P), I) * I);
 	Dy		$tmp20 P 	%line{67} %argrw{"wr"} %argderivs{1}
 	Dy		$tmp22 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp21 $tmp22 I 	%argrw{"wrr"}
 	mul		$tmp23 $tmp21 I 	%argrw{"wrr"}
 	sub		$tmp24 $tmp20 $tmp23 	%argrw{"wrr"}
-	length		___649_pixelWidthY $tmp24 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:69
-#    if (raytype("path:diffuse")) return 0.0;
-	add		$tmp25 ___649_pixelWidthX ___649_pixelWidthY 	%line{69} %argrw{"wrr"}
-	div		___646_pixelWidth $tmp25 $const14 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:74
-# 
+	length		___672_pixelWidthY $tmp24 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:69
+#       pixelWidth = (pixelWidthX + pixelWidthY) / 2;
+	add		$tmp25 ___672_pixelWidthX ___672_pixelWidthY 	%line{69} %argrw{"wrr"}
+	div		___669_pixelWidth $tmp25 $const14 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:74
+#    pixelWidth *= 0.5 * line_width;
 	mul		$tmp26 $const15 Size 	%line{74} %argrw{"wrr"}
-	mul		___646_pixelWidth ___646_pixelWidth $tmp26 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:75
-#    if (edge_type == "triangles")
-	mul		___646_pixelWidth ___646_pixelWidth ___646_pixelWidth 	%line{75} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
-#    {
+	mul		___669_pixelWidth ___669_pixelWidth $tmp26 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:75
+#    pixelWidth *= pixelWidth;
+	mul		___669_pixelWidth ___669_pixelWidth ___669_pixelWidth 	%line{75} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
+#    for (int i = 0; i < np; i++)
 	for		$tmp27 53 54 70 72 	%line{76} %argrw{"r"}
-	assign		___650_i $const5 	%argrw{"wr"}
-	lt		$tmp27 ___650_i ___646_np 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:78
-#       if (!getattribute("geom:trianglevertices", p))
-	if		___650_i 56 57 	%line{78} %argrw{"r"}
-	sub		___651_i2 ___650_i $const6 	%argrw{"wrr"}
-	sub		___651_i2 ___646_np $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:79
-#          return 0.0;
-	aref		$tmp28 ___646_p ___650_i 	%line{79} %argrw{"wrr"}
-	sub		___651_dir P $tmp28 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:80
-#    }
-	aref		$tmp29 ___646_p ___650_i 	%line{80} %argrw{"wrr"}
-	aref		$tmp30 ___646_p ___651_i2 	%argrw{"wrr"}
-	sub		___651_edge $tmp29 $tmp30 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:81
-#    else if (edge_type == "polygons" || edge_type == "patches")
-	cross		___651_crs ___651_edge ___651_dir 	%line{81} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:85
-#          return 0.0;
-	dot		$tmp31 ___651_crs ___651_crs 	%line{85} %argrw{"wrr"}
-	dot		$tmp32 ___651_edge ___651_edge 	%argrw{"wrr"}
-	mul		$tmp33 $tmp32 ___646_pixelWidth 	%argrw{"wrr"}
+	assign		___673_i $const5 	%argrw{"wr"}
+	lt		$tmp27 ___673_i ___669_np 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:78
+#       int i2 = i ? i - 1 : np - 1;
+	if		___673_i 56 57 	%line{78} %argrw{"r"}
+	sub		___674_i2 ___673_i $const6 	%argrw{"wrr"}
+	sub		___674_i2 ___669_np $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:79
+#       vector dir = P - p[i];
+	aref		$tmp28 ___669_p ___673_i 	%line{79} %argrw{"wrr"}
+	sub		___674_dir P $tmp28 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:80
+#       vector edge = p[i] - p[i2];
+	aref		$tmp29 ___669_p ___673_i 	%line{80} %argrw{"wrr"}
+	aref		$tmp30 ___669_p ___674_i2 	%argrw{"wrr"}
+	sub		___674_edge $tmp29 $tmp30 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:81
+#       vector crs = cross(edge, dir);
+	cross		___674_crs ___674_edge ___674_dir 	%line{81} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:85
+#       if (dot(crs, crs) < (dot(edge, edge) * pixelWidth))
+	dot		$tmp31 ___674_crs ___674_crs 	%line{85} %argrw{"wrr"}
+	dot		$tmp32 ___674_edge ___674_edge 	%argrw{"wrr"}
+	mul		$tmp33 $tmp32 ___669_pixelWidth 	%argrw{"wrr"}
 	lt		$tmp34 $tmp31 $tmp33 	%argrw{"wrr"}
 	if		$tmp34 70 70 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:86
-#    }
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:86
+#          return 1;
 	assign		Fac $const6 	%line{86} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
 #    for (int i = 0; i < np; i++)
-	assign		$tmp35 ___650_i 	%line{76} %argrw{"wr"}
-	add		___650_i ___650_i $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:88
+	assign		$tmp35 ___673_i 	%line{76} %argrw{"wr"}
+	add		___673_i ___673_i $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:88
 #    return 0;
 	assign		Fac $const5 	%line{88} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:31
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:31
 # 	if (bump_offset == "dx") {
-	eq		$tmp36 bump_offset $const16 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{31} %argrw{"wrr"}
+	eq		$tmp36 bump_offset $const16 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{31} %argrw{"wrr"}
 	if		$tmp36 156 238 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:32
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:32
 # 		point dx = Dx(P);
-	Dx		___655_dx P 	%line{32} %argrw{"wr"} %argderivs{1}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:33
+	Dx		___678_dx P 	%line{32} %argrw{"wr"} %argderivs{1}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:33
 # 		P -= dx;
-	sub		P P ___655_dx 	%line{33} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:34
+	sub		P P ___678_dx 	%line{33} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:34
 # 		Fac += (Fac - wireframe("triangles", Size, use_pixel_size)) / length(dx);
 	functioncall	$const2 152 	%line{34} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:43
-#  * Redistribution and use in source and binary forms, with or without
-	raytype		$tmp38 $const3 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h"} %line{43} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:43
+#    if (raytype("path:diffuse")) return 0.0;
+	raytype		$tmp38 $const3 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h"} %line{43} %argrw{"wr"}
 	if		$tmp38 83 83 	%argrw{"r"}
 	assign		$tmp37 $const4 	%argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:45
-#  * met:
-	assign		___646_np $const5 	%line{45} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:47
-#  *   notice, this list of conditions and the following disclaimer.
-	assign		___646_pixelWidth $const6 	%line{47} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:49
-#  *   notice, this list of conditions and the following disclaimer in the
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:45
+#    int np = 0;
+	assign		___669_np $const5 	%line{45} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:47
+#    float pixelWidth = 1;
+	assign		___669_pixelWidth $const6 	%line{47} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:49
+#    if (edge_type == "triangles")
 	eq		$tmp39 $const1 $const1 	%line{49} %argrw{"wrr"}
 	if		$tmp39 93 111 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:51
-#  * * Neither the name of Sony Pictures Imageworks nor the names of its
-	assign		___646_np $const7 	%line{51} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:52
-#  *   contributors may be used to endorse or promote products derived from
-	getattribute	$tmp40 $const8 ___646_p 	%line{52} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:51
+#       np = 3;
+	assign		___669_np $const7 	%line{51} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:52
+#       if (!getattribute("geom:trianglevertices", p))
+	getattribute	$tmp40 $const8 ___669_p 	%line{52} %argrw{"wrw"}
 	eq		$tmp41 $tmp40 $const5 	%argrw{"wrr"}
 	if		$tmp41 93 93 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:53
-#  *   this software without specific prior written permission.
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:53
+#          return 0.0;
 	assign		$tmp37 $const4 	%line{53} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:55
-#  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:55
+#    else if (edge_type == "polygons" || edge_type == "patches")
 	eq		$tmp42 $const1 $const9 	%line{55} %argrw{"wrr"}
 	neq		$tmp43 $tmp42 $const5 	%argrw{"wrr"}
 	if		$tmp43 96 99 	%argrw{"r"}
@@ -330,143 +330,143 @@ code ___main___
 	neq		$tmp45 $tmp44 $const5 	%argrw{"wrr"}
 	assign		$tmp43 $tmp45 	%argrw{"wr"}
 	if		$tmp43 111 111 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:57
-#  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-	getattribute	$tmp46 $const11 ___646_np 	%line{57} %argrw{"wrw"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:58
-#  * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	lt		$tmp47 ___646_np $const7 	%line{58} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:57
+#       getattribute("geom:numpolyvertices", np);
+	getattribute	$tmp46 $const11 ___669_np 	%line{57} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:58
+#       if (np < 3 || !getattribute("geom:polyvertices", p))
+	lt		$tmp47 ___669_np $const7 	%line{58} %argrw{"wrr"}
 	neq		$tmp48 $tmp47 $const5 	%argrw{"wrr"}
 	if		$tmp48 104 108 	%argrw{"r"}
-	getattribute	$tmp49 $const12 ___646_p 	%argrw{"wrw"}
+	getattribute	$tmp49 $const12 ___669_p 	%argrw{"wrw"}
 	eq		$tmp50 $tmp49 $const5 	%argrw{"wrr"}
 	neq		$tmp51 $tmp50 $const5 	%argrw{"wrr"}
 	assign		$tmp48 $tmp51 	%argrw{"wr"}
 	if		$tmp48 111 111 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:59
-#  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:59
+#          return 0.0;
 	assign		$tmp37 $const4 	%line{59} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:62
-#  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:62
+#    if (raster)
 	if		use_pixel_size 126 126 	%line{62} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:66
-# 
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:66
+#       float pixelWidthX = length(Dx(P) - dot(Dx(P), I) * I);
 	Dx		$tmp52 P 	%line{66} %argrw{"wr"} %argderivs{1}
 	Dx		$tmp54 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp53 $tmp54 I 	%argrw{"wrr"}
 	mul		$tmp55 $tmp53 I 	%argrw{"wrr"}
 	sub		$tmp56 $tmp52 $tmp55 	%argrw{"wrr"}
-	length		___649_pixelWidthX $tmp56 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:67
-# #ifndef CCL_OSLUTIL_H
+	length		___672_pixelWidthX $tmp56 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:67
+#       float pixelWidthY = length(Dy(P) - dot(Dy(P), I) * I);
 	Dy		$tmp57 P 	%line{67} %argrw{"wr"} %argderivs{1}
 	Dy		$tmp59 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp58 $tmp59 I 	%argrw{"wrr"}
 	mul		$tmp60 $tmp58 I 	%argrw{"wrr"}
 	sub		$tmp61 $tmp57 $tmp60 	%argrw{"wrr"}
-	length		___649_pixelWidthY $tmp61 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:69
-# 
-	add		$tmp62 ___649_pixelWidthX ___649_pixelWidthY 	%line{69} %argrw{"wrr"}
-	div		___646_pixelWidth $tmp62 $const14 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:74
-# float wireframe(string edge_type, float line_width, int raster)
+	length		___672_pixelWidthY $tmp61 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:69
+#       pixelWidth = (pixelWidthX + pixelWidthY) / 2;
+	add		$tmp62 ___672_pixelWidthX ___672_pixelWidthY 	%line{69} %argrw{"wrr"}
+	div		___669_pixelWidth $tmp62 $const14 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:74
+#    pixelWidth *= 0.5 * line_width;
 	mul		$tmp63 $const15 Size 	%line{74} %argrw{"wrr"}
-	mul		___646_pixelWidth ___646_pixelWidth $tmp63 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:75
-# {
-	mul		___646_pixelWidth ___646_pixelWidth ___646_pixelWidth 	%line{75} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
-#    // ray differentials are so big in diffuse context that this function would always return "wire"
+	mul		___669_pixelWidth ___669_pixelWidth $tmp63 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:75
+#    pixelWidth *= pixelWidth;
+	mul		___669_pixelWidth ___669_pixelWidth ___669_pixelWidth 	%line{75} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
+#    for (int i = 0; i < np; i++)
 	for		$tmp64 131 132 148 150 	%line{76} %argrw{"r"}
-	assign		___650_i $const5 	%argrw{"wr"}
-	lt		$tmp64 ___650_i ___646_np 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:78
-# 
-	if		___650_i 134 135 	%line{78} %argrw{"r"}
-	sub		___651_i2 ___650_i $const6 	%argrw{"wrr"}
-	sub		___651_i2 ___646_np $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:79
-#    int np = 0;
-	aref		$tmp65 ___646_p ___650_i 	%line{79} %argrw{"wrr"}
-	sub		___651_dir P $tmp65 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:80
-#    point p[64];
-	aref		$tmp66 ___646_p ___650_i 	%line{80} %argrw{"wrr"}
-	aref		$tmp67 ___646_p ___651_i2 	%argrw{"wrr"}
-	sub		___651_edge $tmp66 $tmp67 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:81
-#    float pixelWidth = 1;
-	cross		___651_crs ___651_edge ___651_dir 	%line{81} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:85
-#       np = 3;
-	dot		$tmp68 ___651_crs ___651_crs 	%line{85} %argrw{"wrr"}
-	dot		$tmp69 ___651_edge ___651_edge 	%argrw{"wrr"}
-	mul		$tmp70 $tmp69 ___646_pixelWidth 	%argrw{"wrr"}
+	assign		___673_i $const5 	%argrw{"wr"}
+	lt		$tmp64 ___673_i ___669_np 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:78
+#       int i2 = i ? i - 1 : np - 1;
+	if		___673_i 134 135 	%line{78} %argrw{"r"}
+	sub		___674_i2 ___673_i $const6 	%argrw{"wrr"}
+	sub		___674_i2 ___669_np $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:79
+#       vector dir = P - p[i];
+	aref		$tmp65 ___669_p ___673_i 	%line{79} %argrw{"wrr"}
+	sub		___674_dir P $tmp65 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:80
+#       vector edge = p[i] - p[i2];
+	aref		$tmp66 ___669_p ___673_i 	%line{80} %argrw{"wrr"}
+	aref		$tmp67 ___669_p ___674_i2 	%argrw{"wrr"}
+	sub		___674_edge $tmp66 $tmp67 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:81
+#       vector crs = cross(edge, dir);
+	cross		___674_crs ___674_edge ___674_dir 	%line{81} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:85
+#       if (dot(crs, crs) < (dot(edge, edge) * pixelWidth))
+	dot		$tmp68 ___674_crs ___674_crs 	%line{85} %argrw{"wrr"}
+	dot		$tmp69 ___674_edge ___674_edge 	%argrw{"wrr"}
+	mul		$tmp70 $tmp69 ___669_pixelWidth 	%argrw{"wrr"}
 	lt		$tmp71 $tmp68 $tmp70 	%argrw{"wrr"}
 	if		$tmp71 148 148 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:86
-#       if (!getattribute("geom:trianglevertices", p))
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:86
+#          return 1;
 	assign		$tmp37 $const6 	%line{86} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
 #    for (int i = 0; i < np; i++)
-	assign		$tmp72 ___650_i 	%line{76} %argrw{"wr"}
-	add		___650_i ___650_i $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:88
+	assign		$tmp72 ___673_i 	%line{76} %argrw{"wr"}
+	add		___673_i ___673_i $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:88
 #    return 0;
 	assign		$tmp37 $const5 	%line{88} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:34
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:34
 # 		Fac += (Fac - wireframe("triangles", Size, use_pixel_size)) / length(dx);
-	sub		$tmp73 Fac $tmp37 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{34} %argrw{"wrr"}
-	length		$tmp74 ___655_dx 	%argrw{"wr"}
+	sub		$tmp73 Fac $tmp37 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{34} %argrw{"wrr"}
+	length		$tmp74 ___678_dx 	%argrw{"wr"}
 	div		$tmp75 $tmp73 $tmp74 	%argrw{"wrr"}
 	add		Fac Fac $tmp75 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:36
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:36
 # 	else if (bump_offset == "dy") {
 	eq		$tmp76 bump_offset $const17 	%line{36} %argrw{"wrr"}
 	if		$tmp76 238 238 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:37
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:37
 # 		point dy = Dy(P);
-	Dy		___656_dy P 	%line{37} %argrw{"wr"} %argderivs{1}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:38
+	Dy		___679_dy P 	%line{37} %argrw{"wr"} %argderivs{1}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:38
 # 		P -= dy;
-	sub		P P ___656_dy 	%line{38} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:39
+	sub		P P ___679_dy 	%line{38} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:39
 # 		Fac += (Fac - wireframe("triangles", Size, use_pixel_size)) / length(dy);
 	functioncall	$const2 234 	%line{39} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:43
-#  * Copyright (c) 2009-2010 Sony Pictures Imageworks Inc., et al.
-	raytype		$tmp78 $const3 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h"} %line{43} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:43
+#    if (raytype("path:diffuse")) return 0.0;
+	raytype		$tmp78 $const3 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h"} %line{43} %argrw{"wr"}
 	if		$tmp78 165 165 	%argrw{"r"}
 	assign		$tmp77 $const4 	%argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:45
-#  *
-	assign		___646_np $const5 	%line{45} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:47
-#  *
-	assign		___646_pixelWidth $const6 	%line{47} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:49
-#  * modification, are permitted provided that the following conditions are
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:45
+#    int np = 0;
+	assign		___669_np $const5 	%line{45} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:47
+#    float pixelWidth = 1;
+	assign		___669_pixelWidth $const6 	%line{47} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:49
+#    if (edge_type == "triangles")
 	eq		$tmp79 $const1 $const1 	%line{49} %argrw{"wrr"}
 	if		$tmp79 175 193 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:51
-#  * * Redistributions of source code must retain the above copyright
-	assign		___646_np $const7 	%line{51} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:52
-#  *   notice, this list of conditions and the following disclaimer.
-	getattribute	$tmp80 $const8 ___646_p 	%line{52} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:51
+#       np = 3;
+	assign		___669_np $const7 	%line{51} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:52
+#       if (!getattribute("geom:trianglevertices", p))
+	getattribute	$tmp80 $const8 ___669_p 	%line{52} %argrw{"wrw"}
 	eq		$tmp81 $tmp80 $const5 	%argrw{"wrr"}
 	if		$tmp81 175 175 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:53
-#  * * Redistributions in binary form must reproduce the above copyright
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:53
+#          return 0.0;
 	assign		$tmp77 $const4 	%line{53} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:55
-#  *   documentation and/or other materials provided with the distribution.
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:55
+#    else if (edge_type == "polygons" || edge_type == "patches")
 	eq		$tmp82 $const1 $const9 	%line{55} %argrw{"wrr"}
 	neq		$tmp83 $tmp82 $const5 	%argrw{"wrr"}
 	if		$tmp83 178 181 	%argrw{"r"}
@@ -474,98 +474,98 @@ code ___main___
 	neq		$tmp85 $tmp84 $const5 	%argrw{"wrr"}
 	assign		$tmp83 $tmp85 	%argrw{"wr"}
 	if		$tmp83 193 193 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:57
-#  *   contributors may be used to endorse or promote products derived from
-	getattribute	$tmp86 $const11 ___646_np 	%line{57} %argrw{"wrw"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:58
-#  *   this software without specific prior written permission.
-	lt		$tmp87 ___646_np $const7 	%line{58} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:57
+#       getattribute("geom:numpolyvertices", np);
+	getattribute	$tmp86 $const11 ___669_np 	%line{57} %argrw{"wrw"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:58
+#       if (np < 3 || !getattribute("geom:polyvertices", p))
+	lt		$tmp87 ___669_np $const7 	%line{58} %argrw{"wrr"}
 	neq		$tmp88 $tmp87 $const5 	%argrw{"wrr"}
 	if		$tmp88 186 190 	%argrw{"r"}
-	getattribute	$tmp89 $const12 ___646_p 	%argrw{"wrw"}
+	getattribute	$tmp89 $const12 ___669_p 	%argrw{"wrw"}
 	eq		$tmp90 $tmp89 $const5 	%argrw{"wrr"}
 	neq		$tmp91 $tmp90 $const5 	%argrw{"wrr"}
 	assign		$tmp88 $tmp91 	%argrw{"wr"}
 	if		$tmp88 193 193 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:59
-#  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:59
+#          return 0.0;
 	assign		$tmp77 $const4 	%line{59} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:62
-#  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:62
+#    if (raster)
 	if		use_pixel_size 208 208 	%line{62} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:66
-#  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:66
+#       float pixelWidthX = length(Dx(P) - dot(Dx(P), I) * I);
 	Dx		$tmp92 P 	%line{66} %argrw{"wr"} %argderivs{1}
 	Dx		$tmp94 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp93 $tmp94 I 	%argrw{"wrr"}
 	mul		$tmp95 $tmp93 I 	%argrw{"wrr"}
 	sub		$tmp96 $tmp92 $tmp95 	%argrw{"wrr"}
-	length		___649_pixelWidthX $tmp96 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:67
-#  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	length		___672_pixelWidthX $tmp96 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:67
+#       float pixelWidthY = length(Dy(P) - dot(Dy(P), I) * I);
 	Dy		$tmp97 P 	%line{67} %argrw{"wr"} %argderivs{1}
 	Dy		$tmp99 P 	%argrw{"wr"} %argderivs{1}
 	dot		$tmp98 $tmp99 I 	%argrw{"wrr"}
 	mul		$tmp100 $tmp98 I 	%argrw{"wrr"}
 	sub		$tmp101 $tmp97 $tmp100 	%argrw{"wrr"}
-	length		___649_pixelWidthY $tmp101 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:69
-#  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-	add		$tmp102 ___649_pixelWidthX ___649_pixelWidthY 	%line{69} %argrw{"wrr"}
-	div		___646_pixelWidth $tmp102 $const14 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:74
-# 
+	length		___672_pixelWidthY $tmp101 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:69
+#       pixelWidth = (pixelWidthX + pixelWidthY) / 2;
+	add		$tmp102 ___672_pixelWidthX ___672_pixelWidthY 	%line{69} %argrw{"wrr"}
+	div		___669_pixelWidth $tmp102 $const14 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:74
+#    pixelWidth *= 0.5 * line_width;
 	mul		$tmp103 $const15 Size 	%line{74} %argrw{"wrr"}
-	mul		___646_pixelWidth ___646_pixelWidth $tmp103 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:75
-# // Return wireframe opacity factor [0, 1] given a geometry type in
-	mul		___646_pixelWidth ___646_pixelWidth ___646_pixelWidth 	%line{75} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
-# // ("triangles", "polygons" or "patches"), and a line_width in raster
+	mul		___669_pixelWidth ___669_pixelWidth $tmp103 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:75
+#    pixelWidth *= pixelWidth;
+	mul		___669_pixelWidth ___669_pixelWidth ___669_pixelWidth 	%line{75} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
+#    for (int i = 0; i < np; i++)
 	for		$tmp104 213 214 230 232 	%line{76} %argrw{"r"}
-	assign		___650_i $const5 	%argrw{"wr"}
-	lt		$tmp104 ___650_i ___646_np 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:78
-# //
-	if		___650_i 216 217 	%line{78} %argrw{"r"}
-	sub		___651_i2 ___650_i $const6 	%argrw{"wrr"}
-	sub		___651_i2 ___646_np $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:79
-# float wireframe(string edge_type, float line_width, int raster)
-	aref		$tmp105 ___646_p ___650_i 	%line{79} %argrw{"wrr"}
-	sub		___651_dir P $tmp105 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:80
-# {
-	aref		$tmp106 ___646_p ___650_i 	%line{80} %argrw{"wrr"}
-	aref		$tmp107 ___646_p ___651_i2 	%argrw{"wrr"}
-	sub		___651_edge $tmp106 $tmp107 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:81
-#    // ray differentials are so big in diffuse context that this function would always return "wire"
-	cross		___651_crs ___651_edge ___651_dir 	%line{81} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:85
-#    point p[64];
-	dot		$tmp108 ___651_crs ___651_crs 	%line{85} %argrw{"wrr"}
-	dot		$tmp109 ___651_edge ___651_edge 	%argrw{"wrr"}
-	mul		$tmp110 $tmp109 ___646_pixelWidth 	%argrw{"wrr"}
+	assign		___673_i $const5 	%argrw{"wr"}
+	lt		$tmp104 ___673_i ___669_np 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:78
+#       int i2 = i ? i - 1 : np - 1;
+	if		___673_i 216 217 	%line{78} %argrw{"r"}
+	sub		___674_i2 ___673_i $const6 	%argrw{"wrr"}
+	sub		___674_i2 ___669_np $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:79
+#       vector dir = P - p[i];
+	aref		$tmp105 ___669_p ___673_i 	%line{79} %argrw{"wrr"}
+	sub		___674_dir P $tmp105 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:80
+#       vector edge = p[i] - p[i2];
+	aref		$tmp106 ___669_p ___673_i 	%line{80} %argrw{"wrr"}
+	aref		$tmp107 ___669_p ___674_i2 	%argrw{"wrr"}
+	sub		___674_edge $tmp106 $tmp107 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:81
+#       vector crs = cross(edge, dir);
+	cross		___674_crs ___674_edge ___674_dir 	%line{81} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:85
+#       if (dot(crs, crs) < (dot(edge, edge) * pixelWidth))
+	dot		$tmp108 ___674_crs ___674_crs 	%line{85} %argrw{"wrr"}
+	dot		$tmp109 ___674_edge ___674_edge 	%argrw{"wrr"}
+	mul		$tmp110 $tmp109 ___669_pixelWidth 	%argrw{"wrr"}
 	lt		$tmp111 $tmp108 $tmp110 	%argrw{"wrr"}
 	if		$tmp111 230 230 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:86
-#    float pixelWidth = 1;
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:86
+#          return 1;
 	assign		$tmp77 $const6 	%line{86} %argrw{"wr"}
 	return
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:76
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:76
 #    for (int i = 0; i < np; i++)
-	assign		$tmp112 ___650_i 	%line{76} %argrw{"wr"}
-	add		___650_i ___650_i $const6 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\oslutil.h:88
+	assign		$tmp112 ___673_i 	%line{76} %argrw{"wr"}
+	add		___673_i ___673_i $const6 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\oslutil.h:88
 #    return 0;
 	assign		$tmp77 $const5 	%line{88} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl:39
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl:39
 # 		Fac += (Fac - wireframe("triangles", Size, use_pixel_size)) / length(dy);
-	sub		$tmp113 Fac $tmp77 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{39} %argrw{"wrr"}
-	length		$tmp114 ___656_dy 	%argrw{"wr"}
+	sub		$tmp113 Fac $tmp77 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_wireframe.osl"} %line{39} %argrw{"wrr"}
+	length		$tmp114 ___679_dy 	%argrw{"wr"}
 	div		$tmp115 $tmp113 $tmp114 	%argrw{"wrr"}
 	add		Fac Fac $tmp115 	%argrw{"wrr"}
 	end

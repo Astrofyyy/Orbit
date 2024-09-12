@@ -7,14 +7,15 @@ import unittest
 import math
 import os
 import platform
-import sys
 import struct
+import sys
 import sysconfig
 
 eps = 1E-05
 NAN = float('nan')
 INF = float('inf')
 NINF = float('-inf')
+FLOAT_MAX = sys.float_info.max
 
 # detect evidence of double-rounding: fsum is not always correctly
 # rounded on machines that suffer from double rounding.
@@ -30,6 +31,7 @@ test_dir = os.path.dirname(file) or os.curdir
 math_testcases = os.path.join(test_dir, 'math_testcases.txt')
 test_file = os.path.join(test_dir, 'cmath_testcases.txt')
 
+
 def to_ulps(x):
     """Convert a non-NaN float x to an integer, in such a way that
     adjacent floats are converted to adjacent integers.  Then
@@ -37,25 +39,39 @@ def to_ulps(x):
     floats.
 
     The results from this function will only make sense on platforms
-    where C doubles are represented in IEEE 754 binary64 format.
+    where native doubles are represented in IEEE 754 binary64 format.
 
+    Note: 0.0 and -0.0 are converted to 0 and -1, respectively.
     """
     n = struct.unpack('<q', struct.pack('<d', x))[0]
     if n < 0:
         n = ~(n+2**63)
     return n
 
-def ulps_check(expected, got, ulps=20):
-    """Given non-NaN floats `expected` and `got`,
-    check that they're equal to within the given number of ulps.
 
-    Returns None on success and an error message on failure."""
+def ulp(x):
+    """Return the value of the least significant bit of a
+    float x, such that the first float bigger than x is x+ulp(x).
+    Then, given an expected result x and a tolerance of n ulps,
+    the result y should be such that abs(y-x) <= n * ulp(x).
+    The results from this function will only make sense on platforms
+    where native doubles are represented in IEEE 754 binary64 format.
+    """
+    x = abs(float(x))
+    if math.isnan(x) or math.isinf(x):
+        return x
 
-    ulps_error = to_ulps(got) - to_ulps(expected)
-    if abs(ulps_error) <= ulps:
-        return None
-    return "error = {} ulps; permitted error = {} ulps".format(ulps_error,
-                                                               ulps)
+    # Find next float up from x.
+    n = struct.unpack('<q', struct.pack('<d', x))[0]
+    x_next = struct.unpack('<d', struct.pack('<q', n + 1))[0]
+    if math.isinf(x_next):
+        # Corner case: x was the largest finite float. Then it's
+        # not an exact power of two, so we can take the difference
+        # between x and the previous float.
+        x_prev = struct.unpack('<d', struct.pack('<q', n - 1))[0]
+        return x - x_prev
+    else:
+        return x_next - x
 
 # Here's a pure Python version of the math.factorial algorithm, for
 # documentation and comparison purposes.
@@ -107,24 +123,23 @@ def py_factorial(n):
         outer *= inner
     return outer << (n - count_set_bits(n))
 
-def acc_check(expected, got, rel_err=2e-15, abs_err = 5e-323):
-    """Determine whether non-NaN floats a and b are equal to within a
-    (small) rounding error.  The default values for rel_err and
-    abs_err are chosen to be suitable for platforms where a float is
-    represented by an IEEE 754 double.  They allow an error of between
-    9 and 19 ulps."""
+def ulp_abs_check(expected, got, ulp_tol, abs_tol):
+    """Given finite floats `expected` and `got`, check that they're
+    approximately equal to within the given number of ulps or the
+    given absolute tolerance, whichever is bigger.
 
-    # need to special case infinities, since inf - inf gives nan
-    if math.isinf(expected) and got == expected:
+    Returns None on success and an error message on failure.
+    """
+    ulp_error = abs(to_ulps(expected) - to_ulps(got))
+    abs_error = abs(expected - got)
+
+    # Succeed if either abs_error <= abs_tol or ulp_error <= ulp_tol.
+    if abs_error <= abs_tol or ulp_error <= ulp_tol:
         return None
-
-    error = got - expected
-
-    permitted_error = max(abs_err, rel_err * abs(expected))
-    if abs(error) < permitted_error:
-        return None
-    return "error = {}; permitted error = {}".format(error,
-                                                     permitted_error)
+    else:
+        fmt = ("error = {:.3g} ({:d} ulps); "
+               "permitted error = {:.3g} or {:d} ulps")
+        return fmt.format(abs_error, ulp_error, abs_tol, ulp_tol)
 
 def parse_mtestfile(fname):
     """Parse a file with test values
@@ -151,6 +166,7 @@ def parse_mtestfile(fname):
 
             yield (id, fn, float(arg), float(exp), flags)
 
+
 def parse_testfile(fname):
     """Parse a file with test values
 
@@ -172,8 +188,53 @@ def parse_testfile(fname):
             yield (id, fn,
                    float(arg_real), float(arg_imag),
                    float(exp_real), float(exp_imag),
-                   flags
-                  )
+                   flags)
+
+
+def result_check(expected, got, ulp_tol=5, abs_tol=0.0):
+    # Common logic of MathTests.(ftest, test_testcases, test_mtestcases)
+    """Compare arguments expected and got, as floats, if either
+    is a float, using a tolerance expressed in multiples of
+    ulp(expected) or absolutely (if given and greater).
+
+    As a convenience, when neither argument is a float, and for
+    non-finite floats, exact equality is demanded. Also, nan==nan
+    as far as this function is concerned.
+
+    Returns None on success and an error message on failure.
+    """
+
+    # Check exactly equal (applies also to strings representing exceptions)
+    if got == expected:
+        return None
+
+    failure = "not equal"
+
+    # Turn mixed float and int comparison (e.g. floor()) to all-float
+    if isinstance(expected, float) and isinstance(got, int):
+        got = float(got)
+    elif isinstance(got, float) and isinstance(expected, int):
+        expected = float(expected)
+
+    if isinstance(expected, float) and isinstance(got, float):
+        if math.isnan(expected) and math.isnan(got):
+            # Pass, since both nan
+            failure = None
+        elif math.isinf(expected) or math.isinf(got):
+            # We already know they're not equal, drop through to failure
+            pass
+        else:
+            # Both are finite floats (now). Are they close enough?
+            failure = ulp_abs_check(expected, got, ulp_tol, abs_tol)
+
+    # arguments are not equal, and if numeric, are too far apart
+    if failure is not None:
+        fail_fmt = "expected {!r}, got {!r}"
+        fail_msg = fail_fmt.format(expected, got)
+        fail_msg += ' ({})'.format(failure)
+        return fail_msg
+    else:
+        return None
 
 # Class providing an __index__ method.
 class MyIndexable(object):
@@ -185,18 +246,24 @@ class MyIndexable(object):
 
 class MathTests(unittest.TestCase):
 
-    def ftest(self, name, value, expected):
-        if abs(value-expected) > eps:
-            # Use %r instead of %f so the error message
-            # displays full precision. Otherwise discrepancies
-            # in the last few bits will lead to very confusing
-            # error messages
-            self.fail('%s returned %r, expected %r' %
-                      (name, value, expected))
+    def ftest(self, name, got, expected, ulp_tol=5, abs_tol=0.0):
+        """Compare arguments expected and got, as floats, if either
+        is a float, using a tolerance expressed in multiples of
+        ulp(expected) or absolutely, whichever is greater.
+
+        As a convenience, when neither argument is a float, and for
+        non-finite floats, exact equality is demanded. Also, nan==nan
+        in this function.
+        """
+        failure = result_check(expected, got, ulp_tol, abs_tol)
+        if failure is not None:
+            self.fail("{}: {}".format(name, failure))
 
     def testConstants(self):
-        self.ftest('pi', math.pi, 3.1415926)
-        self.ftest('e', math.e, 2.7182818)
+        # Ref: Abramowitz & Stegun (Dover, 1965)
+        self.ftest('pi', math.pi, 3.141592653589793238462643)
+        self.ftest('e', math.e, 2.718281828459045235360287)
+        self.assertEqual(math.tau, 2*math.pi)
 
     def testAcos(self):
         self.assertRaises(TypeError, math.acos)
@@ -205,6 +272,8 @@ class MathTests(unittest.TestCase):
         self.ftest('acos(1)', math.acos(1), 0)
         self.assertRaises(ValueError, math.acos, INF)
         self.assertRaises(ValueError, math.acos, NINF)
+        self.assertRaises(ValueError, math.acos, 1 + eps)
+        self.assertRaises(ValueError, math.acos, -1 - eps)
         self.assertTrue(math.isnan(math.acos(NAN)))
 
     def testAcosh(self):
@@ -224,6 +293,8 @@ class MathTests(unittest.TestCase):
         self.ftest('asin(1)', math.asin(1), math.pi/2)
         self.assertRaises(ValueError, math.asin, INF)
         self.assertRaises(ValueError, math.asin, NINF)
+        self.assertRaises(ValueError, math.asin, 1 + eps)
+        self.assertRaises(ValueError, math.asin, -1 - eps)
         self.assertTrue(math.isnan(math.asin(NAN)))
 
     def testAsinh(self):
@@ -378,9 +449,9 @@ class MathTests(unittest.TestCase):
 
     def testCos(self):
         self.assertRaises(TypeError, math.cos)
-        self.ftest('cos(-pi/2)', math.cos(-math.pi/2), 0)
+        self.ftest('cos(-pi/2)', math.cos(-math.pi/2), 0, abs_tol=ulp(1))
         self.ftest('cos(0)', math.cos(0), 1)
-        self.ftest('cos(pi/2)', math.cos(math.pi/2), 0)
+        self.ftest('cos(pi/2)', math.cos(math.pi/2), 0, abs_tol=ulp(1))
         self.ftest('cos(pi)', math.cos(math.pi), -1)
         try:
             self.assertTrue(math.isnan(math.cos(INF)))
@@ -403,6 +474,7 @@ class MathTests(unittest.TestCase):
         self.ftest('degrees(pi)', math.degrees(math.pi), 180.0)
         self.ftest('degrees(pi/2)', math.degrees(math.pi/2), 90.0)
         self.ftest('degrees(-pi/4)', math.degrees(-math.pi/4), -45.0)
+        self.ftest('degrees(0)', math.degrees(0), 0)
 
     def testExp(self):
         self.assertRaises(TypeError, math.exp)
@@ -412,6 +484,7 @@ class MathTests(unittest.TestCase):
         self.assertEqual(math.exp(INF), INF)
         self.assertEqual(math.exp(NINF), 0.)
         self.assertTrue(math.isnan(math.exp(NAN)))
+        self.assertRaises(OverflowError, math.exp, 1000000)
 
     def testFabs(self):
         self.assertRaises(TypeError, math.fabs)
@@ -654,6 +727,7 @@ class MathTests(unittest.TestCase):
         self.assertEqual(math.hypot(INF, NAN), INF)
         self.assertEqual(math.hypot(NAN, NINF), INF)
         self.assertEqual(math.hypot(NINF, NAN), INF)
+        self.assertRaises(OverflowError, math.hypot, FLOAT_MAX, FLOAT_MAX)
         self.assertTrue(math.isnan(math.hypot(1.0, NAN)))
         self.assertTrue(math.isnan(math.hypot(NAN, -2.0)))
 
@@ -707,8 +781,10 @@ class MathTests(unittest.TestCase):
 
     def testLog1p(self):
         self.assertRaises(TypeError, math.log1p)
-        n= 2**90
-        self.assertAlmostEqual(math.log1p(n), math.log1p(float(n)))
+        for n in [2, 2**90, 2**300]:
+            self.assertAlmostEqual(math.log1p(n), math.log1p(float(n)))
+        self.assertRaises(ValueError, math.log1p, -1)
+        self.assertEqual(math.log1p(INF), INF)
 
     @requires_IEEE_754
     def testLog2(self):
@@ -922,6 +998,136 @@ class MathTests(unittest.TestCase):
         self.ftest('radians(180)', math.radians(180), math.pi)
         self.ftest('radians(90)', math.radians(90), math.pi/2)
         self.ftest('radians(-45)', math.radians(-45), -math.pi/4)
+        self.ftest('radians(0)', math.radians(0), 0)
+
+    @requires_IEEE_754
+    def testRemainder(self):
+        from fractions import Fraction
+
+        def validate_spec(x, y, r):
+            """
+            Check that r matches remainder(x, y) according to the IEEE 754
+            specification. Assumes that x, y and r are finite and y is nonzero.
+            """
+            fx, fy, fr = Fraction(x), Fraction(y), Fraction(r)
+            # r should not exceed y/2 in absolute value
+            self.assertLessEqual(abs(fr), abs(fy/2))
+            # x - r should be an exact integer multiple of y
+            n = (fx - fr) / fy
+            self.assertEqual(n, int(n))
+            if abs(fr) == abs(fy/2):
+                # If |r| == |y/2|, n should be even.
+                self.assertEqual(n/2, int(n/2))
+
+        # triples (x, y, remainder(x, y)) in hexadecimal form.
+        testcases = [
+            # Remainders modulo 1, showing the ties-to-even behaviour.
+            '-4.0 1 -0.0',
+            '-3.8 1  0.8',
+            '-3.0 1 -0.0',
+            '-2.8 1 -0.8',
+            '-2.0 1 -0.0',
+            '-1.8 1  0.8',
+            '-1.0 1 -0.0',
+            '-0.8 1 -0.8',
+            '-0.0 1 -0.0',
+            ' 0.0 1  0.0',
+            ' 0.8 1  0.8',
+            ' 1.0 1  0.0',
+            ' 1.8 1 -0.8',
+            ' 2.0 1  0.0',
+            ' 2.8 1  0.8',
+            ' 3.0 1  0.0',
+            ' 3.8 1 -0.8',
+            ' 4.0 1  0.0',
+
+            # Reductions modulo 2*pi
+            '0x0.0p+0 0x1.921fb54442d18p+2 0x0.0p+0',
+            '0x1.921fb54442d18p+0 0x1.921fb54442d18p+2  0x1.921fb54442d18p+0',
+            '0x1.921fb54442d17p+1 0x1.921fb54442d18p+2  0x1.921fb54442d17p+1',
+            '0x1.921fb54442d18p+1 0x1.921fb54442d18p+2  0x1.921fb54442d18p+1',
+            '0x1.921fb54442d19p+1 0x1.921fb54442d18p+2 -0x1.921fb54442d17p+1',
+            '0x1.921fb54442d17p+2 0x1.921fb54442d18p+2 -0x0.0000000000001p+2',
+            '0x1.921fb54442d18p+2 0x1.921fb54442d18p+2  0x0p0',
+            '0x1.921fb54442d19p+2 0x1.921fb54442d18p+2  0x0.0000000000001p+2',
+            '0x1.2d97c7f3321d1p+3 0x1.921fb54442d18p+2  0x1.921fb54442d14p+1',
+            '0x1.2d97c7f3321d2p+3 0x1.921fb54442d18p+2 -0x1.921fb54442d18p+1',
+            '0x1.2d97c7f3321d3p+3 0x1.921fb54442d18p+2 -0x1.921fb54442d14p+1',
+            '0x1.921fb54442d17p+3 0x1.921fb54442d18p+2 -0x0.0000000000001p+3',
+            '0x1.921fb54442d18p+3 0x1.921fb54442d18p+2  0x0p0',
+            '0x1.921fb54442d19p+3 0x1.921fb54442d18p+2  0x0.0000000000001p+3',
+            '0x1.f6a7a2955385dp+3 0x1.921fb54442d18p+2  0x1.921fb54442d14p+1',
+            '0x1.f6a7a2955385ep+3 0x1.921fb54442d18p+2  0x1.921fb54442d18p+1',
+            '0x1.f6a7a2955385fp+3 0x1.921fb54442d18p+2 -0x1.921fb54442d14p+1',
+            '0x1.1475cc9eedf00p+5 0x1.921fb54442d18p+2  0x1.921fb54442d10p+1',
+            '0x1.1475cc9eedf01p+5 0x1.921fb54442d18p+2 -0x1.921fb54442d10p+1',
+
+            # Symmetry with respect to signs.
+            ' 1  0.c  0.4',
+            '-1  0.c -0.4',
+            ' 1 -0.c  0.4',
+            '-1 -0.c -0.4',
+            ' 1.4  0.c -0.4',
+            '-1.4  0.c  0.4',
+            ' 1.4 -0.c -0.4',
+            '-1.4 -0.c  0.4',
+
+            # Huge modulus, to check that the underlying algorithm doesn't
+            # rely on 2.0 * modulus being representable.
+            '0x1.dp+1023 0x1.4p+1023  0x0.9p+1023',
+            '0x1.ep+1023 0x1.4p+1023 -0x0.ap+1023',
+            '0x1.fp+1023 0x1.4p+1023 -0x0.9p+1023',
+        ]
+
+        for case in testcases:
+            with self.subTest(case=case):
+                x_hex, y_hex, expected_hex = case.split()
+                x = float.fromhex(x_hex)
+                y = float.fromhex(y_hex)
+                expected = float.fromhex(expected_hex)
+                validate_spec(x, y, expected)
+                actual = math.remainder(x, y)
+                # Cheap way of checking that the floats are
+                # as identical as we need them to be.
+                self.assertEqual(actual.hex(), expected.hex())
+
+        # Test tiny subnormal modulus: there's potential for
+        # getting the implementation wrong here (for example,
+        # by assuming that modulus/2 is exactly representable).
+        tiny = float.fromhex('1p-1074')  # min +ve subnormal
+        for n in range(-25, 25):
+            if n == 0:
+                continue
+            y = n * tiny
+            for m in range(100):
+                x = m * tiny
+                actual = math.remainder(x, y)
+                validate_spec(x, y, actual)
+                actual = math.remainder(-x, y)
+                validate_spec(-x, y, actual)
+
+        # Special values.
+        # NaNs should propagate as usual.
+        for value in [NAN, 0.0, -0.0, 2.0, -2.3, NINF, INF]:
+            self.assertIsNaN(math.remainder(NAN, value))
+            self.assertIsNaN(math.remainder(value, NAN))
+
+        # remainder(x, inf) is x, for non-nan non-infinite x.
+        for value in [-2.3, -0.0, 0.0, 2.3]:
+            self.assertEqual(math.remainder(value, INF), value)
+            self.assertEqual(math.remainder(value, NINF), value)
+
+        # remainder(x, 0) and remainder(infinity, x) for non-NaN x are invalid
+        # operations according to IEEE 754-2008 7.2(f), and should raise.
+        for value in [NINF, -2.3, -0.0, 0.0, 2.3, INF]:
+            with self.assertRaises(ValueError):
+                math.remainder(INF, value)
+            with self.assertRaises(ValueError):
+                math.remainder(NINF, value)
+            with self.assertRaises(ValueError):
+                math.remainder(value, 0.0)
+            with self.assertRaises(ValueError):
+                math.remainder(value, -0.0)
 
     def testSin(self):
         self.assertRaises(TypeError, math.sin)
@@ -951,6 +1157,7 @@ class MathTests(unittest.TestCase):
         self.ftest('sqrt(1)', math.sqrt(1), 1)
         self.ftest('sqrt(4)', math.sqrt(4), 2)
         self.assertEqual(math.sqrt(INF), INF)
+        self.assertRaises(ValueError, math.sqrt, -1)
         self.assertRaises(ValueError, math.sqrt, NINF)
         self.assertTrue(math.isnan(math.sqrt(NAN)))
 
@@ -970,7 +1177,8 @@ class MathTests(unittest.TestCase):
     def testTanh(self):
         self.assertRaises(TypeError, math.tanh)
         self.ftest('tanh(0)', math.tanh(0), 0)
-        self.ftest('tanh(1)+tanh(-1)', math.tanh(1)+math.tanh(-1), 0)
+        self.ftest('tanh(1)+tanh(-1)', math.tanh(1)+math.tanh(-1), 0,
+                   abs_tol=ulp(1))
         self.ftest('tanh(inf)', math.tanh(INF), 1)
         self.ftest('tanh(-inf)', math.tanh(NINF), -1)
         self.assertTrue(math.isnan(math.tanh(NAN)))
@@ -1020,7 +1228,8 @@ class MathTests(unittest.TestCase):
 
     def testIsnan(self):
         self.assertTrue(math.isnan(float("nan")))
-        self.assertTrue(math.isnan(float("inf")* 0.))
+        self.assertTrue(math.isnan(float("-nan")))
+        self.assertTrue(math.isnan(float("inf") * 0.))
         self.assertFalse(math.isnan(float("inf")))
         self.assertFalse(math.isnan(0.))
         self.assertFalse(math.isnan(1.))
@@ -1084,30 +1293,64 @@ class MathTests(unittest.TestCase):
 
     @requires_IEEE_754
     def test_testfile(self):
+        # Some tests need to be skipped on ancient OS X versions.
+        # See issue #27953.
+        SKIP_ON_TIGER = {'tan0064'}
+
+        osx_version = None
+        if sys.platform == 'darwin':
+            version_txt = platform.mac_ver()[0]
+            try:
+                osx_version = tuple(map(int, version_txt.split('.')))
+            except ValueError:
+                pass
+
+        fail_fmt = "{}: {}({!r}): {}"
+
+        failures = []
         for id, fn, ar, ai, er, ei, flags in parse_testfile(test_file):
-            # Skip if either the input or result is complex, or if
-            # flags is nonempty
-            if ai != 0. or ei != 0. or flags:
+            # Skip if either the input or result is complex
+            if ai != 0.0 or ei != 0.0:
                 continue
             if fn in ['rect', 'polar']:
                 # no real versions of rect, polar
                 continue
+            # Skip certain tests on OS X 10.4.
+            if osx_version is not None and osx_version < (10, 5):
+                if id in SKIP_ON_TIGER:
+                    continue
+
             func = getattr(math, fn)
+
+            if 'invalid' in flags or 'divide-by-zero' in flags:
+                er = 'ValueError'
+            elif 'overflow' in flags:
+                er = 'OverflowError'
+
             try:
                 result = func(ar)
-            except ValueError as exc:
-                message = (("Unexpected ValueError: %s\n        " +
-                           "in test %s:%s(%r)\n") % (exc.args[0], id, fn, ar))
-                self.fail(message)
+            except ValueError:
+                result = 'ValueError'
             except OverflowError:
-                message = ("Unexpected OverflowError in " +
-                           "test %s:%s(%r)\n" % (id, fn, ar))
-                self.fail(message)
-            self.ftest("%s:%s(%r)" % (id, fn, ar), result, er)
+                result = 'OverflowError'
+
+            # Default tolerances
+            ulp_tol, abs_tol = 5, 0.0
+
+            failure = result_check(er, result, ulp_tol, abs_tol)
+            if failure is None:
+                continue
+
+            msg = fail_fmt.format(id, fn, ar, failure)
+            failures.append(msg)
+
+        if failures:
+            self.fail('Failures in test_testfile:\n  ' +
+                      '\n  '.join(failures))
 
     @requires_IEEE_754
     def test_mtestfile(self):
-        fail_fmt = "{}:{}({!r}): expected {!r}, got {!r}"
+        fail_fmt = "{}: {}({!r}): {}"
 
         failures = []
         for id, fn, arg, expected, flags in parse_mtestfile(math_testcases):
@@ -1125,49 +1368,62 @@ class MathTests(unittest.TestCase):
             except OverflowError:
                 got = 'OverflowError'
 
-            accuracy_failure = None
-            if isinstance(got, float) and isinstance(expected, float):
-                if math.isnan(expected) and math.isnan(got):
-                    continue
-                if not math.isnan(expected) and not math.isnan(got):
-                    if fn == 'lgamma':
-                        # we use a weaker accuracy test for lgamma;
-                        # lgamma only achieves an absolute error of
-                        # a few multiples of the machine accuracy, in
-                        # general.
-                        accuracy_failure = acc_check(expected, got,
-                                                  rel_err = 5e-15,
-                                                  abs_err = 5e-15)
-                    elif fn == 'erfc':
-                        # erfc has less-than-ideal accuracy for large
-                        # arguments (x ~ 25 or so), mainly due to the
-                        # error involved in computing exp(-x*x).
-                        #
-                        # XXX Would be better to weaken this test only
-                        # for large x, instead of for all x.
-                        accuracy_failure = ulps_check(expected, got, 2000)
+            # Default tolerances
+            ulp_tol, abs_tol = 5, 0.0
 
-                    else:
-                        accuracy_failure = ulps_check(expected, got, 20)
-                    if accuracy_failure is None:
-                        continue
+            # Exceptions to the defaults
+            if fn == 'gamma':
+                # Experimental results on one platform gave
+                # an accuracy of <= 10 ulps across the entire float
+                # domain. We weaken that to require 20 ulp accuracy.
+                ulp_tol = 20
 
-            if isinstance(got, str) and isinstance(expected, str):
-                if got == expected:
-                    continue
+            elif fn == 'lgamma':
+                # we use a weaker accuracy test for lgamma;
+                # lgamma only achieves an absolute error of
+                # a few multiples of the machine accuracy, in
+                # general.
+                abs_tol = 1e-15
 
-            fail_msg = fail_fmt.format(id, fn, arg, expected, got)
-            if accuracy_failure is not None:
-                fail_msg += ' ({})'.format(accuracy_failure)
-            failures.append(fail_msg)
+            elif fn == 'erfc' and arg >= 0.0:
+                # erfc has less-than-ideal accuracy for large
+                # arguments (x ~ 25 or so), mainly due to the
+                # error involved in computing exp(-x*x).
+                #
+                # Observed between CPython and mpmath at 25 dp:
+                #       x <  0 : err <= 2 ulp
+                #  0 <= x <  1 : err <= 10 ulp
+                #  1 <= x < 10 : err <= 100 ulp
+                # 10 <= x < 20 : err <= 300 ulp
+                # 20 <= x      : < 600 ulp
+                #
+                if arg < 1.0:
+                    ulp_tol = 10
+                elif arg < 10.0:
+                    ulp_tol = 100
+                else:
+                    ulp_tol = 1000
+
+            failure = result_check(expected, got, ulp_tol, abs_tol)
+            if failure is None:
+                continue
+
+            msg = fail_fmt.format(id, fn, arg, failure)
+            failures.append(msg)
 
         if failures:
             self.fail('Failures in test_mtestfile:\n  ' +
                       '\n  '.join(failures))
 
+    # Custom assertions.
+
+    def assertIsNaN(self, value):
+        if not math.isnan(value):
+            self.fail("Expected a NaN, got {!r}.".format(value))
+
 
 class IsCloseTests(unittest.TestCase):
-    isclose = math.isclose # sublcasses should override this
+    isclose = math.isclose  # subclasses should override this
 
     def assertIsClose(self, a, b, *args, **kwargs):
         self.assertTrue(self.isclose(a, b, *args, **kwargs),
@@ -1272,7 +1528,8 @@ class IsCloseTests(unittest.TestCase):
 
         decimal_examples = [(Decimal('1.00000001'), Decimal('1.0')),
                             (Decimal('1.00000001e-20'), Decimal('1.0e-20')),
-                            (Decimal('1.00000001e-100'), Decimal('1.0e-100'))]
+                            (Decimal('1.00000001e-100'), Decimal('1.0e-100')),
+                            (Decimal('1.00000001e20'), Decimal('1.0e20'))]
         self.assertAllClose(decimal_examples, rel_tol=1e-8)
         self.assertAllNotClose(decimal_examples, rel_tol=1e-9)
 
@@ -1280,8 +1537,10 @@ class IsCloseTests(unittest.TestCase):
         # test with Fraction values
         from fractions import Fraction
 
-        # could use some more examples here!
-        fraction_examples = [(Fraction(1, 100000000) + 1, Fraction(1))]
+        fraction_examples = [
+            (Fraction(1, 100000000) + 1, Fraction(1)),
+            (Fraction(100000001), Fraction(100000000)),
+            (Fraction(10**8 + 1, 10**28), Fraction(1, 10**20))]
         self.assertAllClose(fraction_examples, rel_tol=1e-8)
         self.assertAllNotClose(fraction_examples, rel_tol=1e-9)
 

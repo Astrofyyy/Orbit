@@ -19,6 +19,7 @@
 # <pep8 compliant>
 
 import bpy
+from mathutils import Vector
 from bpy.types import Operator
 from bpy.props import (
         IntProperty,
@@ -31,6 +32,7 @@ import bmesh
 import time
 import blf
 from bpy_extras.view3d_utils import location_3d_to_region_2d
+from random import uniform
 
 C = bpy.context
 D = bpy.data
@@ -77,7 +79,7 @@ def defReconst(self, OFFSET):
 
 
 class reConst(Operator):
-    """Erase vertices bellow cero X position value and rebuilds the symmetry. """
+    """Erase vertices below cero X position value and rebuilds the symmetry. """
     """It also creates two uv channels, one symmetrical and one asymmetrical"""
     bl_idname = "mesh.reconst_osc"
     bl_label = "ReConst Mesh"
@@ -123,7 +125,7 @@ def side(self, nombre, offset):
 
 
 class SelectMenor(Operator):
-    """Selects the vetex with an N position value on the X axis"""
+    """Selects the vertex with an N position value on the X axis"""
     bl_idname = "mesh.select_side_osc"
     bl_label = "Select Side"
     bl_options = {"REGISTER", "UNDO"}
@@ -152,10 +154,10 @@ class SelectMenor(Operator):
 # -------------------------RESYM VG----------------------------------
 
 
-class resymVertexGroups(Operator):
+class rvg(Operator):
     bl_idname = "mesh.resym_vertex_weights_osc"
     bl_label = "Resym Vertex Weights"
-    bl_description = ("Copies the symetrical weight value of the vertices on the X axys\n"
+    bl_description = ("Copies the symmetrical weight value of the vertices on the X axys\n"
                       "(It needs the XML map and the Active Object is not in Edit mode)")
     bl_options = {"REGISTER", "UNDO"}
 
@@ -286,7 +288,7 @@ class OscResymSave(Operator):
 
 
 class OscResymMesh(Operator):
-    """Copies the symetrical position of the vertices on the X axys. It needs the XML map"""
+    """Copies the symmetrical position of the vertices on the X axys. It needs the XML map"""
     bl_idname = "mesh.resym_mesh"
     bl_label = "Resym save Apply XML"
     bl_options = {"REGISTER", "UNDO"}
@@ -346,57 +348,40 @@ class OscObjectToMesh(Operator):
 # ----------------------------- OVERLAP UV -------------------------------
 
 
-def DefOscOverlapUv(valpresicion):
-    inicio = time.time()
-    mode = bpy.context.object.mode
-    bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+def DefOscOverlapUv(self,offset,rotate):
+    me = bpy.context.object.data
+    bm = bmesh.from_edit_mesh(me)
+    bm.faces.ensure_lookup_table()
+    faces = [face for face in bm.faces if face.select]
+    uv_layer = bm.loops.layers.uv[bpy.context.object.data.uv_layers.active.name]
 
-    rd = valpresicion
-    ob = bpy.context.object
-    absco = lambda x: (abs(round(x[0], rd)), round(x[1], rd), round(x[2], rd))
-    rounder = lambda x: (round(x[0], rd), round(x[1], rd), round(x[2], rd))
+    faceDict = {}
+    faceReverse = []
+    bm.select_mode = {'FACE'}
+    for face in faces:
+        bpy.ops.mesh.select_all(action="DESELECT")
+        face.select = True
+        bpy.ops.mesh.select_mirror()
+        faceDict[face.index] = [mirrorface for mirrorface in bm.faces if mirrorface.select][0].index
+        faceReverse.append([mirrorface for mirrorface in bm.faces if mirrorface.select][0])
 
-    # vertice a vertex
-    vertvertex = {}
-    for vert in ob.data.loops:
-        vertvertex.setdefault(vert.vertex_index, []).append(vert.index)
 
-    vertexvert = {}
-    for vertex in ob.data.loops:
-        vertexvert[vertex.index] = vertex.vertex_index
 
-    # posicion de cada vertice y cada face
-    vertloc = {rounder(vert.co[:]): vert for vert in ob.data.vertices}
-    faceloc = {rounder(poly.center[:]): poly for poly in ob.data.polygons}
+    for selFace,mirrorFace in faceDict.items():
+        for loop,mirrorLoop in zip(bm.faces[selFace].loops,bm.faces[mirrorFace].loops):
+            mirrorLoop.copy_from(loop)
+        if offset:
+            for loop,mirrorLoop in zip(bm.faces[selFace].loops,bm.faces[mirrorFace].loops):
+                mirrorLoop[uv_layer].uv += Vector((1,0))
 
-    # relativo de cada vertice y cada face
-    verteqind = {vert.index: vertloc.get(
-                 absco(co),
-                 vertloc[co]).index for co,
-                 vert in vertloc.items() if co[0] <= 0}
-    polyeq = {face: faceloc.get(
-              absco(center),
-              faceloc[center]) for center,
-              face in faceloc.items() if center[0] <= 0}
 
-    # loops in faces
-    lif = {poly: [i for i in poly.loop_indices] for poly in ob.data.polygons}
+    #invierto direcciones
+    bmesh.ops.reverse_uvs(bm, faces=[f for f in faceReverse])
+    bmesh.ops.rotate_uvs(bm, faces=[f for f in faceReverse])
+    if rotate:
+        bmesh.ops.rotate_uvs(bm, faces=[f for f in faceReverse])
 
-    # acomoda
-    for l, r in polyeq.items():
-        if l.select:
-            for lloop in lif[l]:
-                for rloop in lif[r]:
-                    if (verteqind[vertexvert[lloop]] == vertexvert[rloop] and
-                            ob.data.uv_layers.active.data[rloop].select):
-
-                        ob.data.uv_layers.active.data[
-                            lloop].uv = ob.data.uv_layers.active.data[
-                                rloop].uv
-
-    bpy.ops.object.mode_set(mode=mode, toggle=False)
-
-    print("Time elapsed: %4s seconds" % (time.time() - inicio))
+    bmesh.update_edit_mesh(me)
 
 
 class OscOverlapUv(Operator):
@@ -411,15 +396,18 @@ class OscOverlapUv(Operator):
         return (context.active_object is not None and
                 context.active_object.type == 'MESH')
 
-    presicion = IntProperty(
-            default=4,
-            min=1,
-            max=10,
-            name="precision"
+
+    offset = BoolProperty(
+            default=True,
+            name="Offset"
+            )
+    rotate = BoolProperty(
+            default=False,
+            name="Rotate"
             )
 
     def execute(self, context):
-        DefOscOverlapUv(self.presicion)
+        DefOscOverlapUv(self,self.offset,self.rotate)
         return {'FINISHED'}
 
 
@@ -462,7 +450,7 @@ class ModalIndexOperator(Operator):
             self.tsize -= 1
         elif event.type in {'RIGHTMOUSE', 'ESC', 'TAB'}:
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
-            context.area.header_text_set()
+            context.area.header_text_set("")
             return {'CANCELLED'}
 
         return {'PASS_THROUGH'}
@@ -561,4 +549,205 @@ class LatticeMirror(Operator):
 
     def execute(self, context):
         defLatticeMirror(self, context)
+        return {'FINISHED'}
+
+
+# -------------------------- OVERLAP UV ISLANDS
+
+def defCopyUvsIsland(self, context):
+    bpy.ops.object.mode_set(mode="OBJECT")
+    global obLoop
+    global islandFaces
+    obLoop = []
+    islandFaces = []
+    for poly in bpy.context.object.data.polygons:
+        if poly.select:
+            islandFaces.append(poly.index)
+            for li in poly.loop_indices:
+                obLoop.append(li)
+
+    bpy.ops.object.mode_set(mode="EDIT")
+
+def defPasteUvsIsland(self, uvOffset, rotateUv,context):
+    bpy.ops.object.mode_set(mode="OBJECT")
+    selPolys = [poly.index for poly in bpy.context.object.data.polygons if poly.select]
+
+    for island in selPolys:
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="DESELECT")
+        bpy.ops.object.mode_set(mode="OBJECT")
+        bpy.context.object.data.polygons[island].select = True
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_linked()
+        bpy.ops.object.mode_set(mode="OBJECT")
+        TobLoop = []
+        TislandFaces = []
+        for poly in bpy.context.object.data.polygons:
+            if poly.select:
+                TislandFaces.append(poly.index)
+                for li in poly.loop_indices:
+                    TobLoop.append(li)
+
+        for source,target in zip(range(min(obLoop),max(obLoop)+1),range(min(TobLoop),max(TobLoop)+1)):
+            bpy.context.object.data.uv_layers.active.data[target].uv = bpy.context.object.data.uv_layers.active.data[source].uv + Vector((uvOffset,0))
+
+        bpy.ops.object.mode_set(mode="EDIT")
+
+    if rotateUv:
+        bpy.ops.object.mode_set(mode="OBJECT")
+        for poly in selPolys:
+            bpy.context.object.data.polygons[poly].select = True
+        bpy.ops.object.mode_set(mode="EDIT")
+        bm = bmesh.from_edit_mesh(bpy.context.object.data)
+        bmesh.ops.reverse_uvs(bm, faces=[f for f in bm.faces if f.select])
+        bmesh.ops.rotate_uvs(bm, faces=[f for f in bm.faces if f.select])
+        #bmesh.update_edit_mesh(bpy.context.object.data, tessface=False, destructive=False)
+
+
+
+class CopyUvIsland(Operator):
+    """Copy Uv Island"""
+    bl_idname = "mesh.uv_island_copy"
+    bl_label = "Copy Uv Island"
+    bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        return (context.active_object is not None and
+                context.active_object.type == 'MESH' and
+                context.active_object.mode == "EDIT")
+
+    def execute(self, context):
+        defCopyUvsIsland(self, context)
+        return {'FINISHED'}
+
+class PasteUvIsland(Operator):
+    """Paste Uv Island"""
+    bl_idname = "mesh.uv_island_paste"
+    bl_label = "Paste Uv Island"
+    bl_options = {"REGISTER", "UNDO"}
+
+    uvOffset = BoolProperty(
+            name="Uv Offset",
+            default=False
+            )
+
+    rotateUv = BoolProperty(
+            name="Rotate Uv Corner",
+            default=False
+            )
+    @classmethod
+    def poll(cls, context):
+        return (context.active_object is not None and
+                context.active_object.type == 'MESH' and
+                context.active_object.mode == "EDIT")
+
+    def execute(self, context):
+        defPasteUvsIsland(self, self.uvOffset, self.rotateUv, context)
+        return {'FINISHED'}
+
+
+
+class createEditMultimesh(Operator):
+    """Create Edit Multi Mesh"""
+    bl_idname = "mesh.create_edit_multimesh"
+    bl_label = "Create edit multimesh"
+    bl_options = {"REGISTER", "UNDO"}
+
+
+    # creo el merge para editar
+    def execute(self,context):
+        global relvert
+        global me
+        global ob
+        temp = [[ob , [vert.co for vert in ob.data.vertices]]for ob in bpy.data.groups[bpy.context.scene.multimeshedit].objects]
+        vi = 0
+        pi = 0
+        relvert = {}
+        vertlist = []
+        polylist = []
+        for ob in temp:
+            objectMatrix = ob[0].matrix_world.copy()
+            for vert in ob[0].data.vertices:
+                vertlist.append(objectMatrix*vert.co)
+            for poly in ob[0].data.polygons:
+                polylist.append(tuple([vert+vi for vert in poly.vertices[:]]))
+            relvert[ob[0]] = {vert.index:vert.index+vi for vert in  ob[0].data.vertices}
+            vi += len(ob[0].data.vertices)
+            ob[0].hide = 1
+        me = bpy.data.meshes.new("editMesh")
+        ob = bpy.data.objects.new("editMesh", me)
+        bpy.context.scene.objects.link(ob)
+        me.from_pydata(vertlist,[],polylist)
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.context.scene.objects.active = ob
+        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        return {'FINISHED'}
+
+
+class ApplyEditMultimesh(Operator):
+    """Apply Edit Multi Mesh"""
+    bl_idname = "mesh.apply_edit_multimesh"
+    bl_label = "Apply edit multimesh"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self,context):
+        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+        for object,rv in relvert.items():
+            objectMatrix = object.matrix_world.inverted().copy()
+            for source, target in rv.items():
+                object.data.vertices[source].co = objectMatrix * me.vertices[target].co
+            object.hide = 0
+        bpy.context.scene.objects.unlink(ob)
+        return {'FINISHED'}
+
+# -------------------------VERTEX COLOR MASK----------------------------------
+
+
+class resymVertexGroups(Operator):
+    bl_idname = "mesh.vertex_color_mask"
+    bl_label = "Vertex Color Mask"
+    bl_description = ("Create a Vertex Color Mask")
+    bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        obj = context.active_object
+        return obj is not None
+
+    def execute(self, context):
+        obj = bpy.context.active_object
+        mesh= obj.data
+
+        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        bpy.ops.mesh.select_all(action="DESELECT")
+
+        bm = bmesh.from_edit_mesh(mesh)
+        bm.faces.ensure_lookup_table()
+
+        islands = []
+        faces = bm.faces
+
+        try:
+            color_layer = bm.loops.layers.color["RGBMask"]
+        except:
+            color_layer = bm.loops.layers.color.new("RGBMask")
+
+        while faces:
+            faces[0].select_set(True)
+            bpy.ops.mesh.select_linked()
+            islands.append([f for f in faces if f.select])
+            bpy.ops.mesh.hide(unselected=False)
+            faces = [f for f in bm.faces if not f.hide]
+
+        bpy.ops.mesh.reveal()
+
+        for island in islands:
+            color = (uniform(0,1),uniform(0,1),uniform(0,1),1)
+            for face in island:
+                for loop in face.loops:
+                    loop[color_layer] = color
+
+        bpy.ops.object.mode_set(mode="VERTEX_PAINT")
+
         return {'FINISHED'}

@@ -287,7 +287,6 @@ class dispatcher:
 
     def set_socket(self, sock, map=None):
         self.socket = sock
-##        self.__dict__['socket'] = sock
         self._fileno = sock.fileno()
         self.add_channel(map)
 
@@ -333,7 +332,7 @@ class dispatcher:
         self.connecting = True
         err = self.socket.connect_ex(address)
         if err in (EINPROGRESS, EALREADY, EWOULDBLOCK) \
-        or err == EINVAL and os.name in ('nt', 'ce'):
+        or err == EINVAL and os.name == 'nt':
             self.addr = address
             return
         if err in (0, EISCONN):
@@ -595,7 +594,8 @@ if os.name == 'posix':
 
         def __del__(self):
             if self.fd >= 0:
-                warnings.warn("unclosed file %r" % self, ResourceWarning)
+                warnings.warn("unclosed file %r" % self, ResourceWarning,
+                              source=self)
             self.close()
 
         def recv(self, *args):
@@ -618,8 +618,9 @@ if os.name == 'posix':
         def close(self):
             if self.fd < 0:
                 return
-            os.close(self.fd)
+            fd = self.fd
             self.fd = -1
+            os.close(fd)
 
         def fileno(self):
             return self.fd

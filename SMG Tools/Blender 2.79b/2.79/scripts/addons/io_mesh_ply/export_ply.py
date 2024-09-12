@@ -116,10 +116,12 @@ def save_mesh(filepath,
 
             if has_vcol:
                 color = col[j]
-                color = (int(color[0] * 255.0),
-                         int(color[1] * 255.0),
-                         int(color[2] * 255.0),
-                         )
+                color = (
+                    int(color[0] * 255.0),
+                    int(color[1] * 255.0),
+                    int(color[2] * 255.0),
+                    int(color[3] * 255.0),
+                )
             key = normal_key, uvcoord_key, color
 
             vdict_local = vdict[vidx]
@@ -154,7 +156,8 @@ def save_mesh(filepath,
     if use_colors:
         fw("property uchar red\n"
            "property uchar green\n"
-           "property uchar blue\n")
+           "property uchar blue\n"
+           "property uchar alpha\n")
 
     fw("element face %d\n" % len(mesh.tessfaces))
     fw("property list uchar uint vertex_indices\n")
@@ -167,7 +170,7 @@ def save_mesh(filepath,
         if use_uv_coords:
             fw(" %.6f %.6f" % v[2])  # uv
         if use_colors:
-            fw(" %u %u %u" % v[3])  # col
+            fw(" %u %u %u %u" % v[3])  # col
         fw("\n")
 
     for pf in ply_faces:

@@ -7,10 +7,9 @@ import marshal
 import os
 import sys
 import types
-import struct
 import warnings
 with warnings.catch_warnings():
-    warnings.simplefilter('ignore', PendingDeprecationWarning)
+    warnings.simplefilter('ignore', DeprecationWarning)
     import imp
 
 LOAD_CONST = dis.opmap['LOAD_CONST']
@@ -288,11 +287,12 @@ class ModuleFinder:
             co = compile(fp.read()+'\n', pathname, 'exec')
         elif type == imp.PY_COMPILED:
             try:
-                marshal_data = importlib._bootstrap_external._validate_bytecode_header(fp.read())
+                data = fp.read()
+                importlib._bootstrap_external._classify_pyc(data, fqname, {})
             except ImportError as exc:
                 self.msgout(2, "raise ImportError: " + str(exc), pathname)
                 raise
-            co = marshal.loads(marshal_data)
+            co = marshal.loads(memoryview(data)[16:])
         else:
             co = None
         m = self.add_module(fqname)
@@ -336,8 +336,7 @@ class ModuleFinder:
                         fullname = name + "." + sub
                         self._add_badmodule(fullname, caller)
 
-    def scan_opcodes_25(self, co,
-                     unpack = struct.unpack):
+    def scan_opcodes(self, co):
         # Scan the code, and yield 'interesting' opcode combinations
         code = co.co_code
         names = co.co_names
@@ -360,7 +359,7 @@ class ModuleFinder:
 
     def scan_code(self, co, m):
         code = co.co_code
-        scanner = self.scan_opcodes_25
+        scanner = self.scan_opcodes
         for what, args in scanner(co):
             if what == "store":
                 name, = args

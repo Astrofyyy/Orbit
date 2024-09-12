@@ -6,11 +6,8 @@ import importlib
 import sys
 import os
 import os.path
-import tempfile
 import subprocess
 import py_compile
-import contextlib
-import shutil
 import zipfile
 
 from importlib.util import source_from_cache
@@ -39,6 +36,11 @@ def interpreter_requires_environment():
     """
     global __cached_interp_requires_environment
     if __cached_interp_requires_environment is None:
+        # If PYTHONHOME is set, assume that we need it
+        if 'PYTHONHOME' in os.environ:
+            __cached_interp_requires_environment = True
+            return True
+
         # Try running an interpreter with -E to see if it works or not.
         try:
             subprocess.check_call([sys.executable, '-E',
@@ -51,57 +53,14 @@ def interpreter_requires_environment():
     return __cached_interp_requires_environment
 
 
-_PythonRunResult = collections.namedtuple("_PythonRunResult",
-                                          ("rc", "out", "err"))
-
-
-# Executing the interpreter in a subprocess
-def run_python_until_end(*args, **env_vars):
-    env_required = interpreter_requires_environment()
-    if '__isolated' in env_vars:
-        isolated = env_vars.pop('__isolated')
-    else:
-        isolated = not env_vars and not env_required
-    cmd_line = [sys.executable, '-X', 'faulthandler']
-    if isolated:
-        # isolated mode: ignore Python environment variables, ignore user
-        # site-packages, and don't add the current directory to sys.path
-        cmd_line.append('-I')
-    elif not env_vars and not env_required:
-        # ignore Python environment variables
-        cmd_line.append('-E')
-    # Need to preserve the original environment, for in-place testing of
-    # shared library builds.
-    env = os.environ.copy()
-    # set TERM='' unless the TERM environment variable is passed explicitly
-    # see issues #11390 and #18300
-    if 'TERM' not in env_vars:
-        env['TERM'] = ''
-    # But a special flag that can be set to override -- in this case, the
-    # caller is responsible to pass the full environment.
-    if env_vars.pop('__cleanenv', None):
-        env = {}
-    env.update(env_vars)
-    cmd_line.extend(args)
-    proc = subprocess.Popen(cmd_line, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                         env=env)
-    with proc:
-        try:
-            out, err = proc.communicate()
-        finally:
-            proc.kill()
-            subprocess._cleanup()
-    rc = proc.returncode
-    err = strip_python_stderr(err)
-    return _PythonRunResult(rc, out, err), cmd_line
-
-def _assert_python(expected_success, *args, **env_vars):
-    res, cmd_line = run_python_until_end(*args, **env_vars)
-    if (res.rc and expected_success) or (not res.rc and not expected_success):
+class _PythonRunResult(collections.namedtuple("_PythonRunResult",
+                                          ("rc", "out", "err"))):
+    """Helper for reporting Python subprocess run results"""
+    def fail(self, cmd_line):
+        """Provide helpful details about failed subcommand runs"""
         # Limit to 80 lines to ASCII characters
         maxlen = 80 * 100
-        out, err = res.out, res.err
+        out, err = self.out, self.err
         if len(out) > maxlen:
             out = b'(... truncated stdout ...)' + out[-maxlen:]
         if len(err) > maxlen:
@@ -120,9 +79,68 @@ def _assert_python(expected_success, *args, **env_vars):
                              "---\n"
                              "%s\n"
                              "---"
-                             % (res.rc, cmd_line,
+                             % (self.rc, cmd_line,
                                 out,
                                 err))
+
+
+# Executing the interpreter in a subprocess
+def run_python_until_end(*args, **env_vars):
+    env_required = interpreter_requires_environment()
+    cwd = env_vars.pop('__cwd', None)
+    if '__isolated' in env_vars:
+        isolated = env_vars.pop('__isolated')
+    else:
+        isolated = not env_vars and not env_required
+    cmd_line = [sys.executable, '-X', 'faulthandler']
+    if isolated:
+        # isolated mode: ignore Python environment variables, ignore user
+        # site-packages, and don't add the current directory to sys.path
+        cmd_line.append('-I')
+    elif not env_vars and not env_required:
+        # ignore Python environment variables
+        cmd_line.append('-E')
+
+    # But a special flag that can be set to override -- in this case, the
+    # caller is responsible to pass the full environment.
+    if env_vars.pop('__cleanenv', None):
+        env = {}
+        if sys.platform == 'win32':
+            # Windows requires at least the SYSTEMROOT environment variable to
+            # start Python.
+            env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
+
+        # Other interesting environment variables, not copied currently:
+        # COMSPEC, HOME, PATH, TEMP, TMPDIR, TMP.
+    else:
+        # Need to preserve the original environment, for in-place testing of
+        # shared library builds.
+        env = os.environ.copy()
+
+    # set TERM='' unless the TERM environment variable is passed explicitly
+    # see issues #11390 and #18300
+    if 'TERM' not in env_vars:
+        env['TERM'] = ''
+
+    env.update(env_vars)
+    cmd_line.extend(args)
+    proc = subprocess.Popen(cmd_line, stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         env=env, cwd=cwd)
+    with proc:
+        try:
+            out, err = proc.communicate()
+        finally:
+            proc.kill()
+            subprocess._cleanup()
+    rc = proc.returncode
+    err = strip_python_stderr(err)
+    return _PythonRunResult(rc, out, err), cmd_line
+
+def _assert_python(expected_success, *args, **env_vars):
+    res, cmd_line = run_python_until_end(*args, **env_vars)
+    if (res.rc and expected_success) or (not res.rc and not expected_success):
+        res.fail(cmd_line)
     return res
 
 def assert_python_ok(*args, **env_vars):
@@ -154,7 +172,9 @@ def spawn_python(*args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **kw):
     kw is extra keyword args to pass to subprocess.Popen. Returns a Popen
     object.
     """
-    cmd_line = [sys.executable, '-E']
+    cmd_line = [sys.executable]
+    if not interpreter_requires_environment():
+        cmd_line.append('-E')
     cmd_line.extend(args)
     # Under Fedora (?), GNU readline can output junk on stderr when initialized,
     # depending on the TERM setting.  Setting TERM=vt100 is supposed to disable

@@ -122,7 +122,7 @@ def do_vtx_if_appropriate(bm, edges):
     if not coplanar:
         return {'NON_PLANAR_EDGES'}
 
-    # point must lie on an edge or the virtual extention of an edge
+    # point must lie on an edge or the virtual extension of an edge
     bm = perform_vtx(bm, point, edges, (p1, p2, p3, p4), vertex_indices)
     return bm
 
@@ -173,11 +173,3 @@ class TCAutoVTX(bpy.types.Operator):
         bmesh.update_edit_mesh(me, True)
 
         return {'FINISHED'}
-
-
-def register():
-    bpy.utils.register_module(__name__)
-
-
-def unregister():
-    bpy.utils.unregister_module(__name__)

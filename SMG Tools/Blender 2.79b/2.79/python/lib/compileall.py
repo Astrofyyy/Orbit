@@ -25,6 +25,8 @@ from functools import partial
 __all__ = ["compile_dir","compile_file","compile_path"]
 
 def _walk_dir(dir, ddir=None, maxlevels=10, quiet=0):
+    if quiet < 2 and isinstance(dir, os.PathLike):
+        dir = os.fspath(dir)
     if not quiet:
         print('Listing {!r}...'.format(dir))
     try:
@@ -50,7 +52,8 @@ def _walk_dir(dir, ddir=None, maxlevels=10, quiet=0):
                                  maxlevels=maxlevels - 1, quiet=quiet)
 
 def compile_dir(dir, maxlevels=10, ddir=None, force=False, rx=None,
-                quiet=0, legacy=False, optimize=-1, workers=1):
+                quiet=0, legacy=False, optimize=-1, workers=1,
+                invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
     """Byte-compile all modules in the given directory tree.
 
     Arguments (only dir is required):
@@ -65,13 +68,14 @@ def compile_dir(dir, maxlevels=10, ddir=None, force=False, rx=None,
     legacy:    if True, produce legacy pyc paths instead of PEP 3147 paths
     optimize:  optimization level or -1 for level of the interpreter
     workers:   maximum number of parallel workers
+    invalidation_mode: how the up-to-dateness of the pyc will be checked
     """
     if workers is not None and workers < 0:
         raise ValueError('workers must be greater or equal to 0')
 
     files = _walk_dir(dir, quiet=quiet, maxlevels=maxlevels,
                       ddir=ddir)
-    success = 1
+    success = True
     if workers is not None and workers != 1 and ProcessPoolExecutor is not None:
         workers = workers or None
         with ProcessPoolExecutor(max_workers=workers) as executor:
@@ -79,18 +83,20 @@ def compile_dir(dir, maxlevels=10, ddir=None, force=False, rx=None,
                                            ddir=ddir, force=force,
                                            rx=rx, quiet=quiet,
                                            legacy=legacy,
-                                           optimize=optimize),
+                                           optimize=optimize,
+                                           invalidation_mode=invalidation_mode),
                                    files)
-            success = min(results, default=1)
+            success = min(results, default=True)
     else:
         for file in files:
             if not compile_file(file, ddir, force, rx, quiet,
-                                legacy, optimize):
-                success = 0
+                                legacy, optimize, invalidation_mode):
+                success = False
     return success
 
 def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
-                 legacy=False, optimize=-1):
+                 legacy=False, optimize=-1,
+                 invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
     """Byte-compile one file.
 
     Arguments (only fullname is required):
@@ -103,8 +109,11 @@ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
                no output with 2
     legacy:    if True, produce legacy pyc paths instead of PEP 3147 paths
     optimize:  optimization level or -1 for level of the interpreter
+    invalidation_mode: how the up-to-dateness of the pyc will be checked
     """
-    success = 1
+    success = True
+    if quiet < 2 and isinstance(fullname, os.PathLike):
+        fullname = os.fspath(fullname)
     name = os.path.basename(fullname)
     if ddir is not None:
         dfile = os.path.join(ddir, name)
@@ -130,10 +139,10 @@ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
             if not force:
                 try:
                     mtime = int(os.stat(fullname).st_mtime)
-                    expect = struct.pack('<4sl', importlib.util.MAGIC_NUMBER,
-                                         mtime)
+                    expect = struct.pack('<4sll', importlib.util.MAGIC_NUMBER,
+                                         0, mtime)
                     with open(cfile, 'rb') as chandle:
-                        actual = chandle.read(8)
+                        actual = chandle.read(12)
                     if expect == actual:
                         return success
                 except OSError:
@@ -142,9 +151,10 @@ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
                 print('Compiling {!r}...'.format(fullname))
             try:
                 ok = py_compile.compile(fullname, cfile, dfile, True,
-                                        optimize=optimize)
+                                        optimize=optimize,
+                                        invalidation_mode=invalidation_mode)
             except py_compile.PyCompileError as err:
-                success = 0
+                success = False
                 if quiet >= 2:
                     return success
                 elif quiet:
@@ -157,7 +167,7 @@ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
                 msg = msg.decode(sys.stdout.encoding)
                 print(msg)
             except (SyntaxError, UnicodeError, OSError) as e:
-                success = 0
+                success = False
                 if quiet >= 2:
                     return success
                 elif quiet:
@@ -167,11 +177,12 @@ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
                 print(e.__class__.__name__ + ':', e)
             else:
                 if ok == 0:
-                    success = 0
+                    success = False
     return success
 
 def compile_path(skip_curdir=1, maxlevels=0, force=False, quiet=0,
-                 legacy=False, optimize=-1):
+                 legacy=False, optimize=-1,
+                 invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
     """Byte-compile all module on sys.path.
 
     Arguments (all optional):
@@ -182,16 +193,24 @@ def compile_path(skip_curdir=1, maxlevels=0, force=False, quiet=0,
     quiet: as for compile_dir() (default 0)
     legacy: as for compile_dir() (default False)
     optimize: as for compile_dir() (default -1)
+    invalidation_mode: as for compiler_dir()
     """
-    success = 1
+    success = True
     for dir in sys.path:
         if (not dir or dir == os.curdir) and skip_curdir:
             if quiet < 2:
                 print('Skipping current directory')
         else:
-            success = success and compile_dir(dir, maxlevels, None,
-                                              force, quiet=quiet,
-                                              legacy=legacy, optimize=optimize)
+            success = success and compile_dir(
+                dir,
+                maxlevels,
+                None,
+                force,
+                quiet=quiet,
+                legacy=legacy,
+                optimize=optimize,
+                invalidation_mode=invalidation_mode,
+            )
     return success
 
 
@@ -234,6 +253,11 @@ def main():
                               'to the equivalent of -l sys.path'))
     parser.add_argument('-j', '--workers', default=1,
                         type=int, help='Run compileall concurrently')
+    invalidation_modes = [mode.name.lower().replace('_', '-')
+                          for mode in py_compile.PycInvalidationMode]
+    parser.add_argument('--invalidation-mode', default='timestamp',
+                        choices=sorted(invalidation_modes),
+                        help='How the pycs will be invalidated at runtime')
 
     args = parser.parse_args()
     compile_dests = args.compile_dest
@@ -262,23 +286,29 @@ def main():
     if args.workers is not None:
         args.workers = args.workers or None
 
+    ivl_mode = args.invalidation_mode.replace('-', '_').upper()
+    invalidation_mode = py_compile.PycInvalidationMode[ivl_mode]
+
     success = True
     try:
         if compile_dests:
             for dest in compile_dests:
                 if os.path.isfile(dest):
                     if not compile_file(dest, args.ddir, args.force, args.rx,
-                                        args.quiet, args.legacy):
+                                        args.quiet, args.legacy,
+                                        invalidation_mode=invalidation_mode):
                         success = False
                 else:
                     if not compile_dir(dest, maxlevels, args.ddir,
                                        args.force, args.rx, args.quiet,
-                                       args.legacy, workers=args.workers):
+                                       args.legacy, workers=args.workers,
+                                       invalidation_mode=invalidation_mode):
                         success = False
             return success
         else:
             return compile_path(legacy=args.legacy, force=args.force,
-                                quiet=args.quiet)
+                                quiet=args.quiet,
+                                invalidation_mode=invalidation_mode)
     except KeyboardInterrupt:
         if args.quiet < 2:
             print("\n[interrupted]")

@@ -21,16 +21,16 @@ import bpy
 import nodeitems_utils
 from bpy.types import Header, Menu, Panel
 from bpy.app.translations import pgettext_iface as iface_
-from bl_ui.properties_grease_pencil_common import (
-        GreasePencilDrawingToolsPanel,
-        GreasePencilStrokeEditPanel,
-        GreasePencilStrokeSculptPanel,
-        GreasePencilBrushPanel,
-        GreasePencilBrushCurvesPanel,
-        GreasePencilDataPanel,
-        GreasePencilPaletteColorPanel,
-        GreasePencilToolsPanel
-        )
+from .properties_grease_pencil_common import (
+    GreasePencilDrawingToolsPanel,
+    GreasePencilStrokeEditPanel,
+    GreasePencilStrokeSculptPanel,
+    GreasePencilBrushPanel,
+    GreasePencilBrushCurvesPanel,
+    GreasePencilDataPanel,
+    GreasePencilPaletteColorPanel,
+    GreasePencilToolsPanel
+)
 
 
 class NODE_HT_header(Header):
@@ -43,7 +43,7 @@ class NODE_HT_header(Header):
         snode = context.space_data
         snode_id = snode.id
         id_from = snode.id_from
-        toolsettings = context.tool_settings
+        tool_settings = context.tool_settings
 
         row = layout.row(align=True)
         row.template_header()
@@ -123,10 +123,10 @@ class NODE_HT_header(Header):
 
         # Snap
         row = layout.row(align=True)
-        row.prop(toolsettings, "use_snap", text="")
-        row.prop(toolsettings, "snap_node_element", icon_only=True)
-        if toolsettings.snap_node_element != 'GRID':
-            row.prop(toolsettings, "snap_target", text="")
+        row.prop(tool_settings, "use_snap", text="")
+        row.prop(tool_settings, "snap_node_element", icon_only=True)
+        if tool_settings.snap_node_element != 'GRID':
+            row.prop(tool_settings, "snap_target", text="")
 
         row = layout.row(align=True)
         row.operator("node.clipboard_copy", text="", icon='COPYDOWN')
@@ -187,10 +187,10 @@ class NODE_MT_view(Menu):
         if context.space_data.show_backdrop:
             layout.separator()
 
-            layout.operator("node.backimage_move", text="Backdrop move")
-            layout.operator("node.backimage_zoom", text="Backdrop zoom in").factor = 1.2
-            layout.operator("node.backimage_zoom", text="Backdrop zoom out").factor = 0.83333
-            layout.operator("node.backimage_fit", text="Fit backdrop to available space")
+            layout.operator("node.backimage_move", text="Backdrop Move")
+            layout.operator("node.backimage_zoom", text="Backdrop Zoom In").factor = 1.2
+            layout.operator("node.backimage_zoom", text="Backdrop Zoom Out").factor = 0.83333
+            layout.operator("node.backimage_fit", text="Fit Backdrop to Available Space")
 
         layout.separator()
 
@@ -243,7 +243,7 @@ class NODE_MT_node(Menu):
 
         layout.separator()
 
-        layout.operator("node.join", text="Join in new Frame")
+        layout.operator("node.join", text="Join in New Frame")
         layout.operator("node.detach", text="Remove from Frame")
 
         layout.separator()
@@ -510,11 +510,15 @@ class NODE_PT_tools_grease_pencil_sculpt(GreasePencilStrokeSculptPanel, Panel):
     bl_region_type = 'TOOLS'
 
 # Grease Pencil drawing brushes
+
+
 class NODE_PT_tools_grease_pencil_brush(GreasePencilBrushPanel, Panel):
     bl_space_type = 'NODE_EDITOR'
     bl_region_type = 'TOOLS'
 
 # Grease Pencil drawing curves
+
+
 class NODE_PT_tools_grease_pencil_brushcurves(GreasePencilBrushCurvesPanel, Panel):
     bl_space_type = 'NODE_EDITOR'
     bl_region_type = 'TOOLS'
@@ -524,6 +528,7 @@ class NODE_PT_tools_grease_pencil_brushcurves(GreasePencilBrushCurvesPanel, Pane
 
 def node_draw_tree_view(layout, context):
     pass
+
 
 classes = (
     NODE_HT_header,

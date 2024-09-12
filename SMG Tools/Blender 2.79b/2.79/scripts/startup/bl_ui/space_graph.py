@@ -26,10 +26,10 @@ class GRAPH_HT_header(Header):
     bl_space_type = 'GRAPH_EDITOR'
 
     def draw(self, context):
-        from bl_ui.space_dopesheet import dopesheet_filter
+        from .space_dopesheet import dopesheet_filter
 
         layout = self.layout
-        toolsettings = context.tool_settings
+        tool_settings = context.tool_settings
 
         st = context.space_data
 
@@ -50,10 +50,10 @@ class GRAPH_HT_header(Header):
 
         row = layout.row(align=True)
 
-        row.prop(toolsettings, "use_proportional_fcurve",
+        row.prop(tool_settings, "use_proportional_fcurve",
                  text="", icon_only=True)
-        if toolsettings.use_proportional_fcurve:
-            row.prop(toolsettings, "proportional_edit_falloff",
+        if tool_settings.use_proportional_fcurve:
+            row.prop(tool_settings, "proportional_edit_falloff",
                      text="", icon_only=True)
 
         layout.prop(st, "auto_snap", text="")
@@ -186,7 +186,7 @@ class GRAPH_MT_marker(Menu):
     def draw(self, context):
         layout = self.layout
 
-        from bl_ui.space_time import marker_menu_generic
+        from .space_time import marker_menu_generic
         marker_menu_generic(layout)
 
         # TODO: pose markers for action edit mode only?
@@ -201,6 +201,8 @@ class GRAPH_MT_channel(Menu):
         layout.operator_context = 'INVOKE_REGION_CHANNELS'
 
         layout.operator("anim.channels_delete")
+        if context.space_data.mode == 'DRIVERS':
+            layout.operator("graph.driver_delete_invalid")
 
         layout.separator()
         layout.operator("anim.channels_group")
@@ -298,6 +300,7 @@ class GRAPH_MT_delete(Menu):
 
         layout.operator("graph.clean").channels = False
         layout.operator("graph.clean", text="Clean Channels").channels = True
+
 
 classes = (
     GRAPH_HT_header,

@@ -245,7 +245,7 @@ class Unfolder:
 
     def save(self, properties):
         """Export the document"""
-        # Note about scale: input is direcly in blender length
+        # Note about scale: input is directly in blender length
         # Mesh.scale_islands multiplies everything by a user-defined ratio
         # exporters (SVG or PDF) multiply everything by 1000 (output in millimeters)
         Exporter = SVG if properties.file_format == 'SVG' else PDF
@@ -472,7 +472,7 @@ class Mesh:
     def generate_stickers(self, default_width, do_create_numbers=True):
         """Add sticker faces where they are needed."""
         def uvedge_priority(uvedge):
-            """Retuns whether it is a good idea to stick something on this edge's face"""
+            """Returns whether it is a good idea to stick something on this edge's face"""
             # TODO: it should take into account overlaps with faces and with other stickers
             return uvedge.uvface.face.area / sum((vb.co - va.co).length for (va, vb) in pairs(uvedge.uvface.vertices))
 
@@ -2357,7 +2357,7 @@ class AddPresetPaperModel(bl_operators.presets.AddPresetBase, bpy.types.Operator
     @property
     def preset_values(self):
         op = bpy.ops.export_mesh.paper_model
-        properties = op.get_rna().bl_rna.properties.items()
+        properties = op.get_rna_type().properties.items()
         blacklist = bpy.types.Operator.bl_rna.properties.keys()
         return [
             "op.{}".format(prop_id) for (prop_id, prop) in properties

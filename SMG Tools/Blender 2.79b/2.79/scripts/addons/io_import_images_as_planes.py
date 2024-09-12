@@ -327,7 +327,7 @@ def clean_node_tree(node_tree):
 
 
 def get_shadeless_node(dest_node_tree):
-    """Return a "shadless" cycles node, creating a node group if nonexistant"""
+    """Return a "shadless" cycles node, creating a node group if nonexistent"""
     try:
         node_tree = bpy.data.node_groups['IAP_SHADELESS']
 
@@ -458,7 +458,7 @@ def register_watched_object(obj):
 def find_plane_corner(object_name, x, y, axis, camera=None, *args, **kwargs):
     """Find the location in camera space of a plane's corner"""
     if args or kwargs:
-        # I've added args / kwargs as a compatability measure with future versions
+        # I've added args / kwargs as a compatibility measure with future versions
         warnings.warn("Unknown Parameters Passed to \"Images as Planes\".  Maybe you need to upgrade?")
 
     plane = bpy.data.objects[object_name]
@@ -606,7 +606,7 @@ def setup_compositing(context, plane, img_spec):
 # Operator
 
 class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
-    """Create mesh plane(s) from image files with the appropiate aspect ratio"""
+    """Create mesh plane(s) from image files with the appropriate aspect ratio"""
 
     bl_idname = "import_image.to_plane"
     bl_label = "Import Images as Planes"
@@ -774,7 +774,7 @@ class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
         layout = self.layout
         box = layout.box()
 
-        box.label("Import Options:", icon='IMPORT')
+        box.label(text="Import Options:", icon='IMPORT')
         row = box.row()
         row.active = bpy.data.is_saved
         row.prop(self, "relative")
@@ -787,23 +787,23 @@ class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
         layout = self.layout
         box = layout.box()
 
-        box.label("Compositing Nodes:", icon='RENDERLAYERS')
-        box.prop(self, 'compositing_nodes')
+        box.label(text="Compositing Nodes:", icon='RENDERLAYERS')
+        box.prop(self, "compositing_nodes")
 
-        box.label("Material Settings:", icon='MATERIAL')
+        box.label(text="Material Settings:", icon='MATERIAL')
 
         row = box.row()
         row.prop(self, 'shader', expand=True)
         if self.shader == 'EMISSION':
-            box.prop(self, 'emit_strength')
+            box.prop(self, "emit_strength")
 
         engine = context.scene.render.engine
         if engine not in ('CYCLES', 'BLENDER_RENDER'):
-            box.label("%s is not supported" % engine, icon='ERROR')
+            box.label(text="%s is not supported" % engine, icon='ERROR')
 
-        box.prop(self, 'overwrite_material')
+        box.prop(self, "overwrite_material")
 
-        box.label("Texture Settings:", icon='TEXTURE')
+        box.label(text="Texture Settings:", icon='TEXTURE')
         row = box.row()
         row.prop(self, "use_transparency")
         sub = row.row()
@@ -817,34 +817,34 @@ class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
         layout = self.layout
         box = layout.box()
 
-        box.label("Position:", icon='SNAP_GRID')
-        box.prop(self, 'offset')
+        box.label(text="Position:", icon='SNAP_GRID')
+        box.prop(self, "offset")
         col = box.column()
         row = col.row()
-        row.prop(self, 'offset_axis', expand=True)
+        row.prop(self, "offset_axis", expand=True)
         row = col.row()
-        row.prop(self, 'offset_amount')
+        row.prop(self, "offset_amount")
         col.enabled = self.offset
 
-        box.label("Plane dimensions:", icon='ARROW_LEFTRIGHT')
+        box.label(text="Plane dimensions:", icon='ARROW_LEFTRIGHT')
         row = box.row()
         row.prop(self, "size_mode", expand=True)
         if self.size_mode == 'ABSOLUTE':
             box.prop(self, "height")
         elif self.size_mode == 'CAMERA':
             row = box.row()
-            row.prop(self, 'fill_mode', expand=True)
+            row.prop(self, "fill_mode", expand=True)
         else:
             box.prop(self, "factor")
 
-        box.label("Orientation:", icon='MANIPUL')
+        box.label(text="Orientation:", icon='MANIPUL')
         row = box.row()
         row.enabled = 'CAM' not in self.size_mode
-        row.prop(self, 'align_axis')
+        row.prop(self, "align_axis")
         row = box.row()
         row.enabled = 'CAM' in self.align_axis
         row.alignment = 'RIGHT'
-        row.prop(self, 'align_track')
+        row.prop(self, "align_track")
 
     def draw(self, context):
 
@@ -1094,7 +1094,7 @@ class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
         bpy.ops.mesh.primitive_plane_add('INVOKE_REGION_WIN')
         plane = context.scene.objects.active
         # Why does mesh.primitive_plane_add leave the object in edit mode???
-        if plane.mode is not 'OBJECT':
+        if plane.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')
         plane.dimensions = width, height, 0.0
         plane.data.name = plane.name = name
@@ -1165,7 +1165,7 @@ class IMPORT_IMAGE_OT_to_plane(Operator, AddObjectHelper):
             # Axis-aligned
             axis = self.axis_id_to_vector[self.align_axis]
 
-        # rotate accodingly for x/y axiis
+        # rotate accordingly for x/y axiis
         if not axis.z:
             plane.rotation_euler.x = pi / 2
 

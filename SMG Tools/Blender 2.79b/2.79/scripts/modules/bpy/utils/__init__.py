@@ -37,6 +37,7 @@ __all__ = (
     "register_module",
     "register_manual_map",
     "unregister_manual_map",
+    "register_classes_factory",
     "register_submodule_factory",
     "make_rna_paths",
     "manual_map",
@@ -487,11 +488,11 @@ def smpte_from_frame(frame, fps=None, fps_base=None):
 
     return (
         "%s%02d:%02d:%02d:%02d" % (
-        sign,
-        int(frame / (3600 * fps)),          # HH
-        int((frame / (60 * fps)) % 60),     # MM
-        int((frame / fps) % 60),            # SS
-        int(frame % fps),                   # FF
+            sign,
+            int(frame / (3600 * fps)),          # HH
+            int((frame / (60 * fps)) % 60),     # MM
+            int((frame / fps) % 60),            # SS
+            int(frame % fps),                   # FF
         ))
 
 
@@ -701,6 +702,24 @@ def unregister_module(module, verbose=False):
         print("done.\n")
 
 
+def register_classes_factory(classes):
+    """
+    Utility function to create register and unregister functions
+    which simply registers and unregisters a sequence of classes.
+    """
+    def register():
+        from bpy.utils import register_class
+        for cls in classes:
+            register_class(cls)
+
+    def unregister():
+        from bpy.utils import unregister_class
+        for cls in reversed(classes):
+            unregister_class(cls)
+
+    return register, unregister
+
+
 def register_submodule_factory(module_name, submodule_names):
     """
     Utility function to create register and unregister functions
@@ -753,6 +772,7 @@ def _blender_default_map():
     # avoid storing in memory
     del _sys.modules["rna_manual_reference"]
     return ret
+
 
 # hooks for doc lookups
 _manual_map = [_blender_default_map]

@@ -538,7 +538,7 @@ class AntAddLandscape(bpy.types.Operator):
             items = [
                 ("0", "None", "No strata", 0),
                 ("1", "Smooth", "Smooth transitions", 1),
-                ("2", "Sharp Sub", "Sharp substract transitions", 2),
+                ("2", "Sharp Sub", "Sharp subtract transitions", 2),
                 ("3", "Sharp Add", "Sharp add transitions", 3),
                 ("4", "Quantize", "Quantize", 4),
                 ("5", "Quantize Mix", "Quantize mixed", 5)]
@@ -585,6 +585,14 @@ class AntAddLandscape(bpy.types.Operator):
             default=True,
             description="Automatic refresh"
             )
+
+    @classmethod
+    def poll(self, context):
+        ob = context.object
+        if ob is not None:
+            if ob.mode == 'EDIT':
+                return False
+        return True
 
     def draw(self, context):
         draw_ant_refresh(self, context)

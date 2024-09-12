@@ -193,7 +193,10 @@ class AntLandscapeRegenerate(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bpy.context.active_object.ant_landscape
+        ob = bpy.context.active_object
+        if ob.mode == 'EDIT':
+            return False
+        return ob.ant_landscape
 
 
     def execute(self, context):
@@ -659,7 +662,7 @@ def draw_ant_displace(self, context, generate=True):
             if not self.sphere_mesh:
                 col = box.column()
                 col.prop(self, "edge_falloff")
-                if self.edge_falloff is not "0":
+                if self.edge_falloff != "0":
                     col = box.column(align=True)
                     col.prop(self, "edge_level")
                     if self.edge_falloff in ["2", "3"]:
@@ -669,7 +672,7 @@ def draw_ant_displace(self, context, generate=True):
 
         col = box.column()
         col.prop(self, "strata_type")
-        if self.strata_type is not "0":
+        if self.strata_type != "0":
             col = box.column()
             col.prop(self, "strata")
 

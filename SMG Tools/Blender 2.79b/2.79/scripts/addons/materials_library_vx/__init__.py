@@ -265,10 +265,11 @@ def get_libraries():
     libs = [Library(matlib_path, f) for f in os.listdir(matlib_path) if f[-5::] == "blend"]
     try:
         user_path = bpy.context.user_preferences.addons[__name__].preferences.matlib_path
-        if os.path.exists(user_path):
-            libs.extend([Library(user_path, f) for f in os.listdir(user_path) if f[-5::] == "blend"])
-        else:
-            print("path not found %s" % user_path)
+        if user_path:
+            if os.path.exists(user_path):
+                libs.extend([Library(user_path, f) for f in os.listdir(user_path) if f[-5::] == "blend"])
+            else:
+                print("path not found %s" % user_path)
     except:
         pass
     return sorted(libs, key=lambda x: bpy.path.display_name(x.name))
@@ -483,11 +484,8 @@ if mat:
 #        self.current_library.materials[self.mat_index].category = cat
       #remove mat from any category
       else:
-        matnode = xml.find("material", mat.name, lib)
-        if matnode:
-          xml.deleteNode(matnode)
         mat.category = ""
-        self.current_library.materials[self.mat_index].category = ""
+        self.all_materials[self.mat_index].category = ""
     else:
       return "WARNING", "Select a material"
 
@@ -602,7 +600,7 @@ if mat:
     print ("Material", material, force)
 
     #if material:
-    #maybe some test cases doesnt return a material, gotta take care of that
+    #maybe some test cases doesn't return a material, gotta take care of that
     #i cannot think of any case like that right now
     #maybe import linked when the database isnt sync
     if context.mode == "EDIT_MESH":
@@ -697,7 +695,7 @@ bpy.ops.wm.save_mainfile(filepath="{3}", check_existing=False, compress=True)
 
       return 'INFO', "Material added."
     else:
-      print("Save Material Error: Run Blender with administrative priviledges.")
+      print("Save Material Error: Run Blender with administrative privileges.")
       return 'WARNING', "There was an error saving the material"
 
   def remove_material(self):
@@ -740,8 +738,7 @@ bpy.ops.wm.save_mainfile(filepath="%s", check_existing=False, compress=True)''' 
 # Scene.matlib = PointerProperty(type = matlibProperties)
 
 ### MENUS
-class matlibLibsMenu(Menu):
-  bl_idname = "matlib.libs_menu"
+class MATLIB_MT_LibsMenu(Menu):
   bl_label = "Libraries Menu"
 
   def draw(self, context):
@@ -751,8 +748,7 @@ class matlibLibsMenu(Menu):
     for i, lib in enumerate(libs):
       layout.operator("matlib.operator", text=lib.shortname).cmd="lib"+str(i)
 
-class matlibCatsMenu(Menu):
-  bl_idname = "matlib.cats_menu"
+class MATLIB_MT_CatsMenu(Menu):
   bl_label = "Categories Menu"
 
   def draw(self, context):
@@ -778,7 +774,7 @@ class matlibCatsMenu(Menu):
 
 
 
-class MatlibAdd(Operator):
+class MATLIB_OT_add(Operator):
   """Add active material to library"""
   bl_idname = "matlib.add"
   bl_label = "Add active material"
@@ -796,7 +792,7 @@ class MatlibAdd(Operator):
       self.report({success[0]}, success[1])
     return {'FINISHED'}
 
-class MatlibRemove(Operator):
+class MATLIB_OT_remove(Operator):
   """Remove material from library"""
   bl_idname = "matlib.remove"
   bl_label = "Remove material from library"
@@ -814,7 +810,7 @@ class MatlibRemove(Operator):
       self.report({success[0]}, success[1])
     return {'FINISHED'}
 
-class MatlibReload(Operator):
+class MATLIB_OT_remove(Operator):
   """Reload library"""
   bl_idname = "matlib.reload"
   bl_label = "Reload library"
@@ -835,7 +831,7 @@ class MatlibReload(Operator):
     return {'FINISHED'}
 
 
-class MatlibApply(Operator):
+class MATLIB_OT_apply(Operator):
   """Apply selected material"""
   bl_idname = "matlib.apply"
   bl_label = "Apply material"
@@ -857,7 +853,7 @@ class MatlibApply(Operator):
     return {'FINISHED'}
 
 
-class MatlibPreview(Operator):
+class MATLIB_OT_preview(Operator):
   """Preview selected material"""
   bl_idname = "matlib.preview"
   bl_label = "Preview selected material"
@@ -879,7 +875,7 @@ class MatlibPreview(Operator):
     return {'FINISHED'}
 
 
-class MatlibFlush(Operator):
+class MATLIB_OT_flush(Operator):
   """Flush unused materials"""
   bl_idname = "matlib.flush"
   bl_label = "Flush unused materials"
@@ -916,7 +912,7 @@ class MatlibFlush(Operator):
     return {'FINISHED'}
 
 
-class matlibOperator(Operator):
+class MATLIB_OT_operator(Operator):
   """Add, Remove, Reload, Apply, Preview, Clean Material"""
   bl_label = "New"
   bl_idname = "matlib.operator"
@@ -956,7 +952,7 @@ class matlibOperator(Operator):
       return {'RUNNING_MODAL'}
     return self.execute(context)
 
-  ### TODO: execute doesnt trigger remove
+  ### TODO: execute doesn't trigger remove
   def execute(self, context):
 
     success = ""
@@ -1117,7 +1113,7 @@ for mat in mats:
     return {'FINISHED'}
 
 
-class matlibvxPanel(Panel):
+class MATLIB_PT_vxPanel(Panel):
   bl_label = "Material Library VX"
   bl_space_type = "PROPERTIES"
   bl_region_type = "WINDOW"
@@ -1136,14 +1132,14 @@ class matlibvxPanel(Panel):
 #      matlibProperties.init = False
 #      matlib.__init__()
 
-    #libaries
+    #libraries
     row = layout.row(align=True)
     if matlib.current_library:
       text = matlib.current_library.shortname
     else:
       text = "Select a Library"
 
-    row.menu("matlib.libs_menu",text=text)
+    row.menu("MATLIB_MT_LibsMenu",text=text)
     row.operator("matlib.operator", icon="ZOOMIN", text="").cmd = "LIBRARY_ADD"
     if matlib.active_material:
       row.label(matlib.active_material.category)
@@ -1174,7 +1170,7 @@ class matlibvxPanel(Panel):
     row = layout.row(align=True)
     text = "All"
     if matlib.current_category: text = matlib.current_category
-    row.menu("matlib.cats_menu",text=text)
+    row.menu("MATLIB_MT_CatsMenu",text=text)
     row.prop(matlib, "filter", icon="FILTER", text="")
     row.operator("matlib.operator", icon="FILE_PARENT", text="").cmd="FILTER_SET"
     row.operator("matlib.operator", icon="ZOOMIN", text="").cmd="FILTER_ADD"
@@ -1197,7 +1193,7 @@ class matlibvxPanel(Panel):
 #      else:
 #        row.label("Library not found!.")
 
-#classes = [matlibvxPanel, matlibOperator, matlibLibsMenu, matlibCatsMenu]
+#classes = [MATLIB_PT_vxPanel, MATLIB_OT_operator, MATLIB_MT_LibsMenu, MATLIB_MT_CatsMenu]
 #print(bpy.context.scene)
 
 

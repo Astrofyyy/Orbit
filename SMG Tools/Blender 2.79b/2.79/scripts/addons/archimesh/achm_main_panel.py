@@ -388,7 +388,7 @@ class AchmPencilAction(Operator):
 # Define panel class for main functions.
 # ------------------------------------------------------------------
 class ArchimeshMainPanel(Panel):
-    bl_idname = "archimesh_main_panel"
+    bl_idname = "ARCHIMESH_PT_main"
     bl_label = "Archimesh"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
@@ -517,7 +517,7 @@ class ArchimeshMainPanel(Panel):
 class AchmRunHintDisplayButton(Operator):
     bl_idname = "archimesh.runopenglbutton"
     bl_label = "Display hint data manager"
-    bl_description = "Display aditional information in the viewport"
+    bl_description = "Display additional information in the viewport"
     bl_category = 'Archimesh'
 
     _handle = None  # keep function handler

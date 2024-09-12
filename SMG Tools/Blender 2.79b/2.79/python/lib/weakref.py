@@ -21,7 +21,7 @@ from _weakref import (
 
 from _weakrefset import WeakSet, _IterationGuard
 
-import collections  # Import after _weakref to avoid circular import.
+import _collections_abc  # Import after _weakref to avoid circular import.
 import sys
 import itertools
 
@@ -87,7 +87,7 @@ class WeakMethod(ref):
     __hash__ = ref.__hash__
 
 
-class WeakValueDictionary(collections.MutableMapping):
+class WeakValueDictionary(_collections_abc.MutableMapping):
     """Mapping class that references values weakly.
 
     Entries in the dictionary will be discarded when no strong
@@ -106,7 +106,7 @@ class WeakValueDictionary(collections.MutableMapping):
         self, *args = args
         if len(args) > 1:
             raise TypeError('expected at most 1 arguments, got %d' % len(args))
-        def remove(wr, selfref=ref(self)):
+        def remove(wr, selfref=ref(self), _atomic_removal=_remove_dead_weakref):
             self = selfref()
             if self is not None:
                 if self._iterating:
@@ -114,7 +114,7 @@ class WeakValueDictionary(collections.MutableMapping):
                 else:
                     # Atomic removal is necessary since this function
                     # can be called asynchronously by the GC
-                    _remove_dead_weakref(d, wr.key)
+                    _atomic_removal(d, wr.key)
         self._remove = remove
         # A list of keys to be removed
         self._pending_removals = []
@@ -340,7 +340,7 @@ class KeyedRef(ref):
         super().__init__(ob, callback)
 
 
-class WeakKeyDictionary(collections.MutableMapping):
+class WeakKeyDictionary(_collections_abc.MutableMapping):
     """ Mapping class that references keys weakly.
 
     Entries in the dictionary will be discarded when there is no

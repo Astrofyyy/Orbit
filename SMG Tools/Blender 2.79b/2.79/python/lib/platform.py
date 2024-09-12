@@ -13,7 +13,6 @@
 #    Python bug tracker (http://bugs.python.org) and assign them to "lemburg".
 #
 #    Still needed:
-#    * more support for WinCE
 #    * support for MS-DOS (PythonDX ?)
 #    * support for Amiga and other still unsupported platforms running Python
 #    * support for additional Linux distributions
@@ -111,7 +110,7 @@ __copyright__ = """
 
 """
 
-__version__ = '1.0.7'
+__version__ = '1.0.8'
 
 import collections
 import sys, os, re, subprocess
@@ -252,13 +251,13 @@ def _dist_try_harder(distname, version, id):
 
 _release_filename = re.compile(r'(\w+)[-_](release|version)', re.ASCII)
 _lsb_release_version = re.compile(r'(.+)'
-                                   ' release '
-                                   '([\d.]+)'
-                                   '[^(]*(?:\((.+)\))?', re.ASCII)
+                                  r' release '
+                                  r'([\d.]+)'
+                                  r'[^(]*(?:\((.+)\))?', re.ASCII)
 _release_version = re.compile(r'([^0-9]+)'
-                               '(?: release )?'
-                               '([\d.]+)'
-                               '[^(]*(?:\((.+)\))?', re.ASCII)
+                              r'(?: release )?'
+                              r'([\d.]+)'
+                              r'[^(]*(?:\((.+)\))?', re.ASCII)
 
 # See also http://www.novell.com/coolsolutions/feature/11251.html
 # and http://linuxmafia.com/faq/Admin/release-files.html
@@ -303,7 +302,7 @@ def linux_distribution(distname='', version='', id='',
                        full_distribution_name=1):
     import warnings
     warnings.warn("dist() and linux_distribution() functions are deprecated "
-                  "in Python 3.5", PendingDeprecationWarning, stacklevel=2)
+                  "in Python 3.5", DeprecationWarning, stacklevel=2)
     return _linux_distribution(distname, version, id, supported_dists,
                                full_distribution_name)
 
@@ -377,7 +376,7 @@ def dist(distname='', version='', id='',
     """
     import warnings
     warnings.warn("dist() and linux_distribution() functions are deprecated "
-                  "in Python 3.5", PendingDeprecationWarning, stacklevel=2)
+                  "in Python 3.5", DeprecationWarning, stacklevel=2)
     return _linux_distribution(distname, version, id,
                                supported_dists=supported_dists,
                                full_distribution_name=0)
@@ -408,8 +407,8 @@ def _norm_version(version, build=''):
     return version
 
 _ver_output = re.compile(r'(?:([\w ]+) ([\w.]+) '
-                         '.*'
-                         '\[.* ([\d.]+)\])')
+                         r'.*'
+                         r'\[.* ([\d.]+)\])')
 
 # Examples of VER command output:
 #
@@ -509,7 +508,7 @@ def win32_ver(release='', version='', csd='', ptype=''):
         from _winreg import OpenKeyEx, QueryValueEx, CloseKey, HKEY_LOCAL_MACHINE
 
     winver = getwindowsversion()
-    maj, min, build = winver._platform_version or winver[:3]
+    maj, min, build = winver.platform_version or winver[:3]
     version = '{0}.{1}.{2}'.format(maj, min, build)
 
     release = (_WIN32_CLIENT_RELEASES.get((maj, min)) or
@@ -1095,22 +1094,22 @@ _sys_version_parser = re.compile(
 
 _ironpython_sys_version_parser = re.compile(
     r'IronPython\s*'
-    '([\d\.]+)'
-    '(?: \(([\d\.]+)\))?'
-    ' on (.NET [\d\.]+)', re.ASCII)
+    r'([\d\.]+)'
+    r'(?: \(([\d\.]+)\))?'
+    r' on (.NET [\d\.]+)', re.ASCII)
 
 # IronPython covering 2.6 and 2.7
 _ironpython26_sys_version_parser = re.compile(
     r'([\d.]+)\s*'
-    '\(IronPython\s*'
-    '[\d.]+\s*'
-    '\(([\d.]+)\) on ([\w.]+ [\d.]+(?: \(\d+-bit\))?)\)'
+    r'\(IronPython\s*'
+    r'[\d.]+\s*'
+    r'\(([\d.]+)\) on ([\w.]+ [\d.]+(?: \(\d+-bit\))?)\)'
 )
 
 _pypy_sys_version_parser = re.compile(
     r'([\w.+]+)\s*'
-    '\(#?([^,]+),\s*([\w ]+),\s*([\w :]+)\)\s*'
-    '\[PyPy [^\]]+\]?')
+    r'\(#?([^,]+),\s*([\w ]+),\s*([\w :]+)\)\s*'
+    r'\[PyPy [^\]]+\]?')
 
 _sys_version_cache = {}
 
@@ -1199,11 +1198,10 @@ def _sys_version(sys_version=None):
         elif buildtime:
             builddate = builddate + ' ' + buildtime
 
-    if hasattr(sys, '_mercurial'):
+    if hasattr(sys, '_git'):
+        _, branch, revision = sys._git
+    elif hasattr(sys, '_mercurial'):
         _, branch, revision = sys._mercurial
-    elif hasattr(sys, 'subversion'):
-        # sys.subversion was added in Python 2.5
-        _, branch, revision = sys.subversion
     else:
         branch = ''
         revision = ''
@@ -1258,7 +1256,7 @@ def python_branch():
     """ Returns a string identifying the Python implementation
         branch.
 
-        For CPython this is the Subversion branch from which the
+        For CPython this is the SCM branch from which the
         Python binary was built.
 
         If not available, an empty string is returned.
@@ -1272,7 +1270,7 @@ def python_revision():
     """ Returns a string identifying the Python implementation
         revision.
 
-        For CPython this is the Subversion revision from which the
+        For CPython this is the SCM revision from which the
         Python binary was built.
 
         If not available, an empty string is returned.
@@ -1345,9 +1343,9 @@ def platform(aliased=0, terse=0):
             # see issue #1322 for more information
             warnings.filterwarnings(
                 'ignore',
-                'dist\(\) and linux_distribution\(\) '
+                r'dist\(\) and linux_distribution\(\) '
                 'functions are deprecated .*',
-                PendingDeprecationWarning,
+                DeprecationWarning,
             )
             distname, distversion, distid = dist('')
         if distname and not terse:

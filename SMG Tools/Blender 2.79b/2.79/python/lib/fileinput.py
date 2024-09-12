@@ -75,12 +75,10 @@ XXX Possible additions:
 import sys, os
 
 __all__ = ["input", "close", "nextfile", "filename", "lineno", "filelineno",
-           "isfirstline", "isstdin", "FileInput"]
+           "fileno", "isfirstline", "isstdin", "FileInput", "hook_compressed",
+           "hook_encoded"]
 
 _state = None
-
-# No longer used
-DEFAULT_BUFSIZE = 8*1024
 
 def input(files=None, inplace=False, backup="", bufsize=0,
           mode="r", openhook=None):
@@ -191,6 +189,8 @@ class FileInput:
                  mode="r", openhook=None):
         if isinstance(files, str):
             files = (files,)
+        elif isinstance(files, os.PathLike):
+            files = (os.fspath(files), )
         else:
             if files is None:
                 files = sys.argv[1:]
@@ -201,6 +201,10 @@ class FileInput:
         self._files = files
         self._inplace = inplace
         self._backup = backup
+        if bufsize:
+            import warnings
+            warnings.warn('bufsize is deprecated and ignored',
+                          DeprecationWarning, stacklevel=2)
         self._savestdout = None
         self._output = None
         self._filename = None
@@ -326,7 +330,7 @@ class FileInput:
         else:
             if self._inplace:
                 self._backupfilename = (
-                    self._filename + (self._backup or ".bak"))
+                    os.fspath(self._filename) + (self._backup or ".bak"))
                 try:
                     os.unlink(self._backupfilename)
                 except OSError:
@@ -398,9 +402,9 @@ def hook_compressed(filename, mode):
         return open(filename, mode)
 
 
-def hook_encoded(encoding):
+def hook_encoded(encoding, errors=None):
     def openhook(filename, mode):
-        return open(filename, mode, encoding=encoding)
+        return open(filename, mode, encoding=encoding, errors=errors)
     return openhook
 
 

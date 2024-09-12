@@ -31,7 +31,15 @@ bl_info = {
 
 import bpy, blf, bgl
 from bpy.types import Operator, Panel, Menu
-from bpy.props import FloatProperty, EnumProperty, BoolProperty, IntProperty, StringProperty, FloatVectorProperty, CollectionProperty
+from bpy.props import (
+    FloatProperty,
+    EnumProperty,
+    BoolProperty,
+    IntProperty,
+    StringProperty,
+    FloatVectorProperty,
+    CollectionProperty,
+)
 from bpy_extras.io_utils import ImportHelper, ExportHelper
 from mathutils import Vector
 from math import cos, sin, pi, hypot
@@ -1041,7 +1049,7 @@ class NWNodeWrangler(bpy.types.AddonPreferences):
             ("NEVER", "Never", "Never collapse the new merge nodes")
         ),
         default='NON_SHADER',
-        description="When merging nodes with the Ctrl+Numpad0 hotkey (and similar) specifiy whether to collapse them or show the full node with options expanded")
+        description="When merging nodes with the Ctrl+Numpad0 hotkey (and similar) specify whether to collapse them or show the full node with options expanded")
     merge_position = EnumProperty(
         name="Mix Node Position",
         items=(
@@ -1049,7 +1057,7 @@ class NWNodeWrangler(bpy.types.AddonPreferences):
             ("BOTTOM", "Bottom", "Place the Mix node at the same height as the lowest node")
         ),
         default='CENTER',
-        description="When merging nodes with the Ctrl+Numpad0 hotkey (and similar) specifiy the position of the new nodes")
+        description="When merging nodes with the Ctrl+Numpad0 hotkey (and similar) specify the position of the new nodes")
 
     show_hotkey_list = BoolProperty(
         name="Show Hotkey List",
@@ -1162,7 +1170,7 @@ class NWLazyMix(Operator, NWBase):
         if event.type == 'MOUSEMOVE':
             self.mouse_path.append((event.mouse_region_x, event.mouse_region_y))
 
-        elif event.type == 'RIGHTMOUSE':
+        elif event.type == 'RIGHTMOUSE' and event.value == 'RELEASE':
             end_pos = [event.mouse_region_x, event.mouse_region_y]
             bpy.types.SpaceNodeEditor.draw_handler_remove(self._handle, 'WINDOW')
 
@@ -1239,7 +1247,7 @@ class NWLazyConnect(Operator, NWBase):
         if event.type == 'MOUSEMOVE':
             self.mouse_path.append((event.mouse_region_x, event.mouse_region_y))
 
-        elif event.type == 'RIGHTMOUSE':
+        elif event.type == 'RIGHTMOUSE' and event.value == 'RELEASE':
             end_pos = [event.mouse_region_x, event.mouse_region_y]
             bpy.types.SpaceNodeEditor.draw_handler_remove(self._handle, 'WINDOW')
 
@@ -2350,7 +2358,10 @@ class NWCopySettings(Operator, NWBase):
     def poll(cls, context):
         valid = False
         if nw_check(context):
-            if context.active_node is not None and context.active_node.type is not 'FRAME':
+            if (
+                    context.active_node is not None and
+                    context.active_node.type != 'FRAME'
+            ):
                 valid = True
         return valid
 
@@ -2677,7 +2688,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
             fname = path.splitext(fname)[0]
             # Remove digits
             fname = ''.join(i for i in fname if not i.isdigit())
-            # Seperate CamelCase by space
+            # Separate CamelCase by space
             fname = re.sub("([a-z])([A-Z])","\g<1> \g<2>",fname)
             # Replace common separators with SPACE
             seperators = ['_', '.', '-', '__', '--', '#']
@@ -2759,7 +2770,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
                 # Too complicated for now
 
                 '''
-                # Frame. Does not update immediatly
+                # Frame. Does not update immediately
                 # Seems to need an editor redraw
                 frame = nodes.new(type='NodeFrame')
                 frame.label = 'Displacement'
@@ -2768,7 +2779,7 @@ class NWAddPrincipledSetup(Operator, NWBase, ImportHelper):
                 frame.update()
                 '''
 
-                #find ouput node
+                #find output node
                 output_node = [n for n in nodes if n.bl_idname == 'ShaderNodeOutputMaterial']
                 if output_node:
                     if not output_node[0].inputs[2].is_linked:
@@ -2933,7 +2944,7 @@ class NWAddReroutes(Operator, NWBase):
             reroutes_count = 0  # will be used when aligning reroutes added to hidden nodes
             for out_i, output in enumerate(node.outputs):
                 pass_used = False  # initial value to be analyzed if 'R_LAYERS'
-                # if node is not 'R_LAYERS' - "pass_used" not needed, so set it to True
+                # if node != 'R_LAYERS' - "pass_used" not needed, so set it to True
                 if node.type != 'R_LAYERS':
                     pass_used = True
                 else:  # if 'R_LAYERS' check if output represent used render pass
@@ -3082,7 +3093,7 @@ class NWAlignNodes(Operator, NWBase):
         elif nodes.active in selection:
             active_loc = copy(nodes.active.location)  # make a copy, not a reference
 
-        # Check if nodes should be layed out horizontally or vertically
+        # Check if nodes should be laid out horizontally or vertically
         x_locs = [n.location.x + (n.dimensions.x / 2) for n in selection]  # use dimension to get center of node, not corner
         y_locs = [n.location.y - (n.dimensions.y / 2) for n in selection]
         x_range = max(x_locs) - min(x_locs)
@@ -3161,7 +3172,7 @@ class NWSelectParentChildren(Operator, NWBase):
 
 
 class NWDetachOutputs(Operator, NWBase):
-    """Detach outputs of selected node leaving inluts liked"""
+    """Detach outputs of selected node leaving inputs linked"""
     bl_idname = "node.nw_detach_outputs"
     bl_label = "Detach Outputs"
     bl_options = {'REGISTER', 'UNDO'}
@@ -4613,7 +4624,7 @@ kmi_defs = (
     (NWResetBG.bl_idname, 'Z', 'PRESS', False, False, False, None, "Reset backdrop image zoom"),
     # Delete unused
     (NWDeleteUnused.bl_idname, 'X', 'PRESS', False, False, True, None, "Delete unused nodes"),
-    # Frame Seleted
+    # Frame Selected
     (NWFrameSelected.bl_idname, 'P', 'PRESS', False, True, False, None, "Frame selected nodes"),
     # Swap Outputs
     (NWSwapLinks.bl_idname, 'S', 'PRESS', False, False, True, None, "Swap Outputs"),
@@ -4643,7 +4654,97 @@ kmi_defs = (
 )
 
 
+classes = (
+    NWPrincipledPreferences,
+    NWNodeWrangler,
+    NWLazyMix,
+    NWLazyConnect,
+    NWDeleteUnused,
+    NWSwapLinks,
+    NWResetBG,
+    NWAddAttrNode,
+    NWEmissionViewer,
+    NWFrameSelected,
+    NWReloadImages,
+    NWSwitchNodeType,
+    NWMergeNodes,
+    NWBatchChangeNodes,
+    NWChangeMixFactor,
+    NWCopySettings,
+    NWCopyLabel,
+    NWClearLabel,
+    NWModifyLabels,
+    NWAddTextureSetup,
+    NWAddPrincipledSetup,
+    NWAddReroutes,
+    NWLinkActiveToSelected,
+    NWAlignNodes,
+    NWSelectParentChildren,
+    NWDetachOutputs,
+    NWLinkToOutputNode,
+    NWMakeLink,
+    NWCallInputsMenu,
+    NWAddSequence,
+    NWAddMultipleImages,
+    NWViewerFocus,
+    NWSaveViewer,
+    NWResetNodes,
+    NodeWranglerPanel,
+    NodeWranglerMenu,
+    NWMergeNodesMenu,
+    NWMergeShadersMenu,
+    NWMergeMixMenu,
+    NWConnectionListOutputs,
+    NWConnectionListInputs,
+    NWMergeMathMenu,
+    NWBatchChangeNodesMenu,
+    NWBatchChangeBlendTypeMenu,
+    NWBatchChangeOperationMenu,
+    NWCopyToSelectedMenu,
+    NWCopyLabelMenu,
+    NWAddReroutesMenu,
+    NWLinkActiveToSelectedMenu,
+    NWLinkStandardMenu,
+    NWLinkUseNodeNameMenu,
+    NWLinkUseOutputsNamesMenu,
+    NWVertColMenu,
+    NWSwitchNodeTypeMenu,
+    NWSwitchShadersInputSubmenu,
+    NWSwitchShadersOutputSubmenu,
+    NWSwitchShadersShaderSubmenu,
+    NWSwitchShadersTextureSubmenu,
+    NWSwitchShadersColorSubmenu,
+    NWSwitchShadersVectorSubmenu,
+    NWSwitchShadersConverterSubmenu,
+    NWSwitchShadersLayoutSubmenu,
+    NWSwitchCompoInputSubmenu,
+    NWSwitchCompoOutputSubmenu,
+    NWSwitchCompoColorSubmenu,
+    NWSwitchCompoConverterSubmenu,
+    NWSwitchCompoFilterSubmenu,
+    NWSwitchCompoVectorSubmenu,
+    NWSwitchCompoMatteSubmenu,
+    NWSwitchCompoDistortSubmenu,
+    NWSwitchCompoLayoutSubmenu,
+    NWSwitchMatInputSubmenu,
+    NWSwitchMatOutputSubmenu,
+    NWSwitchMatColorSubmenu,
+    NWSwitchMatVectorSubmenu,
+    NWSwitchMatConverterSubmenu,
+    NWSwitchMatLayoutSubmenu,
+    NWSwitchTexInputSubmenu,
+    NWSwitchTexOutputSubmenu,
+    NWSwitchTexColorSubmenu,
+    NWSwitchTexPatternSubmenu,
+    NWSwitchTexTexturesSubmenu,
+    NWSwitchTexConverterSubmenu,
+    NWSwitchTexDistortSubmenu,
+    NWSwitchTexLayoutSubmenu,
+)
+
 def register():
+    from bpy.utils import register_class
+
     # props
     bpy.types.Scene.NWBusyDrawing = StringProperty(
         name="Busy Drawing!",
@@ -4662,7 +4763,8 @@ def register():
         default=0,
         description="An internal property used to store the source socket in a Lazy Connect operation")
 
-    bpy.utils.register_module(__name__)
+    for cls in classes:
+        register_class(cls)
 
     # keymaps
     addon_keymaps.clear()
@@ -4691,6 +4793,8 @@ def register():
 
 
 def unregister():
+    from bpy.utils import unregister_class
+
     # props
     del bpy.types.Scene.NWBusyDrawing
     del bpy.types.Scene.NWLazySource
@@ -4715,7 +4819,8 @@ def unregister():
     bpy.types.NODE_PT_active_node_generic.remove(reset_nodes_button)
     bpy.types.NODE_MT_node.remove(reset_nodes_button)
 
-    bpy.utils.unregister_module(__name__)
+    for cls in classes:
+        unregister_class(cls)
 
 if __name__ == "__main__":
     register()

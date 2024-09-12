@@ -18,9 +18,11 @@ CCL_NAMESPACE_BEGIN
 
 ccl_device_inline void kernel_filter_construct_gramian(int x, int y,
                                                        int storage_stride,
-                                                       int dx, int dy,
-                                                       int w, int h,
+                                                       int dx, int dy, int t,
+                                                       int buffer_stride,
                                                        int pass_stride,
+                                                       int frame_offset,
+                                                       bool use_time,
                                                        const ccl_global float *ccl_restrict buffer,
                                                        const ccl_global float *ccl_restrict transform,
                                                        ccl_global int *rank,
@@ -33,8 +35,8 @@ ccl_device_inline void kernel_filter_construct_gramian(int x, int y,
 		return;
 	}
 
-	int p_offset =  y    *w +  x;
-	int q_offset = (y+dy)*w + (x+dx);
+	int p_offset =  y     * buffer_stride +  x;
+	int q_offset = (y+dy) * buffer_stride + (x+dx) + frame_offset;
 
 #ifdef __KERNEL_GPU__
 	const int stride = storage_stride;
@@ -57,15 +59,20 @@ ccl_device_inline void kernel_filter_construct_gramian(int x, int y,
 		return;
 	}
 
-	filter_get_design_row_transform(make_int2(x, y),       buffer + p_offset,
-	                                make_int2(x+dx, y+dy), buffer + q_offset,
-	                                pass_stride, *rank, design_row, transform, stride);
+	filter_get_design_row_transform(make_int3(x, y, t),       buffer + p_offset,
+	                                make_int3(x+dx, y+dy, t), buffer + q_offset,
+	                                pass_stride, *rank, design_row, transform, stride, use_time);
 
+#ifdef __KERNEL_GPU__
 	math_trimatrix_add_gramian_strided(XtWX, (*rank)+1, design_row, weight, stride);
 	math_vec3_add_strided(XtWY, (*rank)+1, design_row, weight * q_color, stride);
+#else
+	math_trimatrix_add_gramian(XtWX, (*rank)+1, design_row, weight);
+	math_vec3_add(XtWY, (*rank)+1, design_row, weight * q_color);
+#endif
 }
 
-ccl_device_inline void kernel_filter_finalize(int x, int y, int w, int h,
+ccl_device_inline void kernel_filter_finalize(int x, int y,
                                               ccl_global float *buffer,
                                               ccl_global int *rank,
                                               int storage_stride,
@@ -88,14 +95,16 @@ ccl_device_inline void kernel_filter_finalize(int x, int y, int w, int h,
 	}
 
 	/* The weighted average of pixel colors (essentially, the NLM-filtered image).
-	 * In case the solution of the linear model fails due to numerical issues,
-	 * fall back to this value. */
+	 * In case the solution of the linear model fails due to numerical issues or
+	 * returns non-sensical negative values, fall back to this value. */
 	float3 mean_color = XtWY[0]/XtWX[0];
 
 	math_trimatrix_vec3_solve(XtWX, XtWY, (*rank)+1, stride);
 
 	float3 final_color = XtWY[0];
-	if(!isfinite3_safe(final_color)) {
+	if(!isfinite3_safe(final_color) ||
+	   (final_color.x < -0.01f || final_color.y < -0.01f || final_color.z < -0.01f))
+	{
 		final_color = mean_color;
 	}
 
@@ -103,11 +112,13 @@ ccl_device_inline void kernel_filter_finalize(int x, int y, int w, int h,
 	final_color = max(final_color, make_float3(0.0f, 0.0f, 0.0f));
 
 	ccl_global float *combined_buffer = buffer + (y*buffer_params.y + x + buffer_params.x)*buffer_params.z;
-	final_color *= sample;
-	if(buffer_params.w) {
-		final_color.x += combined_buffer[buffer_params.w+0];
-		final_color.y += combined_buffer[buffer_params.w+1];
-		final_color.z += combined_buffer[buffer_params.w+2];
+	if(buffer_params.w >= 0) {
+		final_color *= sample;
+		if(buffer_params.w > 0) {
+			final_color.x += combined_buffer[buffer_params.w+0];
+			final_color.y += combined_buffer[buffer_params.w+1];
+			final_color.z += combined_buffer[buffer_params.w+2];
+		}
 	}
 	combined_buffer[0] = final_color.x;
 	combined_buffer[1] = final_color.y;

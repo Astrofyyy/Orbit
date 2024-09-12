@@ -30,9 +30,8 @@ as an argument to a function that introspects the argument).
 # Local imports
 from .. import pytree
 from .. import patcomp
-from ..pgen2 import token
 from .. import fixer_base
-from ..fixer_util import Name, Call, LParen, RParen, ArgList, Dot
+from ..fixer_util import Name, Call, Dot
 from .. import fixer_util
 
 
@@ -84,7 +83,7 @@ class FixDict(fixer_base.BaseFix):
     p1 = patcomp.compile_pattern(P1)
 
     P2 = """for_stmt< 'for' any 'in' node=any ':' any* >
-            | comp_for< 'for' any 'in' node=any any* >
+            | old_comp_for< 'for' any 'in' node=any any* >
          """
     p2 = patcomp.compile_pattern(P2)
 

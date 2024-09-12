@@ -263,7 +263,7 @@ Unpacking non-sequence
     >>> a, *b = 7
     Traceback (most recent call last):
       ...
-    TypeError: 'int' object is not iterable
+    TypeError: cannot unpack non-iterable int object
 
 Unpacking sequence too short
 
@@ -357,7 +357,6 @@ Some size constraints (all fail.)
 __test__ = {'doctests' : doctests}
 
 def test_main(verbose=False):
-    import sys
     from test import support
     from test import test_unpack_ex
     support.run_doctest(test_unpack_ex, verbose)

@@ -2,7 +2,7 @@
 
 import _symtable
 from _symtable import (USE, DEF_GLOBAL, DEF_LOCAL, DEF_PARAM,
-     DEF_IMPORT, DEF_BOUND, SCOPE_OFF, SCOPE_MASK, FREE,
+     DEF_IMPORT, DEF_BOUND, DEF_ANNOT, SCOPE_OFF, SCOPE_MASK, FREE,
      LOCAL, GLOBAL_IMPLICIT, GLOBAL_EXPLICIT, CELL)
 
 import weakref
@@ -119,8 +119,8 @@ class Function(SymbolTable):
     __globals = None
 
     def __idents_matching(self, test_func):
-        return tuple([ident for ident in self.get_identifiers()
-                      if test_func(self._table.symbols[ident])])
+        return tuple(ident for ident in self.get_identifiers()
+                     if test_func(self._table.symbols[ident]))
 
     def get_parameters(self):
         if self.__params is None:
@@ -189,6 +189,9 @@ class Symbol(object):
 
     def is_local(self):
         return bool(self.__flags & DEF_BOUND)
+
+    def is_annotated(self):
+        return bool(self.__flags & DEF_ANNOT)
 
     def is_free(self):
         return bool(self.__scope == FREE)

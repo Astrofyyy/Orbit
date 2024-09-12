@@ -29,16 +29,14 @@ bl_info = {
     "name": "MeasureIt",
     "author": "Antonio Vazquez (antonioya)",
     "location": "View3D > Tools Panel /Properties panel",
-    "version": (1, 7, 0),
-    "blender": (2, 7, 4),
+    "version": (1, 7, 1),
+    "blender": (2, 79, 0),
     "description": "Tools for measuring objects.",
     "wiki_url": "https://wiki.blender.org/index.php/Extensions:2.6/"
                 "Py/Scripts/3D_interaction/Measureit",
     "category": "3D View"
 }
 
-import sys
-import os
 
 # ----------------------------------------------
 # Import modules
@@ -47,10 +45,10 @@ if "bpy" in locals():
     import importlib
 
     importlib.reload(measureit_main)
-    print("measureit: Reloaded multifiles")
+    # print("measureit: Reloaded multifiles")
 else:
     from . import measureit_main
-    print("measureit: Imported multifiles")
+    # print("measureit: Imported multifiles")
 
 # noinspection PyUnresolvedReferences
 import bpy
@@ -233,7 +231,7 @@ def register():
     Scene.measureit_units = EnumProperty(items=(('1', "Automatic", "Use scene units"),
                                                 ('2', "Meters", ""),
                                                 ('3', "Centimeters", ""),
-                                                ('4', "Milimiters", ""),
+                                                ('4', "Millimeters", ""),
                                                 ('5', "Feet", ""),
                                                 ('6', "Inches", "")),
                                          name="Units",
@@ -321,7 +319,7 @@ def register():
                                             default=15, min=6, max=500)
 
     Scene.measureit_debug = BoolProperty(name="Debug",
-                                         description="Display information for debuging"
+                                         description="Display information for debugging"
                                                      " (expand/collapse for enabling or disabling)"
                                                      " this information is only renderered for "
                                                      "selected objects",

@@ -1,37 +1,38 @@
 OpenShadingLanguage 1.00
-# Compiled by oslc 1.7.5
-# options: -q -O2 -IK:/BlenderGit/blender/intern/cycles/kernel/shaders -o K:/BlenderGit/build_windows_Release_x64_vc12_Release/intern/cycles/kernel/shaders/node_anisotropic_bsdf.oso
+# Compiled by oslc 1.9.9
+# options: -q -O2 -IC:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders -o C:/b/win64_cmake_vs2017/win64_cmake_vs2017/build/win64_cmake_vs2017/intern/cycles/kernel/shaders/node_anisotropic_bsdf.oso
 shader node_anisotropic_bsdf
-param	color	Color	0 0 0		%read{74,88} %write{2147483647,-1}
-param	string	distribution	"GGX"		%read{71,83} %write{2147483647,-1}
-param	float	Roughness	0		%read{64,70} %write{2147483647,-1}
-param	float	Anisotropy	0		%read{59,59} %write{2147483647,-1}
+param	color	Color	0 0 0		%read{75,89} %write{2147483647,-1}
+param	string	distribution	"GGX"		%read{72,84} %write{2147483647,-1}
+param	float	Roughness	0		%read{58,58} %write{2147483647,-1}
+param	float	Anisotropy	0		%read{60,60} %write{2147483647,-1}
 param	float	Rotation	0		%read{3,5} %write{2147483647,-1}
-param	normal	Normal	0 0 0		%read{7,87} %write{0,0} %initexpr
+param	normal	Normal	0 0 0		%read{7,88} %write{0,0} %initexpr
 param	normal	Tangent	0 0 0		%read{2,2} %write{1,1} %initexpr
-oparam	closure color	BSDF			%read{2147483647,-1} %write{74,88}
+oparam	closure color	BSDF			%read{2147483647,-1} %write{75,89}
 global	normal	N	%read{0,0} %write{2147483647,-1}
 global	vector	dPdu	%read{1,1} %write{2147483647,-1}
-local	vector	___537_axis	%read{12,14} %write{8,8}
-local	float	___537_cosang	%read{11,52} %write{10,10}
-local	float	___537_sinang	%read{22,47} %write{9,9}
-local	float	___537_cosang1	%read{21,46} %write{11,11}
-local	float	___537_x	%read{15,47} %write{12,12}
-local	float	___537_y	%read{20,45} %write{13,13}
-local	float	___537_z	%read{22,50} %write{14,14}
-local	matrix	___537_M	%read{56,56} %write{54,54}
-local	vector	T	%read{55,87} %write{2,57}
-local	float	RoughnessU	%read{77,87} %write{64,68}
-local	float	RoughnessV	%read{77,87} %write{66,70}
-local	float	aniso	%read{61,69} %write{60,60}
-const	float	$const1	0		%read{3,61} %write{2147483647,-1}
+local	vector	___554_axis	%read{12,14} %write{8,8}
+local	float	___554_cosang	%read{11,52} %write{10,10}
+local	float	___554_sinang	%read{22,47} %write{9,9}
+local	float	___554_cosang1	%read{21,46} %write{11,11}
+local	float	___554_x	%read{15,47} %write{12,12}
+local	float	___554_y	%read{20,45} %write{13,13}
+local	float	___554_z	%read{22,50} %write{14,14}
+local	matrix	___554_M	%read{56,56} %write{54,54}
+local	vector	T	%read{55,88} %write{2,57}
+local	float	roughness	%read{65,71} %write{58,58}
+local	float	roughness_u	%read{78,88} %write{65,69}
+local	float	roughness_v	%read{78,88} %write{67,71}
+local	float	aniso	%read{62,70} %write{61,61}
+const	float	$const1	0		%read{3,62} %write{2147483647,-1}
 temp	int	$tmp1	%read{4,4} %write{3,3}
 const	float	$const2	6.2831855		%read{5,5} %write{2147483647,-1}
 temp	float	$tmp2	%read{9,10} %write{5,5}
 const	point	$const3	0 0 0		%read{7,57} %write{2147483647,-1}
 const	string	$const4	"rotate"		%read{6,6} %write{2147483647,-1}
 temp	vector	$tmp4	%read{8,8} %write{7,7}
-const	float	$const5	1		%read{11,69} %write{2147483647,-1}
+const	float	$const5	1		%read{11,70} %write{2147483647,-1}
 const	int	$const6	0		%read{12,12} %write{2147483647,-1}
 const	int	$const7	1		%read{13,13} %write{2147483647,-1}
 const	int	$const8	2		%read{14,14} %write{2147483647,-1}
@@ -76,197 +77,200 @@ temp	float	$tmp42	%read{53,53} %write{52,52}
 temp	float	$tmp43	%read{54,54} %write{53,53}
 temp	vector	$tmp44	%read{57,57} %write{56,56}
 temp	vector	$tmp45	%read{56,56} %write{55,55}
-const	float	$const9	-0.99000001		%read{60,60} %write{2147483647,-1}
-const	float	$const10	0.99000001		%read{59,59} %write{2147483647,-1}
-const	string	$const11	"clamp"		%read{58,58} %write{2147483647,-1}
-temp	float	$tmp46	%read{60,60} %write{59,59}
-temp	int	$tmp47	%read{62,62} %write{61,61}
-temp	float	$tmp48	%read{64,64} %write{63,63}
-temp	float	$tmp49	%read{66,66} %write{65,65}
-temp	float	$tmp50	%read{68,68} %write{67,67}
-temp	float	$tmp51	%read{70,70} %write{69,69}
-const	string	$const12	"sharp"		%read{71,71} %write{2147483647,-1}
-temp	int	$tmp52	%read{72,72} %write{71,71}
-temp	closure color	$tmp53	%read{74,74} %write{73,73}
-const	string	$const13	"reflection"		%read{73,73} %write{2147483647,-1}
-const	string	$const14	"beckmann"		%read{75,75} %write{2147483647,-1}
-temp	int	$tmp54	%read{76,76} %write{75,75}
-temp	closure color	$tmp55	%read{78,78} %write{77,77}
-const	string	$const15	"microfacet_beckmann_aniso"		%read{77,77} %write{2147483647,-1}
-const	string	$const16	"GGX"		%read{79,79} %write{2147483647,-1}
-temp	int	$tmp56	%read{80,80} %write{79,79}
-temp	closure color	$tmp57	%read{82,82} %write{81,81}
-const	string	$const17	"microfacet_ggx_aniso"		%read{81,81} %write{2147483647,-1}
-const	string	$const18	"Multiscatter GGX"		%read{83,83} %write{2147483647,-1}
-temp	int	$tmp58	%read{84,84} %write{83,83}
-temp	closure color	$tmp59	%read{86,86} %write{85,85}
-const	string	$const19	"microfacet_multi_ggx_aniso"		%read{85,85} %write{2147483647,-1}
-temp	closure color	$tmp60	%read{88,88} %write{87,87}
-const	string	$const20	"ashikhmin_shirley"		%read{87,87} %write{2147483647,-1}
+const	float	$const9	-0.99000001		%read{61,61} %write{2147483647,-1}
+const	float	$const10	0.99000001		%read{60,60} %write{2147483647,-1}
+const	string	$const11	"clamp"		%read{59,59} %write{2147483647,-1}
+temp	float	$tmp46	%read{61,61} %write{60,60}
+temp	int	$tmp47	%read{63,63} %write{62,62}
+temp	float	$tmp48	%read{65,65} %write{64,64}
+temp	float	$tmp49	%read{67,67} %write{66,66}
+temp	float	$tmp50	%read{69,69} %write{68,68}
+temp	float	$tmp51	%read{71,71} %write{70,70}
+const	string	$const12	"sharp"		%read{72,72} %write{2147483647,-1}
+temp	int	$tmp52	%read{73,73} %write{72,72}
+temp	closure color	$tmp53	%read{75,75} %write{74,74}
+const	string	$const13	"reflection"		%read{74,74} %write{2147483647,-1}
+const	string	$const14	"beckmann"		%read{76,76} %write{2147483647,-1}
+temp	int	$tmp54	%read{77,77} %write{76,76}
+temp	closure color	$tmp55	%read{79,79} %write{78,78}
+const	string	$const15	"microfacet_beckmann_aniso"		%read{78,78} %write{2147483647,-1}
+const	string	$const16	"GGX"		%read{80,80} %write{2147483647,-1}
+temp	int	$tmp56	%read{81,81} %write{80,80}
+temp	closure color	$tmp57	%read{83,83} %write{82,82}
+const	string	$const17	"microfacet_ggx_aniso"		%read{82,82} %write{2147483647,-1}
+const	string	$const18	"Multiscatter GGX"		%read{84,84} %write{2147483647,-1}
+temp	int	$tmp58	%read{85,85} %write{84,84}
+temp	closure color	$tmp59	%read{87,87} %write{86,86}
+const	string	$const19	"microfacet_multi_ggx_aniso"		%read{86,86} %write{2147483647,-1}
+temp	closure color	$tmp60	%read{89,89} %write{88,88}
+const	string	$const20	"ashikhmin_shirley"		%read{88,88} %write{2147483647,-1}
 code Normal
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:25
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:25
 # 	normal Normal = N,
-	assign		Normal N 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{25} %argrw{"wr"}
+	assign		Normal N 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{25} %argrw{"wr"}
 code Tangent
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:26
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:26
 # 	normal Tangent = normalize(dPdu),
-	normalize	Tangent dPdu 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{26} %argrw{"wr"}
+	normalize	Tangent dPdu 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{26} %argrw{"wr"}
 code ___main___
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:30
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:30
 # 	vector T = Tangent;
-	assign		T Tangent 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{30} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:32
+	assign		T Tangent 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{30} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:32
 # 	if (Rotation != 0.0)
 	neq		$tmp1 Rotation $const1 	%line{32} %argrw{"wrr"}
 	if		$tmp1 58 58 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:33
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:33
 # 		T = rotate(T, Rotation * M_2PI, point(0.0, 0.0, 0.0), Normal);
 	mul		$tmp2 Rotation $const2 	%line{33} %argrw{"wrr"}
 	functioncall	$const4 58 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:250
-#         // gives us the same result as if the shader-writer called refract()
-	sub		$tmp4 Normal $const3 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h"} %line{250} %argrw{"wrr"}
-	normalize	___537_axis $tmp4 	%argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:264
-#     fresnel(I, N, eta, Kr, Kt, R, T);
-	sin		___537_sinang $tmp2 	%line{264} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:265
-# }
-	cos		___537_cosang $tmp2 	%line{265} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:266
-# 
-	sub		___537_cosang1 $const5 ___537_cosang 	%line{266} %argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:267
-# 
-	compref		___537_x ___537_axis $const6 	%line{267} %argrw{"wrr"}
-	compref		___537_y ___537_axis $const7 	%argrw{"wrr"}
-	compref		___537_z ___537_axis $const8 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:268
-# normal transform (matrix Mto, normal p) BUILTIN;
-	mul		$tmp5 ___537_x ___537_x 	%line{268} %argrw{"wrr"}
-	mul		$tmp6 ___537_x ___537_x 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:250
+#     vector axis = normalize (b - a);
+	sub		$tmp4 Normal $const3 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h"} %line{250} %argrw{"wrr"}
+	normalize	___554_axis $tmp4 	%argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:264
+#     sinang = sin (angle);
+	sin		___554_sinang $tmp2 	%line{264} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:265
+#     cosang = cos (angle);
+	cos		___554_cosang $tmp2 	%line{265} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:266
+# #endif
+	sub		___554_cosang1 $const5 ___554_cosang 	%line{266} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:267
+#     float cosang1 = 1.0 - cosang;
+	compref		___554_x ___554_axis $const6 	%line{267} %argrw{"wrr"}
+	compref		___554_y ___554_axis $const7 	%argrw{"wrr"}
+	compref		___554_z ___554_axis $const8 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:268
+#     float x = axis[0], y = axis[1], z = axis[2];
+	mul		$tmp5 ___554_x ___554_x 	%line{268} %argrw{"wrr"}
+	mul		$tmp6 ___554_x ___554_x 	%argrw{"wrr"}
 	sub		$tmp7 $const5 $tmp6 	%argrw{"wrr"}
-	mul		$tmp8 $tmp7 ___537_cosang 	%argrw{"wrr"}
+	mul		$tmp8 $tmp7 ___554_cosang 	%argrw{"wrr"}
 	add		$tmp9 $tmp5 $tmp8 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:269
-# vector transform (matrix Mto, vector p) BUILTIN;
-	mul		$tmp10 ___537_x ___537_y 	%line{269} %argrw{"wrr"}
-	mul		$tmp11 $tmp10 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp12 ___537_z ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:269
+#     matrix M = matrix (x * x + (1.0 - x * x) * cosang,
+	mul		$tmp10 ___554_x ___554_y 	%line{269} %argrw{"wrr"}
+	mul		$tmp11 $tmp10 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp12 ___554_z ___554_sinang 	%argrw{"wrr"}
 	add		$tmp13 $tmp11 $tmp12 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:270
-# point  transform (matrix Mto, point p) BUILTIN;
-	mul		$tmp14 ___537_x ___537_z 	%line{270} %argrw{"wrr"}
-	mul		$tmp15 $tmp14 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp16 ___537_y ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:270
+#                        x * y * cosang1 + z * sinang,
+	mul		$tmp14 ___554_x ___554_z 	%line{270} %argrw{"wrr"}
+	mul		$tmp15 $tmp14 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp16 ___554_y ___554_sinang 	%argrw{"wrr"}
 	sub		$tmp17 $tmp15 $tmp16 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:272
-# vector transform (string from, string to, vector p) BUILTIN;
-	mul		$tmp18 ___537_x ___537_y 	%line{272} %argrw{"wrr"}
-	mul		$tmp19 $tmp18 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp20 ___537_z ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:272
+#                        0.0,
+	mul		$tmp18 ___554_x ___554_y 	%line{272} %argrw{"wrr"}
+	mul		$tmp19 $tmp18 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp20 ___554_z ___554_sinang 	%argrw{"wrr"}
 	sub		$tmp21 $tmp19 $tmp20 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:273
-# point  transform (string from, string to, point p) BUILTIN;
-	mul		$tmp22 ___537_y ___537_y 	%line{273} %argrw{"wrr"}
-	mul		$tmp23 ___537_y ___537_y 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:273
+#                        x * y * cosang1 - z * sinang,
+	mul		$tmp22 ___554_y ___554_y 	%line{273} %argrw{"wrr"}
+	mul		$tmp23 ___554_y ___554_y 	%argrw{"wrr"}
 	sub		$tmp24 $const5 $tmp23 	%argrw{"wrr"}
-	mul		$tmp25 $tmp24 ___537_cosang 	%argrw{"wrr"}
+	mul		$tmp25 $tmp24 ___554_cosang 	%argrw{"wrr"}
 	add		$tmp26 $tmp22 $tmp25 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:274
-# normal transform (string to, normal p) { return transform("common",to,p); }
-	mul		$tmp27 ___537_y ___537_z 	%line{274} %argrw{"wrr"}
-	mul		$tmp28 $tmp27 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp29 ___537_x ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:274
+#                        y * y + (1.0 - y * y) * cosang,
+	mul		$tmp27 ___554_y ___554_z 	%line{274} %argrw{"wrr"}
+	mul		$tmp28 $tmp27 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp29 ___554_x ___554_sinang 	%argrw{"wrr"}
 	add		$tmp30 $tmp28 $tmp29 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:276
-# point  transform (string to, point p)  { return transform("common",to,p); }
-	mul		$tmp31 ___537_x ___537_z 	%line{276} %argrw{"wrr"}
-	mul		$tmp32 $tmp31 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp33 ___537_y ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:276
+#                        0.0,
+	mul		$tmp31 ___554_x ___554_z 	%line{276} %argrw{"wrr"}
+	mul		$tmp32 $tmp31 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp33 ___554_y ___554_sinang 	%argrw{"wrr"}
 	add		$tmp34 $tmp32 $tmp33 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:277
-# 
-	mul		$tmp35 ___537_y ___537_z 	%line{277} %argrw{"wrr"}
-	mul		$tmp36 $tmp35 ___537_cosang1 	%argrw{"wrr"}
-	mul		$tmp37 ___537_x ___537_sinang 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:277
+#                        x * z * cosang1 + y * sinang,
+	mul		$tmp35 ___554_y ___554_z 	%line{277} %argrw{"wrr"}
+	mul		$tmp36 $tmp35 ___554_cosang1 	%argrw{"wrr"}
+	mul		$tmp37 ___554_x ___554_sinang 	%argrw{"wrr"}
 	sub		$tmp38 $tmp36 $tmp37 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:278
-# float transformu (string tounits, float x) BUILTIN;
-	mul		$tmp39 ___537_z ___537_z 	%line{278} %argrw{"wrr"}
-	mul		$tmp40 ___537_z ___537_z 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:278
+#                        y * z * cosang1 - x * sinang,
+	mul		$tmp39 ___554_z ___554_z 	%line{278} %argrw{"wrr"}
+	mul		$tmp40 ___554_z ___554_z 	%argrw{"wrr"}
 	sub		$tmp41 $const5 $tmp40 	%argrw{"wrr"}
-	mul		$tmp42 $tmp41 ___537_cosang 	%argrw{"wrr"}
+	mul		$tmp42 $tmp41 ___554_cosang 	%argrw{"wrr"}
 	add		$tmp43 $tmp39 $tmp42 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:280
-# 
-	matrix		___537_M $tmp9 $tmp13 $tmp17 $const1 $tmp21 $tmp26 $tmp30 $const1 $tmp34 $tmp38 $tmp43 $const1 $const1 $const1 $const1 $const5 	%line{280} %argrw{"wrrrrrrrrrrrrrrrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:281
-# point rotate (point p, float angle, point a, point b)
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:280
+#                        0.0,
+	matrix		___554_M $tmp9 $tmp13 $tmp17 $const1 $tmp21 $tmp26 $tmp30 $const1 $tmp34 $tmp38 $tmp43 $const1 $const1 $const1 $const1 $const5 	%line{280} %argrw{"wrrrrrrrrrrrrrrrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:281
+#                        0.0, 0.0, 0.0, 1.0);
 	sub		$tmp45 T $const3 	%line{281} %argrw{"wrr"}
-	transformv	$tmp44 ___537_M $tmp45 	%argrw{"wrr"}
+	transformv	$tmp44 ___554_M $tmp45 	%argrw{"wrr"}
 	add		T $tmp44 $const3 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:37
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:36
+# 	float roughness = Roughness * Roughness;
+	mul		roughness Roughness Roughness 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{36} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:38
 # 	float aniso = clamp(Anisotropy, -0.99, 0.99);
-	functioncall	$const11 61 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{37} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h:144
-# float  log (float a,  float b) { return log(a)/log(b); }
-	min		$tmp46 Anisotropy $const10 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\stdosl.h"} %line{144} %argrw{"wrr"}
+	functioncall	$const11 62 	%line{38} %argrw{"r"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h:144
+# float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
+	min		$tmp46 Anisotropy $const10 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\stdosl.h"} %line{144} %argrw{"wrr"}
 	max		aniso $tmp46 $const9 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:39
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:40
 # 	if (aniso < 0.0) {
-	lt		$tmp47 aniso $const1 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{39} %argrw{"wrr"}
-	if		$tmp47 67 71 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:40
-# 		RoughnessU = Roughness / (1.0 + aniso);
-	add		$tmp48 $const5 aniso 	%line{40} %argrw{"wrr"}
-	div		RoughnessU Roughness $tmp48 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:41
-# 		RoughnessV = Roughness * (1.0 + aniso);
-	add		$tmp49 $const5 aniso 	%line{41} %argrw{"wrr"}
-	mul		RoughnessV Roughness $tmp49 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:44
-# 		RoughnessU = Roughness * (1.0 - aniso);
-	sub		$tmp50 $const5 aniso 	%line{44} %argrw{"wrr"}
-	mul		RoughnessU Roughness $tmp50 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:45
-# 		RoughnessV = Roughness / (1.0 - aniso);
-	sub		$tmp51 $const5 aniso 	%line{45} %argrw{"wrr"}
-	div		RoughnessV Roughness $tmp51 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:48
+	lt		$tmp47 aniso $const1 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl"} %line{40} %argrw{"wrr"}
+	if		$tmp47 68 72 	%argrw{"r"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:41
+# 		roughness_u = roughness / (1.0 + aniso);
+	add		$tmp48 $const5 aniso 	%line{41} %argrw{"wrr"}
+	div		roughness_u roughness $tmp48 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:42
+# 		roughness_v = roughness * (1.0 + aniso);
+	add		$tmp49 $const5 aniso 	%line{42} %argrw{"wrr"}
+	mul		roughness_v roughness $tmp49 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:45
+# 		roughness_u = roughness * (1.0 - aniso);
+	sub		$tmp50 $const5 aniso 	%line{45} %argrw{"wrr"}
+	mul		roughness_u roughness $tmp50 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:46
+# 		roughness_v = roughness / (1.0 - aniso);
+	sub		$tmp51 $const5 aniso 	%line{46} %argrw{"wrr"}
+	div		roughness_v roughness $tmp51 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:49
 # 	if (distribution == "sharp")
-	eq		$tmp52 distribution $const12 	%line{48} %argrw{"wrr"}
-	if		$tmp52 75 89 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:49
+	eq		$tmp52 distribution $const12 	%line{49} %argrw{"wrr"}
+	if		$tmp52 76 90 	%argrw{"r"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:50
 # 		BSDF = Color * reflection(Normal);
-	closure		$tmp53 $const13 Normal 	%line{49} %argrw{"wrr"}
+	closure		$tmp53 $const13 Normal 	%line{50} %argrw{"wrr"}
 	mul		BSDF $tmp53 Color 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:50
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:51
 # 	else if (distribution == "beckmann")
-	eq		$tmp54 distribution $const14 	%line{50} %argrw{"wrr"}
-	if		$tmp54 79 89 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:51
-# 		BSDF = Color * microfacet_beckmann_aniso(Normal, T, RoughnessU, RoughnessV);
-	closure		$tmp55 $const15 Normal T RoughnessU RoughnessV 	%line{51} %argrw{"wrrrrr"}
+	eq		$tmp54 distribution $const14 	%line{51} %argrw{"wrr"}
+	if		$tmp54 80 90 	%argrw{"r"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:52
+# 		BSDF = Color * microfacet_beckmann_aniso(Normal, T, roughness_u, roughness_v);
+	closure		$tmp55 $const15 Normal T roughness_u roughness_v 	%line{52} %argrw{"wrrrrr"}
 	mul		BSDF $tmp55 Color 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:52
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:53
 # 	else if (distribution == "GGX")
-	eq		$tmp56 distribution $const16 	%line{52} %argrw{"wrr"}
-	if		$tmp56 83 89 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:53
-# 		BSDF = Color * microfacet_ggx_aniso(Normal, T, RoughnessU, RoughnessV);
-	closure		$tmp57 $const17 Normal T RoughnessU RoughnessV 	%line{53} %argrw{"wrrrrr"}
+	eq		$tmp56 distribution $const16 	%line{53} %argrw{"wrr"}
+	if		$tmp56 84 90 	%argrw{"r"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:54
+# 		BSDF = Color * microfacet_ggx_aniso(Normal, T, roughness_u, roughness_v);
+	closure		$tmp57 $const17 Normal T roughness_u roughness_v 	%line{54} %argrw{"wrrrrr"}
 	mul		BSDF $tmp57 Color 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:54
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:55
 # 	else if (distribution == "Multiscatter GGX")
-	eq		$tmp58 distribution $const18 	%line{54} %argrw{"wrr"}
-	if		$tmp58 87 89 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:55
-# 		BSDF = Color * microfacet_multi_ggx_aniso(Normal, T, RoughnessU, RoughnessV, Color);
-	closure		$tmp59 $const19 Normal T RoughnessU RoughnessV Color 	%line{55} %argrw{"wrrrrrr"}
+	eq		$tmp58 distribution $const18 	%line{55} %argrw{"wrr"}
+	if		$tmp58 88 90 	%argrw{"r"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:56
+# 		BSDF = Color * microfacet_multi_ggx_aniso(Normal, T, roughness_u, roughness_v, Color);
+	closure		$tmp59 $const19 Normal T roughness_u roughness_v Color 	%line{56} %argrw{"wrrrrrr"}
 	mul		BSDF $tmp59 Color 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:57
-# 		BSDF = Color * ashikhmin_shirley(Normal, T, RoughnessU, RoughnessV);
-	closure		$tmp60 $const20 Normal T RoughnessU RoughnessV 	%line{57} %argrw{"wrrrrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_anisotropic_bsdf.osl:58
+# 		BSDF = Color * ashikhmin_shirley(Normal, T, roughness_u, roughness_v);
+	closure		$tmp60 $const20 Normal T roughness_u roughness_v 	%line{58} %argrw{"wrrrrr"}
 	mul		BSDF $tmp60 Color 	%argrw{"wrr"}
 	end

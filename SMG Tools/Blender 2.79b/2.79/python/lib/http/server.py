@@ -83,10 +83,13 @@ XXX To do:
 __version__ = "0.6"
 
 __all__ = [
-    "HTTPServer", "BaseHTTPRequestHandler",
+    "HTTPServer", "ThreadingHTTPServer", "BaseHTTPRequestHandler",
     "SimpleHTTPRequestHandler", "CGIHTTPRequestHandler",
 ]
 
+import copy
+import datetime
+import email.utils
 import html
 import http.client
 import io
@@ -100,8 +103,7 @@ import socketserver
 import sys
 import time
 import urllib.parse
-import copy
-import argparse
+from functools import partial
 
 from http import HTTPStatus
 
@@ -126,9 +128,6 @@ DEFAULT_ERROR_MESSAGE = """\
 
 DEFAULT_ERROR_CONTENT_TYPE = "text/html;charset=utf-8"
 
-def _quote_html(html):
-    return html.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
 class HTTPServer(socketserver.TCPServer):
 
     allow_reuse_address = 1    # Seems to make sense in testing environment
@@ -136,9 +135,13 @@ class HTTPServer(socketserver.TCPServer):
     def server_bind(self):
         """Override server_bind to store the server name."""
         socketserver.TCPServer.server_bind(self)
-        host, port = self.socket.getsockname()[:2]
+        host, port = self.server_address[:2]
         self.server_name = socket.getfqdn(host)
         self.server_port = port
+
+
+class ThreadingHTTPServer(socketserver.ThreadingMixIn, HTTPServer):
+    daemon_threads = True
 
 
 class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
@@ -269,8 +272,8 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
         are in self.command, self.path, self.request_version and
         self.headers.
 
-        Return True for success, False for failure; on failure, an
-        error is sent back.
+        Return True for success, False for failure; on failure, any relevant
+        error response has already been sent back.
 
         """
         self.command = None  # set in case of error on the first line
@@ -280,14 +283,14 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
         requestline = requestline.rstrip('\r\n')
         self.requestline = requestline
         words = requestline.split()
-        if len(words) == 3:
-            command, path, version = words
-            if version[:5] != 'HTTP/':
-                self.send_error(
-                    HTTPStatus.BAD_REQUEST,
-                    "Bad request version (%r)" % version)
-                return False
+        if len(words) == 0:
+            return False
+
+        if len(words) >= 3:  # Enough to determine protocol version
+            version = words[-1]
             try:
+                if not version.startswith('HTTP/'):
+                    raise ValueError
                 base_version_number = version.split('/', 1)[1]
                 version_number = base_version_number.split(".")
                 # RFC 2145 section 3.1 says there can be only one "." and
@@ -309,33 +312,34 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
             if version_number >= (2, 0):
                 self.send_error(
                     HTTPStatus.HTTP_VERSION_NOT_SUPPORTED,
-                    "Invalid HTTP Version (%s)" % base_version_number)
+                    "Invalid HTTP version (%s)" % base_version_number)
                 return False
-        elif len(words) == 2:
-            command, path = words
+            self.request_version = version
+
+        if not 2 <= len(words) <= 3:
+            self.send_error(
+                HTTPStatus.BAD_REQUEST,
+                "Bad request syntax (%r)" % requestline)
+            return False
+        command, path = words[:2]
+        if len(words) == 2:
             self.close_connection = True
             if command != 'GET':
                 self.send_error(
                     HTTPStatus.BAD_REQUEST,
                     "Bad HTTP/0.9 request type (%r)" % command)
                 return False
-        elif not words:
-            return False
-        else:
-            self.send_error(
-                HTTPStatus.BAD_REQUEST,
-                "Bad request syntax (%r)" % requestline)
-            return False
-        self.command, self.path, self.request_version = command, path, version
+        self.command, self.path = command, path
 
         # Examine the headers and look for a Connection directive.
         try:
             self.headers = http.client.parse_headers(self.rfile,
                                                      _class=self.MessageClass)
-        except http.client.LineTooLong:
+        except http.client.LineTooLong as err:
             self.send_error(
-                HTTPStatus.BAD_REQUEST,
-                "Line too long")
+                HTTPStatus.REQUEST_HEADER_FIELDS_TOO_LARGE,
+                "Line too long",
+                str(err))
             return False
         except http.client.HTTPException as err:
             self.send_error(
@@ -465,8 +469,8 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
             # (see bug #1100201)
             content = (self.error_message_format % {
                 'code': code,
-                'message': _quote_html(message),
-                'explain': _quote_html(explain)
+                'message': html.escape(message, quote=False),
+                'explain': html.escape(explain, quote=False)
             })
             body = content.encode('UTF-8', 'replace')
             self.send_header("Content-Type", self.error_content_type)
@@ -491,12 +495,12 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
 
     def send_response_only(self, code, message=None):
         """Send the response header only."""
-        if message is None:
-            if code in self.responses:
-                message = self.responses[code][0]
-            else:
-                message = ''
         if self.request_version != 'HTTP/0.9':
+            if message is None:
+                if code in self.responses:
+                    message = self.responses[code][0]
+                else:
+                    message = ''
             if not hasattr(self, '_headers_buffer'):
                 self._headers_buffer = []
             self._headers_buffer.append(("%s %d %s\r\n" %
@@ -583,12 +587,7 @@ class BaseHTTPRequestHandler(socketserver.StreamRequestHandler):
         """Return the current date and time formatted for a message header."""
         if timestamp is None:
             timestamp = time.time()
-        year, month, day, hh, mm, ss, wd, y, z = time.gmtime(timestamp)
-        s = "%s, %02d %3s %4d %02d:%02d:%02d GMT" % (
-                self.weekdayname[wd],
-                day, self.monthname[month], year,
-                hh, mm, ss)
-        return s
+        return email.utils.formatdate(timestamp, usegmt=True)
 
     def log_date_time_string(self):
         """Return the current time formatted for logging."""
@@ -639,6 +638,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     """
 
     server_version = "SimpleHTTP/" + __version__
+
+    def __init__(self, *args, directory=None, **kwargs):
+        if directory is None:
+            directory = os.getcwd()
+        self.directory = directory
+        super().__init__(*args, **kwargs)
 
     def do_GET(self):
         """Serve a GET request."""
@@ -692,12 +697,42 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         except OSError:
             self.send_error(HTTPStatus.NOT_FOUND, "File not found")
             return None
+
         try:
+            fs = os.fstat(f.fileno())
+            # Use browser cache if possible
+            if ("If-Modified-Since" in self.headers
+                    and "If-None-Match" not in self.headers):
+                # compare If-Modified-Since and time of last file modification
+                try:
+                    ims = email.utils.parsedate_to_datetime(
+                        self.headers["If-Modified-Since"])
+                except (TypeError, IndexError, OverflowError, ValueError):
+                    # ignore ill-formed values
+                    pass
+                else:
+                    if ims.tzinfo is None:
+                        # obsolete format with no timezone, cf.
+                        # https://tools.ietf.org/html/rfc7231#section-7.1.1.1
+                        ims = ims.replace(tzinfo=datetime.timezone.utc)
+                    if ims.tzinfo is datetime.timezone.utc:
+                        # compare to UTC datetime of last modification
+                        last_modif = datetime.datetime.fromtimestamp(
+                            fs.st_mtime, datetime.timezone.utc)
+                        # remove microseconds, like in If-Modified-Since
+                        last_modif = last_modif.replace(microsecond=0)
+
+                        if last_modif <= ims:
+                            self.send_response(HTTPStatus.NOT_MODIFIED)
+                            self.end_headers()
+                            f.close()
+                            return None
+
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-type", ctype)
-            fs = os.fstat(f.fileno())
             self.send_header("Content-Length", str(fs[6]))
-            self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+            self.send_header("Last-Modified",
+                self.date_time_string(fs.st_mtime))
             self.end_headers()
             return f
         except:
@@ -726,7 +761,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                                                errors='surrogatepass')
         except UnicodeDecodeError:
             displaypath = urllib.parse.unquote(path)
-        displaypath = html.escape(displaypath)
+        displaypath = html.escape(displaypath, quote=False)
         enc = sys.getfilesystemencoding()
         title = 'Directory listing for %s' % displaypath
         r.append('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" '
@@ -750,7 +785,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             r.append('<li><a href="%s">%s</a></li>'
                     % (urllib.parse.quote(linkname,
                                           errors='surrogatepass'),
-                       html.escape(displayname)))
+                       html.escape(displayname, quote=False)))
         r.append('</ul>\n<hr>\n</body>\n</html>\n')
         encoded = '\n'.join(r).encode(enc, 'surrogateescape')
         f = io.BytesIO()
@@ -782,7 +817,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         path = posixpath.normpath(path)
         words = path.split('/')
         words = filter(None, words)
-        path = os.getcwd()
+        path = self.directory
         for word in words:
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
                 # Ignore components that are not a simple file/directory name
@@ -1182,7 +1217,8 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
 
 
 def test(HandlerClass=BaseHTTPRequestHandler,
-         ServerClass=HTTPServer, protocol="HTTP/1.0", port=8000, bind=""):
+         ServerClass=ThreadingHTTPServer,
+         protocol="HTTP/1.0", port=8000, bind=""):
     """Test the HTTP request handler class.
 
     This runs an HTTP server on port 8000 (or the port argument).
@@ -1191,24 +1227,28 @@ def test(HandlerClass=BaseHTTPRequestHandler,
     server_address = (bind, port)
 
     HandlerClass.protocol_version = protocol
-    httpd = ServerClass(server_address, HandlerClass)
-
-    sa = httpd.socket.getsockname()
-    print("Serving HTTP on", sa[0], "port", sa[1], "...")
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\nKeyboard interrupt received, exiting.")
-        httpd.server_close()
-        sys.exit(0)
+    with ServerClass(server_address, HandlerClass) as httpd:
+        sa = httpd.socket.getsockname()
+        serve_message = "Serving HTTP on {host} port {port} (http://{host}:{port}/) ..."
+        print(serve_message.format(host=sa[0], port=sa[1]))
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nKeyboard interrupt received, exiting.")
+            sys.exit(0)
 
 if __name__ == '__main__':
+    import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--cgi', action='store_true',
                        help='Run as CGI Server')
     parser.add_argument('--bind', '-b', default='', metavar='ADDRESS',
                         help='Specify alternate bind address '
                              '[default: all interfaces]')
+    parser.add_argument('--directory', '-d', default=os.getcwd(),
+                        help='Specify alternative directory '
+                        '[default:current directory]')
     parser.add_argument('port', action='store',
                         default=8000, type=int,
                         nargs='?',
@@ -1217,5 +1257,6 @@ if __name__ == '__main__':
     if args.cgi:
         handler_class = CGIHTTPRequestHandler
     else:
-        handler_class = SimpleHTTPRequestHandler
+        handler_class = partial(SimpleHTTPRequestHandler,
+                                directory=args.directory)
     test(HandlerClass=handler_class, port=args.port, bind=args.bind)

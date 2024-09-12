@@ -1,6 +1,6 @@
 OpenShadingLanguage 1.00
-# Compiled by oslc 1.7.5
-# options: -q -O2 -IK:/BlenderGit/blender/intern/cycles/kernel/shaders -o K:/BlenderGit/build_windows_Release_x64_vc12_Release/intern/cycles/kernel/shaders/node_sky_texture.oso
+# Compiled by oslc 1.9.9
+# options: -q -O2 -IC:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders -o C:/b/win64_cmake_vs2017/win64_cmake_vs2017/build/win64_cmake_vs2017/intern/cycles/kernel/shaders/node_sky_texture.oso
 shader node_sky_texture
 param	int	use_mapping	0		%read{2,2} %write{2147483647,-1}
 param	matrix	mapping	0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0		%read{3,3} %write{2147483647,-1}
@@ -14,32 +14,32 @@ param	float[9]	config_y	0 0 0 0 0 0 0 0 0		%read{83,231} %write{2147483647,-1}
 param	float[9]	config_z	0 0 0 0 0 0 0 0 0		%read{125,253} %write{2147483647,-1}
 oparam	color	Color	0 0 0		%read{2147483647,-1} %write{182,319}
 global	point	P	%read{0,0} %write{2147483647,-1}
-local	float	___651_X	%read{299,299} %write{285,286}
-local	float	___651_Z	%read{299,299} %write{297,298}
-local	float	___661_cospsi	%read{27,212} %write{26,203}
-local	float	___663_ctheta	%read{221,265} %write{217,261}
-local	float	___663_cgamma	%read{232,277} %write{218,262}
-local	vector	___664_spherical	%read{191,192} %write{190,190}
-local	float	___664_theta	%read{194,261} %write{191,214}
-local	float	___664_phi	%read{197,197} %write{192,192}
-local	float	___664_gamma	%read{218,271} %write{206,212}
-local	float	___664_x	%read{284,294} %write{236,236}
-local	float	___664_y	%read{282,296} %write{258,258}
-local	float	___664_Y	%read{285,299} %write{280,280}
-local	color	___664_xyz	%read{300,302} %write{299,299}
-local	float	___665_ctheta	%read{56,143} %write{39,123}
-local	float	___665_cgamma	%read{44,136} %write{40,124}
-local	float	___665_expM	%read{66,150} %write{43,127}
-local	float	___665_rayM	%read{45,153} %write{44,128}
-local	float	___665_mieM	%read{72,156} %write{55,139}
-local	float	___665_zenith	%read{75,159} %write{56,140}
-local	vector	___666_spherical	%read{14,15} %write{13,13}
-local	float	___666_theta	%read{17,123} %write{14,37}
-local	float	___666_phi	%read{20,20} %write{15,15}
-local	float	___666_gamma	%read{40,126} %write{29,35}
-local	float	___666_x	%read{165,175} %write{79,79}
-local	float	___666_y	%read{166,176} %write{121,121}
-local	float	___666_z	%read{168,178} %write{163,163}
+local	float	___674_X	%read{299,299} %write{285,286}
+local	float	___674_Z	%read{299,299} %write{297,298}
+local	float	___684_cospsi	%read{27,212} %write{26,203}
+local	float	___686_ctheta	%read{221,265} %write{217,261}
+local	float	___686_cgamma	%read{232,277} %write{218,262}
+local	vector	___687_spherical	%read{191,192} %write{190,190}
+local	float	___687_theta	%read{194,261} %write{191,214}
+local	float	___687_phi	%read{197,197} %write{192,192}
+local	float	___687_gamma	%read{218,271} %write{206,212}
+local	float	___687_x	%read{284,294} %write{236,236}
+local	float	___687_y	%read{282,296} %write{258,258}
+local	float	___687_Y	%read{285,299} %write{280,280}
+local	color	___687_xyz	%read{300,302} %write{299,299}
+local	float	___688_ctheta	%read{56,143} %write{39,123}
+local	float	___688_cgamma	%read{44,136} %write{40,124}
+local	float	___688_expM	%read{66,150} %write{43,127}
+local	float	___688_rayM	%read{45,153} %write{44,128}
+local	float	___688_mieM	%read{72,156} %write{55,139}
+local	float	___688_zenith	%read{75,159} %write{56,140}
+local	vector	___689_spherical	%read{14,15} %write{13,13}
+local	float	___689_theta	%read{17,123} %write{14,37}
+local	float	___689_phi	%read{20,20} %write{15,15}
+local	float	___689_gamma	%read{40,126} %write{29,35}
+local	float	___689_x	%read{165,175} %write{79,79}
+local	float	___689_y	%read{166,176} %write{121,121}
+local	float	___689_z	%read{168,178} %write{163,163}
 local	vector	p	%read{3,188} %write{1,3}
 const	string	$const1	"hosek_wilkie"		%read{4,4} %write{2147483647,-1}
 temp	int	$tmp1	%read{5,5} %write{4,4}
@@ -315,504 +315,504 @@ temp	float	$tmp233	%read{318,318} %write{316,316}
 temp	float	$tmp234	%read{318,318} %write{317,317}
 temp	float	$tmp235	%read{319,319} %write{318,318}
 code Vector
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:113
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:113
 # 	vector Vector = P,
-	assign		Vector P 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{113} %argrw{"wr"}
+	assign		Vector P 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{113} %argrw{"wr"}
 code ___main___
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:123
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:123
 # 	vector p = Vector;
-	assign		p Vector 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{123} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:125
+	assign		p Vector 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{123} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:125
 # 	if (use_mapping)
 	if		use_mapping 4 4 	%line{125} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:126
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:126
 # 		p = transform(mapping, p);
 	transformv	p mapping p 	%line{126} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:128
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:128
 # 	if (type == "hosek_wilkie")
 	eq		$tmp1 type $const1 	%line{128} %argrw{"wrr"}
 	if		$tmp1 183 320 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:129
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:129
 # 		Color = sky_radiance_new(p, phi, theta, radiance, config_x, config_y, config_z);
 	functioncall	$const2 183 	%line{129} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:91
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:91
 # 	vector spherical = sky_spherical_coordinates(dir);
 	functioncall	$const3 14 	%line{91} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:34
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:34
 # 	return vector(acos(dir[2]), atan2(dir[0], dir[1]), 0);
 	compref		$tmp3 p $const4 	%line{34} %argrw{"wrr"}
 	acos		$tmp2 $tmp3 	%argrw{"wr"}
 	compref		$tmp5 p $const5 	%argrw{"wrr"}
 	compref		$tmp6 p $const6 	%argrw{"wrr"}
 	atan2		$tmp4 $tmp5 $tmp6 	%argrw{"wrr"}
-	vector		___666_spherical $tmp2 $tmp4 $const7 	%argrw{"wrrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:92
+	vector		___689_spherical $tmp2 $tmp4 $const7 	%argrw{"wrrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:92
 # 	float theta = spherical[0];
-	compref		___666_theta ___666_spherical $const5 	%line{92} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:93
+	compref		___689_theta ___689_spherical $const5 	%line{92} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:93
 # 	float phi = spherical[1];
-	compref		___666_phi ___666_spherical $const6 	%line{93} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:96
+	compref		___689_phi ___689_spherical $const6 	%line{93} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:96
 # 	float gamma = sky_angle_between(theta, phi, suntheta, sunphi);
 	functioncall	$const8 36 	%line{96} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:22
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:22
 # 	float cospsi = sin(thetav) * sin(theta) * cos(phi - phiv) + cos(thetav) * cos(theta);
-	sin		$tmp7 ___666_theta 	%line{22} %argrw{"wr"}
+	sin		$tmp7 ___689_theta 	%line{22} %argrw{"wr"}
 	sin		$tmp8 theta 	%argrw{"wr"}
 	mul		$tmp9 $tmp7 $tmp8 	%argrw{"wrr"}
-	sub		$tmp11 phi ___666_phi 	%argrw{"wrr"}
+	sub		$tmp11 phi ___689_phi 	%argrw{"wrr"}
 	cos		$tmp10 $tmp11 	%argrw{"wr"}
 	mul		$tmp12 $tmp9 $tmp10 	%argrw{"wrr"}
-	cos		$tmp13 ___666_theta 	%argrw{"wr"}
+	cos		$tmp13 ___689_theta 	%argrw{"wr"}
 	cos		$tmp14 theta 	%argrw{"wr"}
 	mul		$tmp15 $tmp13 $tmp14 	%argrw{"wrr"}
-	add		___661_cospsi $tmp12 $tmp15 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:24
+	add		___684_cospsi $tmp12 $tmp15 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:24
 # 	if (cospsi > 1.0)
-	gt		$tmp16 ___661_cospsi $const9 	%line{24} %argrw{"wrr"}
+	gt		$tmp16 ___684_cospsi $const9 	%line{24} %argrw{"wrr"}
 	if		$tmp16 31 31 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:25
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:25
 # 		return 0.0;
-	assign		___666_gamma $const7 	%line{25} %argrw{"wr"}
+	assign		___689_gamma $const7 	%line{25} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:26
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:26
 # 	if (cospsi < -1.0)
-	lt		$tmp17 ___661_cospsi $const10 	%line{26} %argrw{"wrr"}
+	lt		$tmp17 ___684_cospsi $const10 	%line{26} %argrw{"wrr"}
 	if		$tmp17 35 35 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:27
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:27
 # 		return M_PI;
-	assign		___666_gamma $const11 	%line{27} %argrw{"wr"}
+	assign		___689_gamma $const11 	%line{27} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:29
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:29
 # 	return acos(cospsi);
-	acos		___666_gamma ___661_cospsi 	%line{29} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:99
+	acos		___689_gamma ___684_cospsi 	%line{29} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:99
 # 	theta = min(theta, M_PI_2 - 0.001);
 	sub		$tmp18 $const12 $const13 	%line{99} %argrw{"wrr"}
-	min		___666_theta ___666_theta $tmp18 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:102
+	min		___689_theta ___689_theta $tmp18 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:102
 # 	float x = sky_radiance_internal(config_x, theta, gamma) * radiance[0];
 	functioncall	$const14 78 	%line{102} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:74
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:74
 # 	float ctheta = cos(theta);
-	cos		___665_ctheta ___666_theta 	%line{74} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:75
+	cos		___688_ctheta ___689_theta 	%line{74} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:75
 # 	float cgamma = cos(gamma);
-	cos		___665_cgamma ___666_gamma 	%line{75} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:77
+	cos		___688_cgamma ___689_gamma 	%line{75} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:77
 # 	float expM = exp(config[4] * gamma);
 	aref		$tmp20 config_x $const15 	%line{77} %argrw{"wrr"}
-	mul		$tmp21 $tmp20 ___666_gamma 	%argrw{"wrr"}
-	exp		___665_expM $tmp21 	%argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:78
+	mul		$tmp21 $tmp20 ___689_gamma 	%argrw{"wrr"}
+	exp		___688_expM $tmp21 	%argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:78
 # 	float rayM = cgamma * cgamma;
-	mul		___665_rayM ___665_cgamma ___665_cgamma 	%line{78} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:79
+	mul		___688_rayM ___688_cgamma ___688_cgamma 	%line{78} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:79
 # 	float mieM = (1.0 + rayM) / pow((1.0 + config[8] * config[8] - 2.0 * config[8] * cgamma), 1.5);
-	add		$tmp22 $const9 ___665_rayM 	%line{79} %argrw{"wrr"}
+	add		$tmp22 $const9 ___688_rayM 	%line{79} %argrw{"wrr"}
 	aref		$tmp24 config_x $const16 	%argrw{"wrr"}
 	aref		$tmp25 config_x $const16 	%argrw{"wrr"}
 	mul		$tmp26 $tmp24 $tmp25 	%argrw{"wrr"}
 	add		$tmp27 $const9 $tmp26 	%argrw{"wrr"}
 	aref		$tmp28 config_x $const16 	%argrw{"wrr"}
 	mul		$tmp29 $const17 $tmp28 	%argrw{"wrr"}
-	mul		$tmp30 $tmp29 ___665_cgamma 	%argrw{"wrr"}
+	mul		$tmp30 $tmp29 ___688_cgamma 	%argrw{"wrr"}
 	sub		$tmp31 $tmp27 $tmp30 	%argrw{"wrr"}
 	pow		$tmp23 $tmp31 $const18 	%argrw{"wrr"}
-	div		___665_mieM $tmp22 $tmp23 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:80
+	div		___688_mieM $tmp22 $tmp23 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:80
 # 	float zenith = sqrt(ctheta);
-	sqrt		___665_zenith ___665_ctheta 	%line{80} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:82
+	sqrt		___688_zenith ___688_ctheta 	%line{80} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:82
 # 	return (1.0 + config[0] * exp(config[1] / (ctheta + 0.01))) *
 	aref		$tmp32 config_x $const5 	%line{82} %argrw{"wrr"}
 	aref		$tmp34 config_x $const6 	%argrw{"wrr"}
-	add		$tmp35 ___665_ctheta $const19 	%argrw{"wrr"}
+	add		$tmp35 ___688_ctheta $const19 	%argrw{"wrr"}
 	div		$tmp36 $tmp34 $tmp35 	%argrw{"wrr"}
 	exp		$tmp33 $tmp36 	%argrw{"wr"}
 	mul		$tmp37 $tmp32 $tmp33 	%argrw{"wrr"}
 	add		$tmp38 $const9 $tmp37 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:83
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:83
 # 	        (config[2] + config[3] * expM + config[5] * rayM + config[6] * mieM + config[7] * zenith);
 	aref		$tmp39 config_x $const4 	%line{83} %argrw{"wrr"}
 	aref		$tmp40 config_x $const20 	%argrw{"wrr"}
-	mul		$tmp41 $tmp40 ___665_expM 	%argrw{"wrr"}
+	mul		$tmp41 $tmp40 ___688_expM 	%argrw{"wrr"}
 	add		$tmp42 $tmp39 $tmp41 	%argrw{"wrr"}
 	aref		$tmp43 config_x $const21 	%argrw{"wrr"}
-	mul		$tmp44 $tmp43 ___665_rayM 	%argrw{"wrr"}
+	mul		$tmp44 $tmp43 ___688_rayM 	%argrw{"wrr"}
 	add		$tmp45 $tmp42 $tmp44 	%argrw{"wrr"}
 	aref		$tmp46 config_x $const22 	%argrw{"wrr"}
-	mul		$tmp47 $tmp46 ___665_mieM 	%argrw{"wrr"}
+	mul		$tmp47 $tmp46 ___688_mieM 	%argrw{"wrr"}
 	add		$tmp48 $tmp45 $tmp47 	%argrw{"wrr"}
 	aref		$tmp49 config_x $const23 	%argrw{"wrr"}
-	mul		$tmp50 $tmp49 ___665_zenith 	%argrw{"wrr"}
+	mul		$tmp50 $tmp49 ___688_zenith 	%argrw{"wrr"}
 	add		$tmp51 $tmp48 $tmp50 	%argrw{"wrr"}
 	mul		$tmp19 $tmp38 $tmp51 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:102
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:102
 # 	float x = sky_radiance_internal(config_x, theta, gamma) * radiance[0];
 	compref		$tmp52 radiance $const5 	%line{102} %argrw{"wrr"}
-	mul		___666_x $tmp19 $tmp52 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:103
+	mul		___689_x $tmp19 $tmp52 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:103
 # 	float y = sky_radiance_internal(config_y, theta, gamma) * radiance[1];
 	functioncall	$const14 120 	%line{103} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:74
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:74
 # 	float ctheta = cos(theta);
-	cos		___665_ctheta ___666_theta 	%line{74} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:75
+	cos		___688_ctheta ___689_theta 	%line{74} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:75
 # 	float cgamma = cos(gamma);
-	cos		___665_cgamma ___666_gamma 	%line{75} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:77
+	cos		___688_cgamma ___689_gamma 	%line{75} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:77
 # 	float expM = exp(config[4] * gamma);
 	aref		$tmp54 config_y $const15 	%line{77} %argrw{"wrr"}
-	mul		$tmp55 $tmp54 ___666_gamma 	%argrw{"wrr"}
-	exp		___665_expM $tmp55 	%argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:78
+	mul		$tmp55 $tmp54 ___689_gamma 	%argrw{"wrr"}
+	exp		___688_expM $tmp55 	%argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:78
 # 	float rayM = cgamma * cgamma;
-	mul		___665_rayM ___665_cgamma ___665_cgamma 	%line{78} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:79
+	mul		___688_rayM ___688_cgamma ___688_cgamma 	%line{78} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:79
 # 	float mieM = (1.0 + rayM) / pow((1.0 + config[8] * config[8] - 2.0 * config[8] * cgamma), 1.5);
-	add		$tmp56 $const9 ___665_rayM 	%line{79} %argrw{"wrr"}
+	add		$tmp56 $const9 ___688_rayM 	%line{79} %argrw{"wrr"}
 	aref		$tmp58 config_y $const16 	%argrw{"wrr"}
 	aref		$tmp59 config_y $const16 	%argrw{"wrr"}
 	mul		$tmp60 $tmp58 $tmp59 	%argrw{"wrr"}
 	add		$tmp61 $const9 $tmp60 	%argrw{"wrr"}
 	aref		$tmp62 config_y $const16 	%argrw{"wrr"}
 	mul		$tmp63 $const17 $tmp62 	%argrw{"wrr"}
-	mul		$tmp64 $tmp63 ___665_cgamma 	%argrw{"wrr"}
+	mul		$tmp64 $tmp63 ___688_cgamma 	%argrw{"wrr"}
 	sub		$tmp65 $tmp61 $tmp64 	%argrw{"wrr"}
 	pow		$tmp57 $tmp65 $const18 	%argrw{"wrr"}
-	div		___665_mieM $tmp56 $tmp57 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:80
+	div		___688_mieM $tmp56 $tmp57 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:80
 # 	float zenith = sqrt(ctheta);
-	sqrt		___665_zenith ___665_ctheta 	%line{80} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:82
+	sqrt		___688_zenith ___688_ctheta 	%line{80} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:82
 # 	return (1.0 + config[0] * exp(config[1] / (ctheta + 0.01))) *
 	aref		$tmp66 config_y $const5 	%line{82} %argrw{"wrr"}
 	aref		$tmp68 config_y $const6 	%argrw{"wrr"}
-	add		$tmp69 ___665_ctheta $const19 	%argrw{"wrr"}
+	add		$tmp69 ___688_ctheta $const19 	%argrw{"wrr"}
 	div		$tmp70 $tmp68 $tmp69 	%argrw{"wrr"}
 	exp		$tmp67 $tmp70 	%argrw{"wr"}
 	mul		$tmp71 $tmp66 $tmp67 	%argrw{"wrr"}
 	add		$tmp72 $const9 $tmp71 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:83
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:83
 # 	        (config[2] + config[3] * expM + config[5] * rayM + config[6] * mieM + config[7] * zenith);
 	aref		$tmp73 config_y $const4 	%line{83} %argrw{"wrr"}
 	aref		$tmp74 config_y $const20 	%argrw{"wrr"}
-	mul		$tmp75 $tmp74 ___665_expM 	%argrw{"wrr"}
+	mul		$tmp75 $tmp74 ___688_expM 	%argrw{"wrr"}
 	add		$tmp76 $tmp73 $tmp75 	%argrw{"wrr"}
 	aref		$tmp77 config_y $const21 	%argrw{"wrr"}
-	mul		$tmp78 $tmp77 ___665_rayM 	%argrw{"wrr"}
+	mul		$tmp78 $tmp77 ___688_rayM 	%argrw{"wrr"}
 	add		$tmp79 $tmp76 $tmp78 	%argrw{"wrr"}
 	aref		$tmp80 config_y $const22 	%argrw{"wrr"}
-	mul		$tmp81 $tmp80 ___665_mieM 	%argrw{"wrr"}
+	mul		$tmp81 $tmp80 ___688_mieM 	%argrw{"wrr"}
 	add		$tmp82 $tmp79 $tmp81 	%argrw{"wrr"}
 	aref		$tmp83 config_y $const23 	%argrw{"wrr"}
-	mul		$tmp84 $tmp83 ___665_zenith 	%argrw{"wrr"}
+	mul		$tmp84 $tmp83 ___688_zenith 	%argrw{"wrr"}
 	add		$tmp85 $tmp82 $tmp84 	%argrw{"wrr"}
 	mul		$tmp53 $tmp72 $tmp85 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:103
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:103
 # 	float y = sky_radiance_internal(config_y, theta, gamma) * radiance[1];
 	compref		$tmp86 radiance $const6 	%line{103} %argrw{"wrr"}
-	mul		___666_y $tmp53 $tmp86 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:104
+	mul		___689_y $tmp53 $tmp86 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:104
 # 	float z = sky_radiance_internal(config_z, theta, gamma) * radiance[2];
 	functioncall	$const14 162 	%line{104} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:74
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:74
 # 	float ctheta = cos(theta);
-	cos		___665_ctheta ___666_theta 	%line{74} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:75
+	cos		___688_ctheta ___689_theta 	%line{74} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:75
 # 	float cgamma = cos(gamma);
-	cos		___665_cgamma ___666_gamma 	%line{75} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:77
+	cos		___688_cgamma ___689_gamma 	%line{75} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:77
 # 	float expM = exp(config[4] * gamma);
 	aref		$tmp88 config_z $const15 	%line{77} %argrw{"wrr"}
-	mul		$tmp89 $tmp88 ___666_gamma 	%argrw{"wrr"}
-	exp		___665_expM $tmp89 	%argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:78
+	mul		$tmp89 $tmp88 ___689_gamma 	%argrw{"wrr"}
+	exp		___688_expM $tmp89 	%argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:78
 # 	float rayM = cgamma * cgamma;
-	mul		___665_rayM ___665_cgamma ___665_cgamma 	%line{78} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:79
+	mul		___688_rayM ___688_cgamma ___688_cgamma 	%line{78} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:79
 # 	float mieM = (1.0 + rayM) / pow((1.0 + config[8] * config[8] - 2.0 * config[8] * cgamma), 1.5);
-	add		$tmp90 $const9 ___665_rayM 	%line{79} %argrw{"wrr"}
+	add		$tmp90 $const9 ___688_rayM 	%line{79} %argrw{"wrr"}
 	aref		$tmp92 config_z $const16 	%argrw{"wrr"}
 	aref		$tmp93 config_z $const16 	%argrw{"wrr"}
 	mul		$tmp94 $tmp92 $tmp93 	%argrw{"wrr"}
 	add		$tmp95 $const9 $tmp94 	%argrw{"wrr"}
 	aref		$tmp96 config_z $const16 	%argrw{"wrr"}
 	mul		$tmp97 $const17 $tmp96 	%argrw{"wrr"}
-	mul		$tmp98 $tmp97 ___665_cgamma 	%argrw{"wrr"}
+	mul		$tmp98 $tmp97 ___688_cgamma 	%argrw{"wrr"}
 	sub		$tmp99 $tmp95 $tmp98 	%argrw{"wrr"}
 	pow		$tmp91 $tmp99 $const18 	%argrw{"wrr"}
-	div		___665_mieM $tmp90 $tmp91 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:80
+	div		___688_mieM $tmp90 $tmp91 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:80
 # 	float zenith = sqrt(ctheta);
-	sqrt		___665_zenith ___665_ctheta 	%line{80} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:82
+	sqrt		___688_zenith ___688_ctheta 	%line{80} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:82
 # 	return (1.0 + config[0] * exp(config[1] / (ctheta + 0.01))) *
 	aref		$tmp100 config_z $const5 	%line{82} %argrw{"wrr"}
 	aref		$tmp102 config_z $const6 	%argrw{"wrr"}
-	add		$tmp103 ___665_ctheta $const19 	%argrw{"wrr"}
+	add		$tmp103 ___688_ctheta $const19 	%argrw{"wrr"}
 	div		$tmp104 $tmp102 $tmp103 	%argrw{"wrr"}
 	exp		$tmp101 $tmp104 	%argrw{"wr"}
 	mul		$tmp105 $tmp100 $tmp101 	%argrw{"wrr"}
 	add		$tmp106 $const9 $tmp105 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:83
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:83
 # 	        (config[2] + config[3] * expM + config[5] * rayM + config[6] * mieM + config[7] * zenith);
 	aref		$tmp107 config_z $const4 	%line{83} %argrw{"wrr"}
 	aref		$tmp108 config_z $const20 	%argrw{"wrr"}
-	mul		$tmp109 $tmp108 ___665_expM 	%argrw{"wrr"}
+	mul		$tmp109 $tmp108 ___688_expM 	%argrw{"wrr"}
 	add		$tmp110 $tmp107 $tmp109 	%argrw{"wrr"}
 	aref		$tmp111 config_z $const21 	%argrw{"wrr"}
-	mul		$tmp112 $tmp111 ___665_rayM 	%argrw{"wrr"}
+	mul		$tmp112 $tmp111 ___688_rayM 	%argrw{"wrr"}
 	add		$tmp113 $tmp110 $tmp112 	%argrw{"wrr"}
 	aref		$tmp114 config_z $const22 	%argrw{"wrr"}
-	mul		$tmp115 $tmp114 ___665_mieM 	%argrw{"wrr"}
+	mul		$tmp115 $tmp114 ___688_mieM 	%argrw{"wrr"}
 	add		$tmp116 $tmp113 $tmp115 	%argrw{"wrr"}
 	aref		$tmp117 config_z $const23 	%argrw{"wrr"}
-	mul		$tmp118 $tmp117 ___665_zenith 	%argrw{"wrr"}
+	mul		$tmp118 $tmp117 ___688_zenith 	%argrw{"wrr"}
 	add		$tmp119 $tmp116 $tmp118 	%argrw{"wrr"}
 	mul		$tmp87 $tmp106 $tmp119 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:104
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:104
 # 	float z = sky_radiance_internal(config_z, theta, gamma) * radiance[2];
 	compref		$tmp120 radiance $const4 	%line{104} %argrw{"wrr"}
-	mul		___666_z $tmp87 $tmp120 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:107
+	mul		___689_z $tmp87 $tmp120 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:107
 # 	return xyz_to_rgb(x, y, z) * (M_2PI / 683);
 	functioncall	$const24 181 	%line{107} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:74
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:76
 # 	return color( 3.240479 * x + -1.537150 * y + -0.498535 * z,
-	mul		$tmp122 $const25 ___666_x 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h"} %line{74} %argrw{"wrr"}
-	mul		$tmp123 $const26 ___666_y 	%argrw{"wrr"}
+	mul		$tmp122 $const25 ___689_x 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h"} %line{76} %argrw{"wrr"}
+	mul		$tmp123 $const26 ___689_y 	%argrw{"wrr"}
 	add		$tmp124 $tmp122 $tmp123 	%argrw{"wrr"}
-	mul		$tmp125 $const27 ___666_z 	%argrw{"wrr"}
+	mul		$tmp125 $const27 ___689_z 	%argrw{"wrr"}
 	add		$tmp126 $tmp124 $tmp125 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:75
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:77
 # 	             -0.969256 * x +  1.875991 * y +  0.041556 * z,
-	mul		$tmp127 $const28 ___666_x 	%line{75} %argrw{"wrr"}
-	mul		$tmp128 $const29 ___666_y 	%argrw{"wrr"}
+	mul		$tmp127 $const28 ___689_x 	%line{77} %argrw{"wrr"}
+	mul		$tmp128 $const29 ___689_y 	%argrw{"wrr"}
 	add		$tmp129 $tmp127 $tmp128 	%argrw{"wrr"}
-	mul		$tmp130 $const30 ___666_z 	%argrw{"wrr"}
+	mul		$tmp130 $const30 ___689_z 	%argrw{"wrr"}
 	add		$tmp131 $tmp129 $tmp130 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:76
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:78
 # 	              0.055648 * x + -0.204043 * y +  1.057311 * z);
-	mul		$tmp132 $const31 ___666_x 	%line{76} %argrw{"wrr"}
-	mul		$tmp133 $const32 ___666_y 	%argrw{"wrr"}
+	mul		$tmp132 $const31 ___689_x 	%line{78} %argrw{"wrr"}
+	mul		$tmp133 $const32 ___689_y 	%argrw{"wrr"}
 	add		$tmp134 $tmp132 $tmp133 	%argrw{"wrr"}
-	mul		$tmp135 $const33 ___666_z 	%argrw{"wrr"}
+	mul		$tmp135 $const33 ___689_z 	%argrw{"wrr"}
 	add		$tmp136 $tmp134 $tmp135 	%argrw{"wrr"}
 	color		$tmp121 $tmp126 $tmp131 $tmp136 	%argrw{"wrrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:107
-# 
-	div		$tmp137 $const34 $const36 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{107} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:107
+# 	return xyz_to_rgb(x, y, z) * (M_2PI / 683);
+	div		$tmp137 $const34 $const36 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{107} %argrw{"wrr"}
 	mul		Color $tmp121 $tmp137 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:131
-# 	/* angle between sun direction and dir */
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:131
+# 		Color = sky_radiance_old(p, phi, theta, radiance, config_x, config_y, config_z);
 	functioncall	$const37 320 	%line{131} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:51
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:51
 # 	vector spherical = sky_spherical_coordinates(dir);
 	functioncall	$const3 191 	%line{51} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:34
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:34
 # 	return vector(acos(dir[2]), atan2(dir[0], dir[1]), 0);
 	compref		$tmp139 p $const4 	%line{34} %argrw{"wrr"}
 	acos		$tmp138 $tmp139 	%argrw{"wr"}
 	compref		$tmp141 p $const5 	%argrw{"wrr"}
 	compref		$tmp142 p $const6 	%argrw{"wrr"}
 	atan2		$tmp140 $tmp141 $tmp142 	%argrw{"wrr"}
-	vector		___664_spherical $tmp138 $tmp140 $const7 	%argrw{"wrrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:52
+	vector		___687_spherical $tmp138 $tmp140 $const7 	%argrw{"wrrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:52
 # 	float theta = spherical[0];
-	compref		___664_theta ___664_spherical $const5 	%line{52} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:53
+	compref		___687_theta ___687_spherical $const5 	%line{52} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:53
 # 	float phi = spherical[1];
-	compref		___664_phi ___664_spherical $const6 	%line{53} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:56
+	compref		___687_phi ___687_spherical $const6 	%line{53} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:56
 # 	float gamma = sky_angle_between(theta, phi, suntheta, sunphi);
 	functioncall	$const8 213 	%line{56} %argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:22
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:22
 # 	float cospsi = sin(thetav) * sin(theta) * cos(phi - phiv) + cos(thetav) * cos(theta);
-	sin		$tmp143 ___664_theta 	%line{22} %argrw{"wr"}
+	sin		$tmp143 ___687_theta 	%line{22} %argrw{"wr"}
 	sin		$tmp144 theta 	%argrw{"wr"}
 	mul		$tmp145 $tmp143 $tmp144 	%argrw{"wrr"}
-	sub		$tmp147 phi ___664_phi 	%argrw{"wrr"}
+	sub		$tmp147 phi ___687_phi 	%argrw{"wrr"}
 	cos		$tmp146 $tmp147 	%argrw{"wr"}
 	mul		$tmp148 $tmp145 $tmp146 	%argrw{"wrr"}
-	cos		$tmp149 ___664_theta 	%argrw{"wr"}
+	cos		$tmp149 ___687_theta 	%argrw{"wr"}
 	cos		$tmp150 theta 	%argrw{"wr"}
 	mul		$tmp151 $tmp149 $tmp150 	%argrw{"wrr"}
-	add		___661_cospsi $tmp148 $tmp151 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:24
+	add		___684_cospsi $tmp148 $tmp151 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:24
 # 	if (cospsi > 1.0)
-	gt		$tmp152 ___661_cospsi $const9 	%line{24} %argrw{"wrr"}
+	gt		$tmp152 ___684_cospsi $const9 	%line{24} %argrw{"wrr"}
 	if		$tmp152 208 208 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:25
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:25
 # 		return 0.0;
-	assign		___664_gamma $const7 	%line{25} %argrw{"wr"}
+	assign		___687_gamma $const7 	%line{25} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:26
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:26
 # 	if (cospsi < -1.0)
-	lt		$tmp153 ___661_cospsi $const10 	%line{26} %argrw{"wrr"}
+	lt		$tmp153 ___684_cospsi $const10 	%line{26} %argrw{"wrr"}
 	if		$tmp153 212 212 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:27
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:27
 # 		return M_PI;
-	assign		___664_gamma $const11 	%line{27} %argrw{"wr"}
+	assign		___687_gamma $const11 	%line{27} %argrw{"wr"}
 	return
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:29
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:29
 # 	return acos(cospsi);
-	acos		___664_gamma ___661_cospsi 	%line{29} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:59
+	acos		___687_gamma ___684_cospsi 	%line{29} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:59
 # 	theta = min(theta, M_PI_2 - 0.001);
 	sub		$tmp154 $const12 $const13 	%line{59} %argrw{"wrr"}
-	min		___664_theta ___664_theta $tmp154 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:62
+	min		___687_theta ___687_theta $tmp154 	%argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:62
 # 	float x = radiance[1] * sky_perez_function(config_y, theta, gamma);
 	compref		$tmp155 radiance $const6 	%line{62} %argrw{"wrr"}
 	functioncall	$const38 236 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:40
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:40
 # 	float ctheta = cos(theta);
-	cos		___663_ctheta ___664_theta 	%line{40} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:41
+	cos		___686_ctheta ___687_theta 	%line{40} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:41
 # 	float cgamma = cos(gamma);
-	cos		___663_cgamma ___664_gamma 	%line{41} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:43
+	cos		___686_cgamma ___687_gamma 	%line{41} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:43
 # 	return (1.0 + lam[0] * exp(lam[1] / ctheta)) * (1.0 + lam[2] * exp(lam[3] * gamma) + lam[4] * cgamma * cgamma);
 	aref		$tmp157 config_y $const5 	%line{43} %argrw{"wrr"}
 	aref		$tmp159 config_y $const6 	%argrw{"wrr"}
-	div		$tmp160 $tmp159 ___663_ctheta 	%argrw{"wrr"}
+	div		$tmp160 $tmp159 ___686_ctheta 	%argrw{"wrr"}
 	exp		$tmp158 $tmp160 	%argrw{"wr"}
 	mul		$tmp161 $tmp157 $tmp158 	%argrw{"wrr"}
 	add		$tmp162 $const9 $tmp161 	%argrw{"wrr"}
 	aref		$tmp163 config_y $const4 	%argrw{"wrr"}
 	aref		$tmp165 config_y $const20 	%argrw{"wrr"}
-	mul		$tmp166 $tmp165 ___664_gamma 	%argrw{"wrr"}
+	mul		$tmp166 $tmp165 ___687_gamma 	%argrw{"wrr"}
 	exp		$tmp164 $tmp166 	%argrw{"wr"}
 	mul		$tmp167 $tmp163 $tmp164 	%argrw{"wrr"}
 	add		$tmp168 $const9 $tmp167 	%argrw{"wrr"}
 	aref		$tmp169 config_y $const15 	%argrw{"wrr"}
-	mul		$tmp170 $tmp169 ___663_cgamma 	%argrw{"wrr"}
-	mul		$tmp171 $tmp170 ___663_cgamma 	%argrw{"wrr"}
+	mul		$tmp170 $tmp169 ___686_cgamma 	%argrw{"wrr"}
+	mul		$tmp171 $tmp170 ___686_cgamma 	%argrw{"wrr"}
 	add		$tmp172 $tmp168 $tmp171 	%argrw{"wrr"}
 	mul		$tmp156 $tmp162 $tmp172 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:62
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:62
 # 	float x = radiance[1] * sky_perez_function(config_y, theta, gamma);
-	mul		___664_x $tmp155 $tmp156 	%line{62} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:63
+	mul		___687_x $tmp155 $tmp156 	%line{62} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:63
 # 	float y = radiance[2] * sky_perez_function(config_z, theta, gamma);
 	compref		$tmp173 radiance $const4 	%line{63} %argrw{"wrr"}
 	functioncall	$const38 258 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:40
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:40
 # 	float ctheta = cos(theta);
-	cos		___663_ctheta ___664_theta 	%line{40} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:41
+	cos		___686_ctheta ___687_theta 	%line{40} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:41
 # 	float cgamma = cos(gamma);
-	cos		___663_cgamma ___664_gamma 	%line{41} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:43
+	cos		___686_cgamma ___687_gamma 	%line{41} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:43
 # 	return (1.0 + lam[0] * exp(lam[1] / ctheta)) * (1.0 + lam[2] * exp(lam[3] * gamma) + lam[4] * cgamma * cgamma);
 	aref		$tmp175 config_z $const5 	%line{43} %argrw{"wrr"}
 	aref		$tmp177 config_z $const6 	%argrw{"wrr"}
-	div		$tmp178 $tmp177 ___663_ctheta 	%argrw{"wrr"}
+	div		$tmp178 $tmp177 ___686_ctheta 	%argrw{"wrr"}
 	exp		$tmp176 $tmp178 	%argrw{"wr"}
 	mul		$tmp179 $tmp175 $tmp176 	%argrw{"wrr"}
 	add		$tmp180 $const9 $tmp179 	%argrw{"wrr"}
 	aref		$tmp181 config_z $const4 	%argrw{"wrr"}
 	aref		$tmp183 config_z $const20 	%argrw{"wrr"}
-	mul		$tmp184 $tmp183 ___664_gamma 	%argrw{"wrr"}
+	mul		$tmp184 $tmp183 ___687_gamma 	%argrw{"wrr"}
 	exp		$tmp182 $tmp184 	%argrw{"wr"}
 	mul		$tmp185 $tmp181 $tmp182 	%argrw{"wrr"}
 	add		$tmp186 $const9 $tmp185 	%argrw{"wrr"}
 	aref		$tmp187 config_z $const15 	%argrw{"wrr"}
-	mul		$tmp188 $tmp187 ___663_cgamma 	%argrw{"wrr"}
-	mul		$tmp189 $tmp188 ___663_cgamma 	%argrw{"wrr"}
+	mul		$tmp188 $tmp187 ___686_cgamma 	%argrw{"wrr"}
+	mul		$tmp189 $tmp188 ___686_cgamma 	%argrw{"wrr"}
 	add		$tmp190 $tmp186 $tmp189 	%argrw{"wrr"}
 	mul		$tmp174 $tmp180 $tmp190 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:63
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:63
 # 	float y = radiance[2] * sky_perez_function(config_z, theta, gamma);
-	mul		___664_y $tmp173 $tmp174 	%line{63} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:64
+	mul		___687_y $tmp173 $tmp174 	%line{63} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:64
 # 	float Y = radiance[0] * sky_perez_function(config_x, theta, gamma);
 	compref		$tmp191 radiance $const5 	%line{64} %argrw{"wrr"}
 	functioncall	$const38 280 	%argrw{"r"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:40
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:40
 # 	float ctheta = cos(theta);
-	cos		___663_ctheta ___664_theta 	%line{40} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:41
+	cos		___686_ctheta ___687_theta 	%line{40} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:41
 # 	float cgamma = cos(gamma);
-	cos		___663_cgamma ___664_gamma 	%line{41} %argrw{"wr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:43
+	cos		___686_cgamma ___687_gamma 	%line{41} %argrw{"wr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:43
 # 	return (1.0 + lam[0] * exp(lam[1] / ctheta)) * (1.0 + lam[2] * exp(lam[3] * gamma) + lam[4] * cgamma * cgamma);
 	aref		$tmp193 config_x $const5 	%line{43} %argrw{"wrr"}
 	aref		$tmp195 config_x $const6 	%argrw{"wrr"}
-	div		$tmp196 $tmp195 ___663_ctheta 	%argrw{"wrr"}
+	div		$tmp196 $tmp195 ___686_ctheta 	%argrw{"wrr"}
 	exp		$tmp194 $tmp196 	%argrw{"wr"}
 	mul		$tmp197 $tmp193 $tmp194 	%argrw{"wrr"}
 	add		$tmp198 $const9 $tmp197 	%argrw{"wrr"}
 	aref		$tmp199 config_x $const4 	%argrw{"wrr"}
 	aref		$tmp201 config_x $const20 	%argrw{"wrr"}
-	mul		$tmp202 $tmp201 ___664_gamma 	%argrw{"wrr"}
+	mul		$tmp202 $tmp201 ___687_gamma 	%argrw{"wrr"}
 	exp		$tmp200 $tmp202 	%argrw{"wr"}
 	mul		$tmp203 $tmp199 $tmp200 	%argrw{"wrr"}
 	add		$tmp204 $const9 $tmp203 	%argrw{"wrr"}
 	aref		$tmp205 config_x $const15 	%argrw{"wrr"}
-	mul		$tmp206 $tmp205 ___663_cgamma 	%argrw{"wrr"}
-	mul		$tmp207 $tmp206 ___663_cgamma 	%argrw{"wrr"}
+	mul		$tmp206 $tmp205 ___686_cgamma 	%argrw{"wrr"}
+	mul		$tmp207 $tmp206 ___686_cgamma 	%argrw{"wrr"}
 	add		$tmp208 $tmp204 $tmp207 	%argrw{"wrr"}
 	mul		$tmp192 $tmp198 $tmp208 	%argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:64
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:64
 # 	float Y = radiance[0] * sky_perez_function(config_x, theta, gamma);
-	mul		___664_Y $tmp191 $tmp192 	%line{64} %argrw{"wrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:67
+	mul		___687_Y $tmp191 $tmp192 	%line{64} %argrw{"wrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:67
 # 	color xyz = xyY_to_xyz(x, y, Y);
 	functioncall	$const39 300 	%line{67} %argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:63
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:65
 # 	if (y != 0.0) X = (x / y) * Y;
-	neq		$tmp209 ___664_y $const7 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h"} %line{63} %argrw{"wrr"}
+	neq		$tmp209 ___687_y $const7 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h"} %line{65} %argrw{"wrr"}
 	if		$tmp209 286 287 	%argrw{"r"}
-	div		$tmp210 ___664_x ___664_y 	%argrw{"wrr"}
-	mul		___651_X $tmp210 ___664_Y 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:64
+	div		$tmp210 ___687_x ___687_y 	%argrw{"wrr"}
+	mul		___674_X $tmp210 ___687_Y 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:66
 # 	else X = 0.0;
-	assign		___651_X $const7 	%line{64} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:66
+	assign		___674_X $const7 	%line{66} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:68
 # 	if (y != 0.0 && Y != 0.0) Z = ((1.0 - x - y) / y) * Y;
-	neq		$tmp211 ___664_y $const7 	%line{66} %argrw{"wrr"}
+	neq		$tmp211 ___687_y $const7 	%line{68} %argrw{"wrr"}
 	neq		$tmp212 $tmp211 $const5 	%argrw{"wrr"}
 	if		$tmp212 293 293 	%argrw{"r"}
-	neq		$tmp213 ___664_Y $const7 	%argrw{"wrr"}
+	neq		$tmp213 ___687_Y $const7 	%argrw{"wrr"}
 	neq		$tmp214 $tmp213 $const5 	%argrw{"wrr"}
 	assign		$tmp212 $tmp214 	%argrw{"wr"}
 	if		$tmp212 298 299 	%argrw{"r"}
-	sub		$tmp215 $const9 ___664_x 	%argrw{"wrr"}
-	sub		$tmp216 $tmp215 ___664_y 	%argrw{"wrr"}
-	div		$tmp217 $tmp216 ___664_y 	%argrw{"wrr"}
-	mul		___651_Z $tmp217 ___664_Y 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:67
+	sub		$tmp215 $const9 ___687_x 	%argrw{"wrr"}
+	sub		$tmp216 $tmp215 ___687_y 	%argrw{"wrr"}
+	div		$tmp217 $tmp216 ___687_y 	%argrw{"wrr"}
+	mul		___674_Z $tmp217 ___687_Y 	%argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:69
 # 	else Z = 0.0;
-	assign		___651_Z $const7 	%line{67} %argrw{"wr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:69
+	assign		___674_Z $const7 	%line{69} %argrw{"wr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:71
 # 	return color(X, Y, Z);
-	color		___664_xyz ___651_X ___664_Y ___651_Z 	%line{69} %argrw{"wrrr"}
-# K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl:68
+	color		___687_xyz ___674_X ___687_Y ___674_Z 	%line{71} %argrw{"wrrr"}
+# C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl:68
 # 	return xyz_to_rgb(xyz[0], xyz[1], xyz[2]);
-	compref		$tmp218 ___664_xyz $const5 	%filename{"K:/BlenderGit/blender/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{68} %argrw{"wrr"}
-	compref		$tmp219 ___664_xyz $const6 	%argrw{"wrr"}
-	compref		$tmp220 ___664_xyz $const4 	%argrw{"wrr"}
+	compref		$tmp218 ___687_xyz $const5 	%filename{"C:/b/win64_cmake_vs2017/win64_cmake_vs2017/blender.git/intern/cycles/kernel/shaders/node_sky_texture.osl"} %line{68} %argrw{"wrr"}
+	compref		$tmp219 ___687_xyz $const6 	%argrw{"wrr"}
+	compref		$tmp220 ___687_xyz $const4 	%argrw{"wrr"}
 	functioncall	$const24 320 	%argrw{"r"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:74
-#  * You may obtain a copy of the License at
-	mul		$tmp221 $const25 $tmp218 	%filename{"K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h"} %line{74} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:76
+# 	return color( 3.240479 * x + -1.537150 * y + -0.498535 * z,
+	mul		$tmp221 $const25 $tmp218 	%filename{"C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h"} %line{76} %argrw{"wrr"}
 	mul		$tmp222 $const26 $tmp219 	%argrw{"wrr"}
 	add		$tmp223 $tmp221 $tmp222 	%argrw{"wrr"}
 	mul		$tmp224 $const27 $tmp220 	%argrw{"wrr"}
 	add		$tmp225 $tmp223 $tmp224 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:75
-#  *
-	mul		$tmp226 $const28 $tmp218 	%line{75} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:77
+# 	             -0.969256 * x +  1.875991 * y +  0.041556 * z,
+	mul		$tmp226 $const28 $tmp218 	%line{77} %argrw{"wrr"}
 	mul		$tmp227 $const29 $tmp219 	%argrw{"wrr"}
 	add		$tmp228 $tmp226 $tmp227 	%argrw{"wrr"}
 	mul		$tmp229 $const30 $tmp220 	%argrw{"wrr"}
 	add		$tmp230 $tmp228 $tmp229 	%argrw{"wrr"}
-# K:/BlenderGit\\blender\\intern\\cycles\\kernel\\shaders\\node_color.h:76
-#  * http://www.apache.org/licenses/LICENSE-2.0
-	mul		$tmp231 $const31 $tmp218 	%line{76} %argrw{"wrr"}
+# C:\b\win64_cmake_vs2017\win64_cmake_vs2017\blender.git\intern\cycles\kernel\shaders\node_color.h:78
+# 	              0.055648 * x + -0.204043 * y +  1.057311 * z);
+	mul		$tmp231 $const31 $tmp218 	%line{78} %argrw{"wrr"}
 	mul		$tmp232 $const32 $tmp219 	%argrw{"wrr"}
 	add		$tmp233 $tmp231 $tmp232 	%argrw{"wrr"}
 	mul		$tmp234 $const33 $tmp220 	%argrw{"wrr"}

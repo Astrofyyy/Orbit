@@ -301,6 +301,8 @@ class CommonTest(unittest.TestCase):
         u = self.type2test([0, 1])
         u *= 3
         self.assertEqual(u, self.type2test([0, 1, 0, 1, 0, 1]))
+        u *= 0
+        self.assertEqual(u, self.type2test([]))
 
     def test_getitemoverwriteiter(self):
         # Verify that __getitem__ overrides are not recognized by __iter__
@@ -318,7 +320,6 @@ class CommonTest(unittest.TestCase):
             self.assertEqual(id(s), id(s*1))
 
     def test_bigrepeat(self):
-        import sys
         if sys.maxsize <= 2147483647:
             x = self.type2test([0])
             x *= 2**16

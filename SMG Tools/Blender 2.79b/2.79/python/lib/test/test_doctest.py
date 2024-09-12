@@ -7,7 +7,9 @@ import doctest
 import functools
 import os
 import sys
-
+import importlib
+import unittest
+import tempfile
 
 # NOTE: There are some additional tests relating to interaction with
 #       zipimport in the test_zipimport_support test module.
@@ -291,7 +293,7 @@ constructor:
     ...
     ... Non-example text.
     ...
-    ...     >>> print('another\example')
+    ...     >>> print('another\\example')
     ...     another
     ...     example
     ... '''
@@ -435,7 +437,7 @@ We'll simulate a __file__ attr that ends in pyc:
     >>> tests = finder.find(sample_func)
 
     >>> print(tests)  # doctest: +ELLIPSIS
-    [<DocTest sample_func from ...:19 (1 example)>]
+    [<DocTest sample_func from ...:21 (1 example)>]
 
 The exact name depends on how test_doctest was invoked, so allow for
 leading path components.
@@ -659,7 +661,7 @@ plain ol' Python and is guaranteed to be available.
 
     >>> import builtins
     >>> tests = doctest.DocTestFinder().find(builtins)
-    >>> 790 < len(tests) < 810 # approximate number of objects with docstrings
+    >>> 800 < len(tests) < 820 # approximate number of objects with docstrings
     True
     >>> real_tests = [t for t in tests if len(t.examples) > 0]
     >>> len(real_tests) # objects that actually have doctests
@@ -680,6 +682,23 @@ Note here that 'bin', 'oct', and 'hex' are functions; 'float.as_integer_ratio',
 'float.hex', and 'int.bit_length' are methods; 'float.fromhex' is a classmethod,
 and 'int' is a type.
 """
+
+
+class TestDocTestFinder(unittest.TestCase):
+
+    def test_empty_namespace_package(self):
+        pkg_name = 'doctest_empty_pkg'
+        with tempfile.TemporaryDirectory() as parent_dir:
+            pkg_dir = os.path.join(parent_dir, pkg_name)
+            os.mkdir(pkg_dir)
+            sys.path.append(parent_dir)
+            try:
+                mod = importlib.import_module(pkg_name)
+            finally:
+                support.forget(pkg_name)
+                sys.path.pop()
+            assert doctest.DocTestFinder().find(mod) == []
+
 
 def test_DocTestParser(): r"""
 Unit tests for the `DocTestParser` class.
@@ -1876,7 +1895,6 @@ if not hasattr(sys, 'gettrace') or not sys.gettrace():
         To demonstrate this, we'll create a fake standard input that
         captures our debugger input:
 
-          >>> import tempfile
           >>> real_stdin = sys.stdin
           >>> sys.stdin = _FakeInput([
           ...    'print(x)',  # print data defined by the example
@@ -1917,7 +1935,7 @@ if not hasattr(sys, 'gettrace') or not sys.gettrace():
           ... finally:
           ...     sys.stdin = real_stdin
           --Return--
-          > <doctest test.test_doctest.test_pdb_set_trace[8]>(3)calls_set_trace()->None
+          > <doctest test.test_doctest.test_pdb_set_trace[7]>(3)calls_set_trace()->None
           -> import pdb; pdb.set_trace()
           (Pdb) print(y)
           2
@@ -2798,7 +2816,6 @@ text files).
     ...         _ = f.write("       'abc def'\n")
     ...         _ = f.write("\n")
     ...         _ = f.write('   \"\"\"\n')
-    ...     import shutil
     ...     rc1, out1, err1 = script_helper.assert_python_failure(
     ...             '-m', 'doctest', fn, fn2)
     ...     rc2, out2, err2 = script_helper.assert_python_ok(
@@ -2942,11 +2959,14 @@ Invalid doctest option:
 def test_main():
     # Check the doctest cases in doctest itself:
     ret = support.run_doctest(doctest, verbosity=True)
+
     # Check the doctest cases defined here:
     from test import test_doctest
     support.run_doctest(test_doctest, verbosity=True)
 
-import sys, re, io
+    # Run unittests
+    support.run_unittest(__name__)
+
 
 def test_coverage(coverdir):
     trace = support.import_module('trace')

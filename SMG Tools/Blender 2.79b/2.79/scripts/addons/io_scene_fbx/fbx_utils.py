@@ -650,7 +650,7 @@ def elem_props_template_finalize(template, elem):
     Finalize one element's template/props.
     Issue is, some templates might be "needed" by different types (e.g. NodeAttribute is for lights, cameras, etc.),
     but values for only *one* subtype can be written as template. So we have to be sure we write those for the other
-    subtypes in each and every elements, if they are not overriden by that element.
+    subtypes in each and every elements, if they are not overridden by that element.
     Yes, hairy, FBX that is to say. When they could easily support several subtypes per template... :(
     """
     for name, (value, ptype_name, animatable, written) in template.items():
@@ -729,6 +729,7 @@ class AnimationCurveNodeWrapper:
         'LCL_ROTATION': ("Lcl Rotation", "R", ("X", "Y", "Z")),
         'LCL_SCALING': ("Lcl Scaling", "S", ("X", "Y", "Z")),
         'SHAPE_KEY': ("DeformPercent", "DeformPercent", ("DeformPercent",)),
+        'CAMERA_FOCAL': ("FocalLength", "FocalLength", ("FocalLength",)),
     }
 
     def __init__(self, elem_key, kind, force_keying, force_startend_keying, default_values=...):

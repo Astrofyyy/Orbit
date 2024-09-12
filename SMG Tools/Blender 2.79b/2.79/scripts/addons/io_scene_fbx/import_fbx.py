@@ -64,6 +64,18 @@ MAT_CONVERT_LAMP = fbx_utils.MAT_CONVERT_LAMP.inverted()
 MAT_CONVERT_CAMERA = fbx_utils.MAT_CONVERT_CAMERA.inverted()
 
 
+def validate_blend_names(name):
+    assert(type(name) == bytes)
+    # Blender typically does not accept names over 63 bytes...
+    if len(name) > 63:
+        import hashlib
+        h = hashlib.sha1(name).hexdigest()
+        return name[:55].decode('utf-8', 'replace') + "_" + h[:7]
+    else:
+        # We use 'replace' even though FBX 'specs' say it should always be utf8, see T53841.
+        return name.decode('utf-8', 'replace')
+
+
 def elem_find_first(elem, id_search, default=None):
     for fbx_item in elem.elems:
         if fbx_item.id == id_search:
@@ -124,14 +136,14 @@ def elem_name_ensure_class(elem, clss=...):
     elem_name, elem_class = elem_split_name_class(elem)
     if clss is not ...:
         assert(elem_class == clss)
-    return elem_name.decode('utf-8', 'replace')
+    return validate_blend_names(elem_name)
 
 
 def elem_name_ensure_classes(elem, clss=...):
     elem_name, elem_class = elem_split_name_class(elem)
     if clss is not ...:
         assert(elem_class in clss)
-    return elem_name.decode('utf-8', 'replace')
+    return validate_blend_names(elem_name)
 
 
 def elem_split_name_class_nodeattr(elem):
@@ -240,9 +252,9 @@ def elem_props_get_bool(elem, elem_prop_id, default=None):
     elem_prop = elem_props_find_first(elem, elem_prop_id)
     if elem_prop is not None:
         assert(elem_prop.props[0] == elem_prop_id)
-        assert(elem_prop.props[1] == b'bool')
+        # b'Bool' with a capital seems to be used for animated property... go figure...
+        assert(elem_prop.props[1] in {b'bool', b'Bool'})
         assert(elem_prop.props[2] == b'')
-        assert(elem_prop.props[3] == b'')
 
         # we could allow other number types
         assert(elem_prop.props_type[4] == data_types.INT32)
@@ -312,9 +324,10 @@ def blen_read_custom_properties(fbx_obj, blen_obj, settings):
                     for item in items.split('\r\n'):
                         if item:
                             prop_name, prop_value = item.split('=', 1)
-                            blen_obj[prop_name.strip()] = prop_value.strip()
+                            prop_name = validate_blend_names(prop_name.strip().encode('utf-8'))
+                            blen_obj[prop_name] = prop_value.strip()
                 else:
-                    prop_name = fbx_prop.props[0].decode('utf-8', 'replace')
+                    prop_name = validate_blend_names(fbx_prop.props[0])
                     prop_type = fbx_prop.props[1]
                     if prop_type in {b'Vector', b'Vector3D', b'Color', b'ColorRGB'}:
                         assert(fbx_prop.props_type[4:7] == bytes((data_types.FLOAT64,)) * 3)
@@ -544,7 +557,7 @@ def blen_read_animations_action_item(action, item, cnodes, fps, anim_offset):
     'Bake' loc/rot/scale into the action,
     taking any pre_ and post_ matrix into account to transform from fbx into blender space.
     """
-    from bpy.types import Object, PoseBone, ShapeKey
+    from bpy.types import Object, PoseBone, ShapeKey, Material, Camera
     from itertools import chain
 
     fbx_curves = []
@@ -559,8 +572,13 @@ def blen_read_animations_action_item(action, item, cnodes, fps, anim_offset):
     blen_curves = []
     props = []
 
-    if isinstance(item, ShapeKey):
+    if isinstance(item, Material):
+        grpname = item.name
+        props = [("diffuse_color", 3, grpname or "Diffuse Color")]
+    elif isinstance(item, ShapeKey):
         props = [(item.path_from_id("value"), 1, "Key")]
+    elif isinstance(item, Camera):
+        props = [(item.path_from_id("lens"), 1, "Camera")]
     else:  # Object or PoseBone:
         if item.is_bone:
             bl_obj = item.bl_obj.pose.bones[item.bl_bone]
@@ -586,13 +604,35 @@ def blen_read_animations_action_item(action, item, cnodes, fps, anim_offset):
     blen_curves = [action.fcurves.new(prop, channel, grpname)
                    for prop, nbr_channels, grpname in props for channel in range(nbr_channels)]
 
-    if isinstance(item, ShapeKey):
+    if isinstance(item, Material):
+        for frame, values in blen_read_animations_curves_iter(fbx_curves, anim_offset, 0, fps):
+            value = [0,0,0]
+            for v, (fbxprop, channel, _fbx_acdata) in values:
+                assert(fbxprop == b'DiffuseColor')
+                assert(channel in {0, 1, 2})
+                value[channel] = v
+
+            for fc, v in zip(blen_curves, value):
+                fc.keyframe_points.insert(frame, v, {'NEEDED', 'FAST'}).interpolation = 'LINEAR'
+
+    elif isinstance(item, ShapeKey):
         for frame, values in blen_read_animations_curves_iter(fbx_curves, anim_offset, 0, fps):
             value = 0.0
             for v, (fbxprop, channel, _fbx_acdata) in values:
                 assert(fbxprop == b'DeformPercent')
                 assert(channel == 0)
                 value = v / 100.0
+
+            for fc, v in zip(blen_curves, (value,)):
+                fc.keyframe_points.insert(frame, v, {'NEEDED', 'FAST'}).interpolation = 'LINEAR'
+
+    elif isinstance(item, Camera):
+        for frame, values in blen_read_animations_curves_iter(fbx_curves, anim_offset, 0, fps):
+            value = 0.0
+            for v, (fbxprop, channel, _fbx_acdata) in values:
+                assert(fbxprop == b'FocalLength')
+                assert(channel == 0)
+                value = v
 
             for fc, v in zip(blen_curves, (value,)):
                 fc.keyframe_points.insert(frame, v, {'NEEDED', 'FAST'}).interpolation = 'LINEAR'
@@ -659,7 +699,7 @@ def blen_read_animations(fbx_tmpl_astack, fbx_tmpl_alayer, stacks, scene, anim_o
     Only the first found action is linked to objects, more complex setups are not handled,
     it's up to user to reproduce them!
     """
-    from bpy.types import ShapeKey
+    from bpy.types import ShapeKey, Material, Camera
 
     actions = {}
     for as_uuid, ((fbx_asdata, _blen_data), alayers) in stacks.items():
@@ -667,13 +707,17 @@ def blen_read_animations(fbx_tmpl_astack, fbx_tmpl_alayer, stacks, scene, anim_o
         for al_uuid, ((fbx_aldata, _blen_data), items) in alayers.items():
             layer_name = elem_name_ensure_class(fbx_aldata, b'AnimLayer')
             for item, cnodes in items.items():
-                if isinstance(item, ShapeKey):
+                if isinstance(item, Material):
+                    id_data = item
+                elif isinstance(item, ShapeKey):
                     id_data = item.id_data
+                elif isinstance(item, Camera):
+                    id_data = item
                 else:
                     id_data = item.bl_obj
                     # XXX Ignore rigged mesh animations - those are a nightmare to handle, see note about it in
                     #     FbxImportHelperNode class definition.
-                    if id_data.type == 'MESH' and id_data.parent and id_data.parent.type == 'ARMATURE':
+                    if id_data and id_data.type == 'MESH' and id_data.parent and id_data.parent.type == 'ARMATURE':
                         continue
                 if id_data is None:
                     continue
@@ -699,7 +743,7 @@ def blen_read_animations(fbx_tmpl_astack, fbx_tmpl_alayer, stacks, scene, anim_o
 
 def blen_read_geom_layerinfo(fbx_layer):
     return (
-        elem_find_first_string(fbx_layer, b'Name'),
+        validate_blend_names(elem_find_first_string_as_bytes(fbx_layer, b'Name')),
         elem_find_first_string_as_bytes(fbx_layer, b'MappingInformationType'),
         elem_find_first_string_as_bytes(fbx_layer, b'ReferenceInformationType'),
         )
@@ -1000,12 +1044,11 @@ def blen_read_geom_layer_color(fbx_obj, mesh):
                 print("%r %r missing data" % (layer_id, fbx_layer_name))
                 continue
 
-            # ignore alpha layer (read 4 items into 3)
             blen_read_geom_array_mapped_polyloop(
                 mesh, blen_data, "color",
                 fbx_layer_data, fbx_layer_index,
                 fbx_layer_mapping, fbx_layer_ref,
-                4, 3, layer_id,
+                4, 4, layer_id,
                 )
 
 
@@ -1083,7 +1126,7 @@ def blen_read_geom_layer_normal(fbx_obj, mesh, xform=None):
         bdata = [None] * len(blen_data) if is_fake else blen_data
         if func(mesh, bdata, "normal",
                 fbx_layer_data, fbx_layer_index, fbx_layer_mapping, fbx_layer_ref, 3, 3, layer_id, xform, True):
-            if blen_data_type is "Polygons":
+            if blen_data_type == "Polygons":
                 for pidx, p in enumerate(mesh.polygons):
                     for lidx in range(p.loop_start, p.loop_start + p.loop_total):
                         mesh.loops[lidx].normal[:] = bdata[pidx]
@@ -1255,18 +1298,17 @@ def blen_read_shape(fbx_tmpl, fbx_sdata, fbx_bcdata, meshes, scene):
 
         if me.shape_keys is None:
             objects[0].shape_key_add(name="Basis", from_mix=False)
-        objects[0].shape_key_add(name=elem_name_utf8, from_mix=False)
+        kb = objects[0].shape_key_add(name=elem_name_utf8, from_mix=False)
         me.shape_keys.use_relative = True  # Should already be set as such.
 
-        kb = me.shape_keys.key_blocks[elem_name_utf8]
         for idx, co in vcos:
             kb.data[idx].co[:] = co
         kb.value = weight
 
         # Add vgroup if necessary.
         if create_vg:
-            add_vgroup_to_objects(indices, vgweights, elem_name_utf8, objects)
-            kb.vertex_group = elem_name_utf8
+            vgoups = add_vgroup_to_objects(indices, vgweights, kb.name, objects)
+            kb.vertex_group = kb.name
 
         keyblocks.append(kb)
 
@@ -1286,7 +1328,6 @@ def blen_read_material(fbx_tmpl, fbx_obj, settings):
 
     fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                  elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-    #~ assert(fbx_props[0] is not None)  # Some Material may be missing that one, it seems... see T50566.
 
     ma_diff = elem_props_get_color_rgb(fbx_props, b'DiffuseColor', const_color_white)
     ma_spec = elem_props_get_color_rgb(fbx_props, b'SpecularColor', const_color_white)
@@ -1404,7 +1445,6 @@ def blen_read_camera(fbx_tmpl, fbx_obj, global_scale):
 
     fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                  elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-    assert(fbx_props[0] is not None)
 
     camera = bpy.data.cameras.new(name=elem_name_utf8)
 
@@ -1433,10 +1473,6 @@ def blen_read_light(fbx_tmpl, fbx_obj, global_scale):
 
     fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                  elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-    # rare
-    if fbx_props[0] is None:
-        lamp = bpy.data.lamps.new(name=elem_name_utf8, type='POINT')
-        return lamp
 
     light_type = {
         0: 'POINT',
@@ -1917,7 +1953,6 @@ class FbxImportHelperNode:
 
         fbx_props = (elem_find_first(self.fbx_elem, b'Properties70'),
                      elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-        assert(fbx_props[0] is not None)
 
         # ----
         # Misc Attributes
@@ -2074,7 +2109,6 @@ class FbxImportHelperNode:
             if self.fbx_elem:
                 fbx_props = (elem_find_first(self.fbx_elem, b'Properties70'),
                              elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-                assert(fbx_props[0] is not None)
 
                 if settings.use_custom_props:
                     blen_read_custom_properties(self.fbx_elem, arm, settings)
@@ -2394,7 +2428,7 @@ def load(operator, context, filepath="",
 
     def fbx_template_get(key):
         ret = fbx_templates.get(key, fbx_elem_nil)
-        if ret is None:
+        if ret is fbx_elem_nil:
             # Newest FBX (7.4 and above) use no more 'K' in their type names...
             key = (key[0], key[1][1:])
             return fbx_templates.get(key, fbx_elem_nil)
@@ -2554,7 +2588,6 @@ def load(operator, context, filepath="",
 
             fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                          elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-            assert(fbx_props[0] is not None)
 
             transform_data = blen_read_object_transform_preprocess(fbx_props, fbx_obj, Matrix(), use_prepost_rot)
             # Note: 'Root' "bones" are handled as (armature) objects.
@@ -2806,10 +2839,26 @@ def load(operator, context, filepath="",
                             continue
                         items.append((ob, lnk_prop))
                     elif lnk_prop == b'DeformPercent':  # Shape keys.
-                        keyblocks = blend_shape_channels.get(n_uuid)
+                        keyblocks = blend_shape_channels.get(n_uuid, None)
                         if keyblocks is None:
                             continue
                         items += [(kb, lnk_prop) for kb in keyblocks]
+                    elif lnk_prop == b'FocalLength':  # Camera lens.
+                        from bpy.types import Camera
+                        fbx_item = fbx_table_nodes.get(n_uuid, None)
+                        if fbx_item is None or not isinstance(fbx_item[1], Camera):
+                            continue
+                        cam = fbx_item[1]
+                        items.append((cam, lnk_prop))
+                    elif lnk_prop == b'DiffuseColor':
+                        from bpy.types import Material
+                        fbx_item = fbx_table_nodes.get(n_uuid, None)
+                        if fbx_item is None or not isinstance(fbx_item[1], Material):
+                            continue
+                        mat = fbx_item[1]
+                        items.append((mat, lnk_prop))
+                        if settings.use_cycles:
+                            print("WARNING! Importing material's animation is not supported for Cycles materials...")
                 for al_uuid, al_ctype in fbx_connection_map.get(acn_uuid, ()):
                     if al_ctype.props[0] != b'OO':
                         continue
@@ -2837,7 +2886,11 @@ def load(operator, context, filepath="",
                         continue
                     # Note this is an infamous simplification of the compound props stuff,
                     # seems to be standard naming but we'll probably have to be smarter to handle more exotic files?
-                    channel = {b'd|X': 0, b'd|Y': 1, b'd|Z': 2, b'd|DeformPercent': 0}.get(acn_ctype.props[3], None)
+                    channel = {
+                        b'd|X': 0, b'd|Y': 1, b'd|Z': 2,
+                        b'd|DeformPercent': 0,
+                        b'd|FocalLength': 0
+                    }.get(acn_ctype.props[3], None)
                     if channel is None:
                         continue
                     curvenodes[acn_uuid][ac_uuid] = (fbx_acitem, channel)
@@ -2895,8 +2948,6 @@ def load(operator, context, filepath="",
             assert(fbx_obj.id == b'Material')
             fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                          elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-            # Do not assert, it can be None actually, sigh...
-            #~ assert(fbx_props[0] is not None)
             # (x / 7.142) is only a guess, cycles usable range is (0.0 -> 0.5)
             return elem_props_get_number(fbx_props, b'BumpFactor', 2.5) / 7.142
 
@@ -2905,8 +2956,6 @@ def load(operator, context, filepath="",
 
             fbx_props = (elem_find_first(fbx_obj, b'Properties70'),
                          elem_find_first(fbx_tmpl, b'Properties70', fbx_elem_nil))
-            # Do not assert, it can be None actually, sigh...
-            #~ assert(fbx_props[0] is not None)
             return (elem_props_get_vector_3d(fbx_props, b'Translation', (0.0, 0.0, 0.0)),
                     elem_props_get_vector_3d(fbx_props, b'Rotation', (0.0, 0.0, 0.0)),
                     elem_props_get_vector_3d(fbx_props, b'Scaling', (1.0, 1.0, 1.0)),
@@ -3118,7 +3167,7 @@ def load(operator, context, filepath="",
                     else:
                         for material in mesh.materials:
                             if material in material_decals:
-                                # recieve but dont cast shadows
+                                # receive but dont cast shadows
                                 material.use_raytrace = False
     _(); del _
 

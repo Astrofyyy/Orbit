@@ -2,12 +2,11 @@
 
 # Python imports
 import os
-import unittest
 from itertools import chain
 from operator import itemgetter
 
 # Local imports
-from lib2to3 import pygram, pytree, refactor, fixer_util
+from lib2to3 import pygram, fixer_util
 from lib2to3.tests import support
 
 
@@ -2955,10 +2954,23 @@ class Test_filter(FixerTestCase):
         a = """x = [x for x in range(10) if x%2 == 0]"""
         self.check(b, a)
 
-        # XXX This (rare) case is not supported
-##         b = """x = filter(f, 'abc')[0]"""
-##         a = """x = list(filter(f, 'abc'))[0]"""
-##         self.check(b, a)
+    def test_filter_trailers(self):
+        b = """x = filter(None, 'abc')[0]"""
+        a = """x = [_f for _f in 'abc' if _f][0]"""
+        self.check(b, a)
+
+        b = """x = len(filter(f, 'abc')[0])"""
+        a = """x = len(list(filter(f, 'abc'))[0])"""
+        self.check(b, a)
+
+        b = """x = filter(lambda x: x%2 == 0, range(10))[0]"""
+        a = """x = [x for x in range(10) if x%2 == 0][0]"""
+        self.check(b, a)
+
+        # Note the parens around x
+        b = """x = filter(lambda (x): x%2 == 0, range(10))[0]"""
+        a = """x = [x for x in range(10) if x%2 == 0][0]"""
+        self.check(b, a)
 
     def test_filter_nochange(self):
         a = """b.join(filter(f, 'abc'))"""
@@ -3023,6 +3035,23 @@ class Test_map(FixerTestCase):
         a = """x =    list(map(   f,    'abc'   ))"""
         self.check(b, a)
 
+    def test_map_trailers(self):
+        b = """x = map(f, 'abc')[0]"""
+        a = """x = list(map(f, 'abc'))[0]"""
+        self.check(b, a)
+
+        b = """x = map(None, l)[0]"""
+        a = """x = list(l)[0]"""
+        self.check(b, a)
+
+        b = """x = map(lambda x:x, l)[0]"""
+        a = """x = [x for x in l][0]"""
+        self.check(b, a)
+
+        b = """x = map(f, 'abc')[0][1]"""
+        a = """x = list(map(f, 'abc'))[0][1]"""
+        self.check(b, a)
+
     def test_trailing_comment(self):
         b = """x = map(f, 'abc')   #   foo"""
         a = """x = list(map(f, 'abc'))   #   foo"""
@@ -3066,11 +3095,6 @@ class Test_map(FixerTestCase):
             list(map(f, x))
             """
         self.warns(b, a, "You should use a for loop here")
-
-        # XXX This (rare) case is not supported
-##         b = """x = map(f, 'abc')[0]"""
-##         a = """x = list(map(f, 'abc'))[0]"""
-##         self.check(b, a)
 
     def test_map_nochange(self):
         a = """b.join(map(f, 'abc'))"""
@@ -3131,12 +3155,25 @@ class Test_zip(FixerTestCase):
         super(Test_zip, self).check(b, a)
 
     def test_zip_basic(self):
+        b = """x = zip()"""
+        a = """x = list(zip())"""
+        self.check(b, a)
+
         b = """x = zip(a, b, c)"""
         a = """x = list(zip(a, b, c))"""
         self.check(b, a)
 
         b = """x = len(zip(a, b))"""
         a = """x = len(list(zip(a, b)))"""
+        self.check(b, a)
+
+    def test_zip_trailers(self):
+        b = """x = zip(a, b, c)[0]"""
+        a = """x = list(zip(a, b, c))[0]"""
+        self.check(b, a)
+
+        b = """x = zip(a, b, c)[0][1]"""
+        a = """x = list(zip(a, b, c))[0][1]"""
         self.check(b, a)
 
     def test_zip_nochange(self):
@@ -3232,6 +3269,10 @@ class Test_types(FixerTestCase):
 
         b = """types.NoneType"""
         a = """type(None)"""
+        self.check(b, a)
+
+        b = "types.StringTypes"
+        a = "(str,)"
         self.check(b, a)
 
 class Test_idioms(FixerTestCase):
@@ -4368,7 +4409,7 @@ class Test_operator(FixerTestCase):
 
     def test_operator_isCallable(self):
         b = "operator.isCallable(x)"
-        a = "hasattr(x, '__call__')"
+        a = "callable(x)"
         self.check(b, a)
 
     def test_operator_sequenceIncludes(self):
@@ -4386,12 +4427,12 @@ class Test_operator(FixerTestCase):
 
     def test_operator_isSequenceType(self):
         b = "operator.isSequenceType(x)"
-        a = "import collections\nisinstance(x, collections.Sequence)"
+        a = "import collections.abc\nisinstance(x, collections.abc.Sequence)"
         self.check(b, a)
 
     def test_operator_isMappingType(self):
         b = "operator.isMappingType(x)"
-        a = "import collections\nisinstance(x, collections.Mapping)"
+        a = "import collections.abc\nisinstance(x, collections.abc.Mapping)"
         self.check(b, a)
 
     def test_operator_isNumberType(self):
@@ -4427,7 +4468,7 @@ class Test_operator(FixerTestCase):
 
     def test_bare_isCallable(self):
         s = "isCallable(x)"
-        t = "You should use 'hasattr(x, '__call__')' here."
+        t = "You should use 'callable(x)' here."
         self.warns_unchanged(s, t)
 
     def test_bare_sequenceIncludes(self):
@@ -4437,12 +4478,12 @@ class Test_operator(FixerTestCase):
 
     def test_bare_operator_isSequenceType(self):
         s = "isSequenceType(z)"
-        t = "You should use 'isinstance(z, collections.Sequence)' here."
+        t = "You should use 'isinstance(z, collections.abc.Sequence)' here."
         self.warns_unchanged(s, t)
 
     def test_bare_operator_isMappingType(self):
         s = "isMappingType(x)"
-        t = "You should use 'isinstance(x, collections.Mapping)' here."
+        t = "You should use 'isinstance(x, collections.abc.Mapping)' here."
         self.warns_unchanged(s, t)
 
     def test_bare_operator_isNumberType(self):

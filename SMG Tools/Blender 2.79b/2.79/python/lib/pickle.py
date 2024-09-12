@@ -27,6 +27,7 @@ from types import FunctionType
 from copyreg import dispatch_table
 from copyreg import _extension_registry, _inverted_registry, _extension_cache
 from itertools import islice
+from functools import partial
 import sys
 from sys import maxsize
 from struct import pack, unpack
@@ -182,6 +183,7 @@ __all__.extend([x for x in dir() if re.match("[A-Z][A-Z0-9_]+$", x)])
 
 class _Framer:
 
+    _FRAME_SIZE_MIN = 4
     _FRAME_SIZE_TARGET = 64 * 1024
 
     def __init__(self, file_write):
@@ -200,20 +202,46 @@ class _Framer:
         if self.current_frame:
             f = self.current_frame
             if f.tell() >= self._FRAME_SIZE_TARGET or force:
-                with f.getbuffer() as data:
-                    n = len(data)
-                    write = self.file_write
-                    write(FRAME)
-                    write(pack("<Q", n))
-                    write(data)
-                f.seek(0)
-                f.truncate()
+                data = f.getbuffer()
+                write = self.file_write
+                if len(data) >= self._FRAME_SIZE_MIN:
+                    # Issue a single call to the write method of the underlying
+                    # file object for the frame opcode with the size of the
+                    # frame. The concatenation is expected to be less expensive
+                    # than issuing an additional call to write.
+                    write(FRAME + pack("<Q", len(data)))
+
+                # Issue a separate call to write to append the frame
+                # contents without concatenation to the above to avoid a
+                # memory copy.
+                write(data)
+
+                # Start the new frame with a new io.BytesIO instance so that
+                # the file object can have delayed access to the previous frame
+                # contents via an unreleased memoryview of the previous
+                # io.BytesIO instance.
+                self.current_frame = io.BytesIO()
 
     def write(self, data):
         if self.current_frame:
             return self.current_frame.write(data)
         else:
             return self.file_write(data)
+
+    def write_large_bytes(self, header, payload):
+        write = self.file_write
+        if self.current_frame:
+            # Terminate the current frame and flush it to the file.
+            self.commit_frame(force=True)
+
+        # Perform direct write of the header and payload of the large binary
+        # object. Be careful not to concatenate the header and the payload
+        # prior to calling 'write' as we do not want to allocate a large
+        # temporary bytes object.
+        # We intentionally do not insert a protocol 4 frame opcode to make
+        # it possible to optimize file.read calls in the loader.
+        write(header)
+        write(payload)
 
 
 class _Unframer:
@@ -268,7 +296,7 @@ def _getattribute(obj, name):
             obj = getattr(obj, subpath)
         except AttributeError:
             raise AttributeError("Can't get attribute {!r} on {!r}"
-                                 .format(name, obj))
+                                 .format(name, obj)) from None
     return obj, parent
 
 def whichmodule(obj, name):
@@ -378,6 +406,7 @@ class _Pickler:
             raise TypeError("file must have a 'write' attribute")
         self.framer = _Framer(self._file_write)
         self.write = self.framer.write
+        self._write_large_bytes = self.framer.write_large_bytes
         self.memo = {}
         self.proto = int(protocol)
         self.bin = protocol >= 1
@@ -548,7 +577,7 @@ class _Pickler:
         write = self.write
 
         func_name = getattr(func, "__name__", "")
-        if self.proto >= 4 and func_name == "__newobj_ex__":
+        if self.proto >= 2 and func_name == "__newobj_ex__":
             cls, args, kwargs = args
             if not hasattr(cls, "__new__"):
                 raise PicklingError("args[0] from {} args has no __new__"
@@ -556,10 +585,16 @@ class _Pickler:
             if obj is not None and cls is not obj.__class__:
                 raise PicklingError("args[0] from {} args has the wrong class"
                                     .format(func_name))
-            save(cls)
-            save(args)
-            save(kwargs)
-            write(NEWOBJ_EX)
+            if self.proto >= 4:
+                save(cls)
+                save(args)
+                save(kwargs)
+                write(NEWOBJ_EX)
+            else:
+                func = partial(cls.__new__, cls, *args, **kwargs)
+                save(func)
+                save(())
+                write(REDUCE)
         elif self.proto >= 2 and func_name == "__newobj__":
             # A __reduce__ implementation can direct protocol 2 or newer to
             # use the more efficient NEWOBJ opcode, while still
@@ -667,7 +702,10 @@ class _Pickler:
             else:
                 self.write(LONG4 + pack("<i", n) + encoded)
             return
-        self.write(LONG + repr(obj).encode("ascii") + b'L\n')
+        if -0x80000000 <= obj <= 0x7fffffff:
+            self.write(INT + repr(obj).encode("ascii") + b'\n')
+        else:
+            self.write(LONG + repr(obj).encode("ascii") + b'L\n')
     dispatch[int] = save_long
 
     def save_float(self, obj):
@@ -689,7 +727,9 @@ class _Pickler:
         if n <= 0xff:
             self.write(SHORT_BINBYTES + pack("<B", n) + obj)
         elif n > 0xffffffff and self.proto >= 4:
-            self.write(BINBYTES8 + pack("<Q", n) + obj)
+            self._write_large_bytes(BINBYTES8 + pack("<Q", n), obj)
+        elif n >= self.framer._FRAME_SIZE_TARGET:
+            self._write_large_bytes(BINBYTES + pack("<I", n), obj)
         else:
             self.write(BINBYTES + pack("<I", n) + obj)
         self.memoize(obj)
@@ -702,7 +742,9 @@ class _Pickler:
             if n <= 0xff and self.proto >= 4:
                 self.write(SHORT_BINUNICODE + pack("<B", n) + encoded)
             elif n > 0xffffffff and self.proto >= 4:
-                self.write(BINUNICODE8 + pack("<Q", n) + encoded)
+                self._write_large_bytes(BINUNICODE8 + pack("<Q", n), encoded)
+            elif n >= self.framer._FRAME_SIZE_TARGET:
+                self._write_large_bytes(BINUNICODE + pack("<I", n), encoded)
             else:
                 self.write(BINUNICODE + pack("<I", n) + encoded)
         else:
@@ -912,7 +954,7 @@ class _Pickler:
         except (ImportError, KeyError, AttributeError):
             raise PicklingError(
                 "Can't pickle %r: it's not found as %s.%s" %
-                (obj, module_name, name))
+                (obj, module_name, name)) from None
         else:
             if obj2 is not obj:
                 raise PicklingError(
@@ -957,7 +999,7 @@ class _Pickler:
             except UnicodeEncodeError:
                 raise PicklingError(
                     "can't pickle global identifier '%s.%s' using "
-                    "pickle protocol %i" % (module, name, self.proto))
+                    "pickle protocol %i" % (module, name, self.proto)) from None
 
         self.memoize(obj)
 
@@ -1028,7 +1070,7 @@ class _Unpickler:
         self._unframer = _Unframer(self._file_read, self._file_readline)
         self.read = self._unframer.read
         self.readline = self._unframer.readline
-        self.mark = object() # any new unique object
+        self.metastack = []
         self.stack = []
         self.append = self.stack.append
         self.proto = 0
@@ -1044,20 +1086,12 @@ class _Unpickler:
         except _Stop as stopinst:
             return stopinst.value
 
-    # Return largest index k such that self.stack[k] is self.mark.
-    # If the stack doesn't contain a mark, eventually raises IndexError.
-    # This could be sped by maintaining another stack, of indices at which
-    # the mark appears.  For that matter, the latter stack would suffice,
-    # and we wouldn't need to push mark objects on self.stack at all.
-    # Doing so is probably a good thing, though, since if the pickle is
-    # corrupt (or hostile) we may get a clue from finding self.mark embedded
-    # in unpickled objects.
-    def marker(self):
-        stack = self.stack
-        mark = self.mark
-        k = len(stack)-1
-        while stack[k] is not mark: k = k-1
-        return k
+    # Return a list of items pushed in the stack after last MARK instruction.
+    def pop_mark(self):
+        items = self.stack
+        self.stack = self.metastack.pop()
+        self.append = self.stack.append
+        return items
 
     def persistent_load(self, pid):
         raise UnpicklingError("unsupported persistent id encountered")
@@ -1238,8 +1272,8 @@ class _Unpickler:
     dispatch[SHORT_BINUNICODE[0]] = load_short_binunicode
 
     def load_tuple(self):
-        k = self.marker()
-        self.stack[k:] = [tuple(self.stack[k+1:])]
+        items = self.pop_mark()
+        self.append(tuple(items))
     dispatch[TUPLE[0]] = load_tuple
 
     def load_empty_tuple(self):
@@ -1271,21 +1305,20 @@ class _Unpickler:
     dispatch[EMPTY_SET[0]] = load_empty_set
 
     def load_frozenset(self):
-        k = self.marker()
-        self.stack[k:] = [frozenset(self.stack[k+1:])]
+        items = self.pop_mark()
+        self.append(frozenset(items))
     dispatch[FROZENSET[0]] = load_frozenset
 
     def load_list(self):
-        k = self.marker()
-        self.stack[k:] = [self.stack[k+1:]]
+        items = self.pop_mark()
+        self.append(items)
     dispatch[LIST[0]] = load_list
 
     def load_dict(self):
-        k = self.marker()
-        items = self.stack[k+1:]
+        items = self.pop_mark()
         d = {items[i]: items[i+1]
              for i in range(0, len(items), 2)}
-        self.stack[k:] = [d]
+        self.append(d)
     dispatch[DICT[0]] = load_dict
 
     # INST and OBJ differ only in how they get a class object.  It's not
@@ -1293,9 +1326,7 @@ class _Unpickler:
     # previously diverged and grew different bugs.
     # klass is the class to instantiate, and k points to the topmost mark
     # object, following which are the arguments for klass.__init__.
-    def _instantiate(self, klass, k):
-        args = tuple(self.stack[k+1:])
-        del self.stack[k:]
+    def _instantiate(self, klass, args):
         if (args or not isinstance(klass, type) or
             hasattr(klass, "__getinitargs__")):
             try:
@@ -1311,14 +1342,14 @@ class _Unpickler:
         module = self.readline()[:-1].decode("ascii")
         name = self.readline()[:-1].decode("ascii")
         klass = self.find_class(module, name)
-        self._instantiate(klass, self.marker())
+        self._instantiate(klass, self.pop_mark())
     dispatch[INST[0]] = load_inst
 
     def load_obj(self):
         # Stack is ... markobject classobject arg1 arg2 ...
-        k = self.marker()
-        klass = self.stack.pop(k+1)
-        self._instantiate(klass, k)
+        args = self.pop_mark()
+        cls = args.pop(0)
+        self._instantiate(cls, args)
     dispatch[OBJ[0]] = load_obj
 
     def load_newobj(self):
@@ -1403,12 +1434,14 @@ class _Unpickler:
     dispatch[REDUCE[0]] = load_reduce
 
     def load_pop(self):
-        del self.stack[-1]
+        if self.stack:
+            del self.stack[-1]
+        else:
+            self.pop_mark()
     dispatch[POP[0]] = load_pop
 
     def load_pop_mark(self):
-        k = self.marker()
-        del self.stack[k:]
+        self.pop_mark()
     dispatch[POP_MARK[0]] = load_pop_mark
 
     def load_dup(self):
@@ -1464,17 +1497,21 @@ class _Unpickler:
     dispatch[APPEND[0]] = load_append
 
     def load_appends(self):
-        stack = self.stack
-        mark = self.marker()
-        list_obj = stack[mark - 1]
-        items = stack[mark + 1:]
-        if isinstance(list_obj, list):
-            list_obj.extend(items)
+        items = self.pop_mark()
+        list_obj = self.stack[-1]
+        try:
+            extend = list_obj.extend
+        except AttributeError:
+            pass
         else:
-            append = list_obj.append
-            for item in items:
-                append(item)
-        del stack[mark:]
+            extend(items)
+            return
+        # Even if the PEP 307 requires extend() and append() methods,
+        # fall back on append() if the object has no extend() method
+        # for backward compatibility.
+        append = list_obj.append
+        for item in items:
+            append(item)
     dispatch[APPENDS[0]] = load_appends
 
     def load_setitem(self):
@@ -1486,27 +1523,21 @@ class _Unpickler:
     dispatch[SETITEM[0]] = load_setitem
 
     def load_setitems(self):
-        stack = self.stack
-        mark = self.marker()
-        dict = stack[mark - 1]
-        for i in range(mark + 1, len(stack), 2):
-            dict[stack[i]] = stack[i + 1]
-
-        del stack[mark:]
+        items = self.pop_mark()
+        dict = self.stack[-1]
+        for i in range(0, len(items), 2):
+            dict[items[i]] = items[i + 1]
     dispatch[SETITEMS[0]] = load_setitems
 
     def load_additems(self):
-        stack = self.stack
-        mark = self.marker()
-        set_obj = stack[mark - 1]
-        items = stack[mark + 1:]
+        items = self.pop_mark()
+        set_obj = self.stack[-1]
         if isinstance(set_obj, set):
             set_obj.update(items)
         else:
             add = set_obj.add
             for item in items:
                 add(item)
-        del stack[mark:]
     dispatch[ADDITEMS[0]] = load_additems
 
     def load_build(self):
@@ -1534,7 +1565,9 @@ class _Unpickler:
     dispatch[BUILD[0]] = load_build
 
     def load_mark(self):
-        self.append(self.mark)
+        self.metastack.append(self.stack)
+        self.stack = []
+        self.append = self.stack.append
     dispatch[MARK[0]] = load_mark
 
     def load_stop(self):

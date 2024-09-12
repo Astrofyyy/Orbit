@@ -1392,7 +1392,7 @@ def get_angle(p1, p2):
 # Point b: (x,z)
 # Point c: (x,z)
 # Return:
-# x, y: center poistion
+# x, y: center position
 #  r: radio
 # ang: angle
 # ---------------------------------------------------------
@@ -1772,7 +1772,7 @@ Object.WindowPanelGenerator = CollectionProperty(type=GeneralPanelProperties)
 # Define panel class to modify myobjects.
 # ------------------------------------------------------------------
 class AchmWindowEditPanel(Panel):
-    bl_idname = "window.edit_panel2"
+    bl_idname = "ARCHIMESH_PT_window_edit"
     bl_label = "Window Panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'

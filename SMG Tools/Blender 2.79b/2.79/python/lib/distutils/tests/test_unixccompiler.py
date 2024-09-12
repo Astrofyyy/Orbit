@@ -1,5 +1,4 @@
 """Tests for distutils.unixccompiler."""
-import os
 import sys
 import unittest
 from test.support import EnvironmentVarGuard, run_unittest
@@ -51,14 +50,6 @@ class UnixCCompilerTestCase(unittest.TestCase):
         self.assertEqual(self.cc.rpath_foo(), ['-Wl,+s', '-L/foo'])
 
         sysconfig.get_config_var = old_gcv
-
-        # irix646
-        sys.platform = 'irix646'
-        self.assertEqual(self.cc.rpath_foo(), ['-rpath', '/foo'])
-
-        # osf1V5
-        sys.platform = 'osf1V5'
-        self.assertEqual(self.cc.rpath_foo(), ['-rpath', '/foo'])
 
         # GCC GNULD
         sys.platform = 'bar'

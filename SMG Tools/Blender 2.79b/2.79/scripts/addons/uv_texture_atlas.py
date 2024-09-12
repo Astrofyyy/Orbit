@@ -77,6 +77,7 @@ def check_group_exist(self, context, use_report=True):
 
 
 class TexAtl_Main(Panel):
+    bl_idname = "UVTEX_ATLAS_PT_main"
     bl_label = "Texture Atlas"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -620,7 +621,7 @@ class TexAtl_MergeObjects(Operator):
 
         bpy.ops.object.select_all(action='DESELECT')
 
-        # We do the MergeList beacuse we will duplicate grouped objects
+        # We do the MergeList because we will duplicate grouped objects
         mergeList = []
         for object in bpy.data.groups[self.group_name].objects:
             mergeList.append(object)
@@ -634,7 +635,7 @@ class TexAtl_MergeObjects(Operator):
             bpy.ops.object.select_all(action='DESELECT')
             object.select = True
 
-            # activate lightmap uv if existant
+            # activate lightmap uv if existent
             for uv in object.data.uv_textures:
                 if uv.name == self.group_name:
                     uv.active = True
@@ -771,7 +772,7 @@ class TexAtl_SeparateObjects(Operator):
                 bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
                 # scene.objects.active.select = False
 
-                # find separeted object
+                # find separated object
                 ob_separeted = None
                 for obj in groupSeparate.objects:
                     if obj != ob_merged:
@@ -793,7 +794,7 @@ class TexAtl_SeparateObjects(Operator):
                     ob_original.hide_select = isOriginalToSelect
                     ob_original.data.update()
 
-                # delete separeted object
+                # delete separated object
                 bpy.ops.object.select_all(action='DESELECT')
                 ob_separeted.select = True
                 bpy.ops.object.delete(use_global=False)
