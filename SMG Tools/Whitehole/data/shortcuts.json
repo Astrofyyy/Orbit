@@ -63,8 +63,18 @@
 						}
 					],
 					"RequiredFile": "SMG2",
-					"DefaultTooltip": "Contains what world number the galaxy is in."
+					"DefaultTooltip": "Contains what world number the galaxy is in.",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Contains star select unlock conditions and other star select related settings.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				}, 
+				{
+					"Type": "Separator",
+					"RequiredFile": "/ScenarioData/FileSelect.reg"
+				},
 				{
 					"Type": "Shortcut",
 					"DefaultName": "StageObjInfo",
@@ -94,81 +104,40 @@
 					"DefaultTooltip": "Contains what position and rotation the zone is at.\nZones can be added to specific layers to make them only appear when that layer is enabled."
 				},
 				{
-					"Type": "Separator",
-					"RequiredFile": "SMG2"
+					"Type": "Shortcut",
+					"DefaultName": "ScenarioSettings",
+					"DefaultArchivePath": "/StageData/%s/%sMap.arc",
+					"DefaultBcsvPath": "/Stage/jmp/List/ScenarioSettings",
+					"Variables": [
+						{
+							"VariableName": "StageName",
+							"VariableGetMessage": "Enter the stage's file name:",
+							"VariableListType": "StageName"
+						}, 
+						{
+							"VariableName": "StageName"
+						}
+					],
+					"RequiredFile": "/ScenarioData/FileSelect.reg",
+					"DefaultTooltip": "Contains additional GLE settings for each scenario in a galaxy."
 				},
 				{
-					"Type": "Menu",
-					"DefaultName": "Alternate Stage Files",
-					"RequiredFile": "SMG2",
-					"MenuElements": [
+					"Type": "Shortcut",
+					"DefaultName": "StageInfo",
+					"DefaultArchivePath": "/StageData/%s/%sMap.arc",
+					"DefaultBcsvPath": "/Stage/jmp/List/StageInfo",
+					"Variables": [
 						{
-							"Type": "Shortcut",
-							"DefaultName": "DesignAreaObjInfo",
-							"DefaultArchivePath": "/StageData/%s/%sDesign.arc",
-							"DefaultBcsvPath": "/Stage/jmp/Placement/%s/AreaObjInfo",
-							"Variables": [
-								{
-									"VariableName": "StageName",
-									"VariableGetMessage": "Enter the stage's file name:",
-									"VariableListType": "StageName"
-								},
-								{
-									"VariableName": "StageName",
-									"RequiredFile": "SMG2"
-								},
-								{
-									"VariableName": "Layer",
-									"VariableGetMessage": "Enter the layer (ex. 'LayerP' NOT 'P'):"
-								}
-							],
-							"DefaultTooltip": "Contains all design-related areas, such as Light Control Areas."
-						},
+							"VariableName": "StageName",
+							"VariableGetMessage": "Enter the stage's file name:",
+							"VariableListType": "StageName"
+						}, 
 						{
-							"Type": "Shortcut",
-							"DefaultName": "SoundAreaObjInfo",
-							"DefaultArchivePath": "/StageData/%s/%sSound.arc",
-							"DefaultBcsvPath": "/Stage/jmp/Placement/%s/AreaObjInfo",
-							"Variables": [
-								{
-									"VariableName": "StageName",
-									"VariableGetMessage": "Enter the stage's file name:",
-									"VariableListType": "StageName"
-								},
-								{
-									"VariableName": "StageName",
-									"RequiredFile": "SMG2"
-								},
-								{
-									"VariableName": "Layer",
-									"VariableGetMessage": "Enter the layer (ex. 'LayerP' NOT 'P'):"
-								}
-							],
-							"DefaultTooltip": "Contains all sound-related areas, such as Background Music Change Areas or Play Sound Areas."
-						},
-						{
-							"Type": "Shortcut",
-							"DefaultName": "SoundObjInfo",
-							"DefaultArchivePath": "/StageData/%s/%sSound.arc",
-							"DefaultBcsvPath": "/Stage/jmp/Placement/%s/ObjInfo",
-							"Variables": [
-								{
-									"VariableName": "StageName",
-									"VariableGetMessage": "Enter the stage's file name:",
-									"VariableListType": "StageName"
-								},
-								{
-									"VariableName": "StageName",
-									"RequiredFile": "SMG2"
-								},
-								{
-									"VariableName": "Layer",
-									"VariableGetMessage": "Enter the layer (ex. 'LayerP' NOT 'P'):"
-								}
-							],
-							"DefaultTooltip": "Contains all sound-related objects, excluding areas."
+							"VariableName": "StageName"
 						}
-					]
+					],
+					"RequiredFile": "/ScenarioData/FileSelect.reg",
+					"DefaultTooltip": "Sets where certain events (like game over) warp you to."
 				},
 				{
 					"Type": "Separator",
@@ -226,6 +195,60 @@
 									"VariableName": "StageName"
 								}
 							]
+						},
+						{
+							"Type": "Shortcut",
+							"DefaultName": "ScenarioSwitch",
+							"DefaultArchivePath": "/StageData/%s/%sZoneInfo.arc",
+							"DefaultBcsvPath": "/Stage/csv/ScenarioSwitch.bcsv",
+							"Variables": [
+								{
+									"VariableName": "StageName",
+									"VariableGetMessage": "Enter the stage's file name:",
+									"VariableListType": "StageName"
+								}, 
+								{
+									"VariableName": "StageName"
+								}
+							],
+							"RequiredFile": "/ScenarioData/FileSelect.reg",
+							"DefaultTooltip": "Used by the ScenarioSwitch object to check game flags."
+						},
+						{
+							"Type": "Shortcut",
+							"DefaultName": "NPCAnimeFunc",
+							"DefaultArchivePath": "/StageData/%s/%sZoneInfo.arc",
+							"DefaultBcsvPath": "/Stage/csv/NPCAnimeFunc.bcsv",
+							"Variables": [
+								{
+									"VariableName": "StageName",
+									"VariableGetMessage": "Enter the stage's file name:",
+									"VariableListType": "StageName"
+								}, 
+								{
+									"VariableName": "StageName"
+								}
+							],
+							"RequiredFile": "/ScenarioData/FileSelect.reg",
+							"DefaultTooltip": "Sets the animations used by the MSBF's GlobalAnimeFunc."
+						},
+						{
+							"Type": "Shortcut",
+							"DefaultName": "SetFlagSwitch",
+							"DefaultArchivePath": "/StageData/%s/%sZoneInfo.arc",
+							"DefaultBcsvPath": "/Stage/csv/SetFlagSwitch.bcsv",
+							"Variables": [
+								{
+									"VariableName": "StageName",
+									"VariableGetMessage": "Enter the stage's file name:",
+									"VariableListType": "StageName"
+								}, 
+								{
+									"VariableName": "StageName"
+								}
+							],
+							"RequiredFile": "/ScenarioData/FileSelect.reg",
+							"DefaultTooltip": "Used by the SetFlagSwitch object to save values to the Save File."
 						}
 					]
 				},
@@ -255,8 +278,19 @@
 						{
 							"Type": "Shortcut",
 							"DefaultName": "scenario_1",
+							"OtherNames": [
+								{
+									"Name": "scenario",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
+								}
+							],
 							"DefaultArchivePath": "/StageData/%s/%sUseResource.arc",
 							"DefaultBcsvPath": "/Stage/csv/scenario_1.bcsv",
+							"OtherBcsvPaths": [
+								{
+									"BcsvPath": "/Stage/csv/scenario_%s.bcsv"
+								}
+							],
 							"Variables": [
 								{
 									"VariableName": "StageName",
@@ -266,6 +300,11 @@
 								{
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
+								},
+								{
+									"VariableName": "Scenario",
+									"VariableGetMessage": "Enter the scenario number:",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
 								}
 							]
 						}, 
@@ -284,7 +323,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}, 
 						{
 							"Type": "Shortcut",
@@ -301,7 +341,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}, 
 						{
 							"Type": "Shortcut",
@@ -323,8 +364,20 @@
 						{
 							"Type": "Shortcut",
 							"DefaultName": "wave_arc_scenario_1",
+							"OtherNames": [
+								{
+									"Name": "wave_arc_scenario",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
+								}
+							],
 							"DefaultArchivePath": "/StageData/%s/%sUseResource.arc",
 							"DefaultBcsvPath": "/Stage/csv/wave_arc_scenario_1.bcsv",
+							"OtherBcsvPaths": [
+								{
+									"BcsvPath": "/Stage/csv/wave_arc_scenario_%s.bcsv",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
+								}
+							],
 							"Variables": [
 								{
 									"VariableName": "StageName",
@@ -334,6 +387,11 @@
 								{
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
+								},
+								{
+									"VariableName": "Scenario",
+									"VariableGetMessage": "Enter the scenario number:",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
 								}
 							]
 						}, 
@@ -352,7 +410,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}, 
 						{
 							"Type": "Shortcut",
@@ -369,7 +428,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}, 
 						{
 							"Type": "Shortcut",
@@ -391,8 +451,20 @@
 						{
 							"Type": "Shortcut",
 							"DefaultName": "sound_scenario_1",
+							"OtherNames": [
+								{
+									"Name": "sound_scenario",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
+								}
+							],
 							"DefaultArchivePath": "/StageData/%s/%sUseResource.arc",
 							"DefaultBcsvPath": "/Stage/csv/sound_scenario_1.bcsv",
+							"OtherBcsvPaths": [
+								{
+									"BcsvPath": "/Stage/csv/sound_scenario_%s.bcsv",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
+								}
+							],
 							"Variables": [
 								{
 									"VariableName": "StageName",
@@ -402,6 +474,11 @@
 								{
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
+								},
+								{
+									"VariableName": "Scenario",
+									"VariableGetMessage": "Enter the scenario number:",
+									"RequiredFile": "/ScenarioData/FileSelect.reg"
 								}
 							]
 						}, 
@@ -420,7 +497,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}, 
 						{
 							"Type": "Shortcut",
@@ -437,7 +515,8 @@
 									"VariableName": "StageName",
 									"RequiredFile": "SMG2"
 								}
-							]
+							],
+							"RequiredFile": "!/ScenarioData/FileSelect.reg"
 						}
 					]
 				},
@@ -502,7 +581,29 @@
 					],
 					"DefaultTooltip": "A list of which lights the zone uses."
 
+				},
+				{
+					"Type": "Shortcut",
+					"DefaultName": "ChangeSceneListInfo",
+					"DefaultArchivePath": "/StageData/%s/%sMap.arc",
+					"DefaultBcsvPath": "/Stage/jmp/List/ChangeSceneListInfo",
+					"Variables": [
+						{
+							"VariableName": "ZoneName",
+							"VariableGetMessage": "Enter the zone's file name:",
+							"VariableListType": "ZoneName"
+						}, 
+						{
+							"VariableName": "ZoneName"
+						},
+						{
+							"VariableName": "ZoneName"
+						}
+					],
+					"RequiredFile": "/ScenarioData/FileSelect.reg",
+					"DefaultTooltip": "Defines what scenes to warp to, contained in a specific zone."
 				}
+				
 			]
 		},
 		{
@@ -685,49 +786,157 @@
 				{
 					"Type": "Shortcut",
 					"DefaultName": "MarioFaceShipEventDataTable",
+					"OtherNames": [
+						{
+							"Name": "HubworldEventDataTable",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/MarioFaceShipEventDataTable.bcsv",
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/HubworldEventDataTable.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"RequiredFile": "SMG2",
-					"DefaultTooltip": "Activates switches on Starship Mario after a certain unlock criteria."
+					"DefaultTooltip": "Activates switches on Starship Mario after a certain unlock criteria.",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Activates events in a hubworld after a certain unlock criteria.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				},
 				
 				{
 					"Type": "Shortcut",
 					"DefaultName": "GalaxyWorldOrderList",
+					"OtherNames": [
+						{
+							"Name": "GalaxyOrderList",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/GalaxyWorldOrderList.bcsv",
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/GalaxyOrderList.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"RequiredFile": "SMG2",
-					"DefaultTooltip": "Defines the order of galaxies per world."
+					"DefaultTooltip": "Defines the order of galaxies per world.",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Defines the order of galaxies in the star list.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				},
 				{
 					"Type": "Shortcut",
 					"DefaultName": "GalaxyDataTable",
+					"OtherNames": [
+						{
+							"Name": "GameEventValueTable",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/GalaxyDataTable.bcsv",
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/GameEventValueTable.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"RequiredFile": "SMG2",
-					"DefaultTooltip": "Defines the required number of Comet Medals to make a Comet appear in an individual galaxy and which galaxies have a Grand Star."
+					"DefaultTooltip": "Defines the required number of Comet Medals to make a Comet appear in an individual galaxy and which galaxies have a Grand Star.",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Defines event values the game uses.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				},
 
 				{
 					"Type": "Shortcut",
 					"DefaultName": "MarioFaceShipEventCastTable",
+					"OtherNames": [
+						{
+							"Name": "GameSettings",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/MarioFaceShipEventCastTable.bcsv",
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/GameSettings.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"RequiredFile": "SMG2",
-					"DefaultTooltip": "A list of demos used for Starship Mario."
+					"DefaultTooltip": "A list of demos used for Starship Mario.",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Defines what main settings the game uses.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				},
 				{
 					"Type": "Shortcut",
 					"DefaultName": "WorldMapHeapGalaxy",
+					"OtherNames": [
+						{
+							"Name": "HubworldStarReturnDataTable",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/WorldMapHeapGalaxy.bcsv",
-					"RequiredFile": "SMG2"
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/HubworldStarReturnDataTable.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
+					"RequiredFile": "SMG2",
+					"OtherTooltips": [
+						{
+							"Tooltip": "Defines what cutscene is used for the Star Return Sequence.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					]
 				},
 				{
 					"Type": "Shortcut",
 					"DefaultName": "WorldMapHeapResource",
+					"OtherNames": [
+						{
+							"Name": "SavePointList",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"DefaultArchivePath": "/ObjectData/SystemDataTable.arc",
 					"DefaultBcsvPath": "/SystemDataTable/WorldMapHeapResource.bcsv",
+					"OtherBcsvPaths": [
+						{
+							"BcsvPath": "/SystemDataTable/SavePointList.bcsv",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
+					"OtherTooltips": [
+						{
+							"Tooltip": "Controls where you go when you load your save file.",
+							"RequiredFile": "/ScenarioData/FileSelect.reg"
+						}
+					],
 					"RequiredFile": "SMG2"
 				},
 				{
@@ -797,6 +1006,14 @@
 					"DefaultName": "SoundIdToInstList",
 					"DefaultArchivePath": "/AudioRes/Info/SoundIdToInstList.arc",
 					"DefaultBcsvPath": "/SoundIdToInstList/SoundIdToInstList.bcsv"
+				},
+				{
+					"Type": "Shortcut",
+					"DefaultName": "TrackControl",
+					"DefaultArchivePath": "/AudioRes/Info/BgmParam.arc",
+					"DefaultBcsvPath": "/BgmParam/TrackControl.bcsv",
+					"RequiredFile": "/ScenarioData/FileSelect.reg",
+					"DefaultTooltip": "Allows altering of an AST's track controls."
 				}
 			]
 		},
